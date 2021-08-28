@@ -1,0 +1,50 @@
+{% extends "__base.html" %}
+
+{% block title %}
+
+    <title>Title</title>
+
+{% endblock title %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <form action="{{ request.get_full_path }}" method="post">
+                    <!-- CSRF Token -->
+                    {% csrf_token %}
+                    <!-- Non-Field Errors -->
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-warning" role="alert">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+                    <!-- Username -->
+                    <div class="form-group">
+                        {% if form.username.errors %}
+                            <div class="alert alert-warning" role="alert">
+                                {{ form.username.errors }}
+                            </div>
+                        {% endif %}
+                        <label for="{{ form.username.id_for_label }}">{{ form.username.label }}:</label>
+                        {{ form.username }}
+                    </div>
+                    <!-- Password -->
+                    <div class="form-group">
+                        {% if form.password.errors %}
+                            <div class="alert alert-warning" role="alert">
+                                {{ form.password.errors }}
+                            </div>
+                        {% endif %}
+                        <label for="{{ form.password.id_for_label }}">{{ form.password.label }}:</label>
+                        {{ form.password }}
+                    </div>
+                    <!-- Form Submit Button -->
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock content %}

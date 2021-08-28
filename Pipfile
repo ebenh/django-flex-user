@@ -5,6 +5,17 @@ name = "pypi"
 
 [packages]
 django = "*"
+djangorestframework = "*"
+django-phonenumber-field = "*"
+tldextract = "*"
+regex = "*"
+django-otp = "*"
+social-auth-app-django = "*"
+django-dirtyfields = "*"
+djangorestframework-simplejwt = "*"
+psycopg2 = "*"
+phonenumbers = "*"
+freezegun = "*"
 
 [dev-packages]
 

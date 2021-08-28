@@ -26,11 +26,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
-    'django_flex_user.apps.DjangoFlexUserConfig',
+    'rest_framework',  # djangorestframework
+    'rest_framework.authtoken',  # djangorestframework
+    'social_django',  # social-auth-app-django
+    'django_otp',  # django-otp
+    'django_otp.plugins.otp_email',  # django-otp
+    'django_flex_user.apps.DjangoFlexUserConfig',  # django-flex-user
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -69,7 +73,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'test_project.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -79,7 +82,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -99,7 +101,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -113,7 +114,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
@@ -123,3 +123,15 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Tell Django to use our new user model
+
+AUTH_USER_MODEL = 'django_flex_user.SPUser'
+
+# Tell Django to use our authentication backend
+
+AUTHENTICATION_BACKENDS = [
+    'django_flex_user.backends.SPModelBackend',
+    'django_flex_user.backends.SPFacebookOAuth2',
+    'django_flex_user.backends.SPGoogleOAuth2',
+]  # default: ['django.contrib.auth.backends.ModelBackend',]
