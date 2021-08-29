@@ -159,7 +159,7 @@ PHONENUMBER_DEFAULT_REGION = 'US'
 # Configure social-auth-app-django
 
 # SOCIAL_AUTH_POSTGRES_JSONFIELD = True  # social-auth-app-django ... deprecated
-SOCIAL_AUTH_JSONFIELD_ENABLED = True  # social-auth-app-django
+# SOCIAL_AUTH_JSONFIELD_ENABLED = True  # social-auth-app-django ... todo: enable this when using pgsql
 # SOCIAL_AUTH_URL_NAMESPACE = 'social'  # social-auth-app-django
 
 SOCIAL_AUTH_ALLOWED_REDIRECT_HOSTS = ['localhost:4200', 'cnn.com', 'yahoo.com',

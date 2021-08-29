@@ -3,7 +3,6 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
-from django.contrib.postgres.fields import CICharField
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
@@ -15,6 +14,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 from dirtyfields import DirtyFieldsMixin
 
 from .validators import SPUnicodeUsernameValidator
+
+from .fields import CICharField
 
 
 # Reference: https://docs.djangoproject.com/en/3.0/topics/auth/customizing/
