@@ -151,3 +151,7 @@ AUTHENTICATION_BACKENDS = [
 # Tell Django to use our login template
 
 LOGIN_URL = '/account/log-in/'
+
+# Configure django-phonenumber-field
+
+PHONENUMBER_DEFAULT_REGION = 'US'
