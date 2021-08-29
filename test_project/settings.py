@@ -147,3 +147,7 @@ AUTHENTICATION_BACKENDS = [
     'django_flex_user.backends.SPFacebookOAuth2',
     'django_flex_user.backends.SPGoogleOAuth2',
 ]  # default: ['django.contrib.auth.backends.ModelBackend',]
+
+# Tell Django to use our login template
+
+LOGIN_URL = '/account/log-in/'
