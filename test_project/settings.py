@@ -247,3 +247,9 @@ SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'django_flex_user.verification.email_val
 SOCIAL_AUTH_FACEBOOK_FORCE_EMAIL_VALIDATION = True
 
 SOCIAL_AUTH_CLEAN_USERNAME_FUNCTION = 'django_flex_user.validators.clean_username'
+
+#
+# Production Variables ... Needed for social-auth-app-django
+#
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
