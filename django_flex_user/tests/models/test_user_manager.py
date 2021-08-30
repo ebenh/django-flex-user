@@ -3,7 +3,7 @@ from django.test import TestCase
 
 class TestUserManager(TestCase):
     """
-    This class is designed to test django_flex_user.models.SPUserManager
+    This class is designed to test django_flex_user.models.FlexUserManager
     """
     _username_values = [{},
                         {'username': None},
@@ -23,7 +23,7 @@ class TestUserManager(TestCase):
                             {'phone_number': '+12025551234'},
                             {'phone_number': 'invalidPhoneNumber'}]
 
-    # note eben: Because django_flex_user.models.SPUserManager._create_user deliberately has no password constraints, there is no
+    # note eben: Because django_flex_user.models.FlexUserManager._create_user deliberately has no password constraints, there is no
     # such invalid password that we can test.
     _password_values = [{},
                         {'password': None},
@@ -63,7 +63,7 @@ class TestUserManager(TestCase):
                                     ('phone_number' not in args or args['phone_number'] is None):
                                 """
                                 If the supplied username, email, and phone_number are simultaneously undefined or None,
-                                django_flex_user.models.SPUserManager._create_user should raise ValidationError.
+                                django_flex_user.models.FlexUserManager._create_user should raise ValidationError.
 
                                 At least one of username, email or phone_number must be defined and not None.
                                 """
@@ -73,7 +73,7 @@ class TestUserManager(TestCase):
                                     args.get('phone_number') == '':
                                 """
                                 If any of the supplied username, email or phone_number are the empty string
-                                django_flex_user.models.SPUserManager._create_user should raise ValidationError.
+                                django_flex_user.models.FlexUserManager._create_user should raise ValidationError.
                                 """
                                 self.assertRaises(ValidationError, create_user_method, **args)
                             elif (args.get('username') and 'invalid' in args['username']) or \
@@ -81,13 +81,13 @@ class TestUserManager(TestCase):
                                     (args.get('phone_number') and 'invalid' in args['phone_number']):
                                 """
                                 If any of the supplied username, email or phone_number are defined and invalid,
-                                django_flex_user.models.SPUserManager._create_user should raise ValidationError.
+                                django_flex_user.models.FlexUserManager._create_user should raise ValidationError.
                                 """
                                 self.assertRaises(ValidationError, create_user_method, **args)
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.models.SPUserManager._create_user should
+                                phone_number and password for which django_flex_user.models.FlexUserManager._create_user should
                                 return a valid SPUser object.
                                 """
                                 user = create_user_method(**args)

@@ -287,7 +287,7 @@ class TestUserModel(TestCase):
     def test_serialize(self):
         """
         This purpose of this method is to test django_flex_user.models.SPUser.natural_key and
-        django_flex_user.models.SPUserManager.get_by_natural_key.
+        django_flex_user.models.FlexUserManager.get_by_natural_key.
 
         :return:
         """
@@ -310,7 +310,7 @@ class TestUserModel(TestCase):
         # Clear user table
         FlexUser.objects.all().delete()
 
-        # Deserialize. Calls django_flex_user.models.SPUser.natural_key and django_flex_user.models.SPUserManager.get_by_natural_key.
+        # Deserialize. Calls django_flex_user.models.SPUser.natural_key and django_flex_user.models.FlexUserManager.get_by_natural_key.
         for obj in serializers.deserialize('json', stream):
             obj.save()
 

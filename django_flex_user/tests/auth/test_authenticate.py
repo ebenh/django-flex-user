@@ -79,7 +79,7 @@ class TestAuthenticate(TestCase):
                                 If the supplied password is the empty string,
                                 django_flex_user.backends.SPModelBackend.authenticate should attempt to authenticate it normally.
                                 
-                                django_flex_user.models.SPUserManager._create_user deliberately puts no restriction on password
+                                django_flex_user.models.FlexUserManager._create_user deliberately puts no restriction on password
                                 complexity, therefore any password is valid. It's worth pointing out that for users
                                 created with None passwords, their passwords are stored as an unusable password. An
                                 unusable password is one for which django_flex_user.backends.SPModelBackend.authenticate should
@@ -181,7 +181,7 @@ class TestAuthenticate(TestCase):
     def test_authenticate_non_normalized_email(self):
         """
         django_flex_user.backends.SPModelBackend.authenticate deliberately does not normalize input. It is the caller's
-        responsibility to normalize email by calling django_flex_user.models.SPUserManager.normalize_email before passing it to
+        responsibility to normalize email by calling django_flex_user.models.FlexUserManager.normalize_email before passing it to
         authenticate.
 
         :return:
