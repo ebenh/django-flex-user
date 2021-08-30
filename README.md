@@ -13,10 +13,18 @@
 
         py -m pipenv shell
 
-4. Run the development server
+4. Initialize database tables
+
+        py manage.py migrate
+
+5. Create an admin user
+
+        py manage.py createsuperuser
+
+7. Run the development server
 
         py manage.py runserver
 
-5. Run tests
+8. Run tests
 
         py manage.py test
