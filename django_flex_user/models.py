@@ -21,7 +21,7 @@ from .fields import CICharField
 # Reference: https://docs.djangoproject.com/en/3.0/topics/auth/customizing/
 # Reference: https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html
 
-class SPUserManager(BaseUserManager):
+class FlexUserManager(BaseUserManager):
     """
     Our custom implementation of django.contrib.auth.models.UserManager.
     """
@@ -201,7 +201,7 @@ class SPUser(AbstractBaseUser, PermissionsMixin, DirtyFieldsMixin):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
 
-    objects = SPUserManager()
+    objects = FlexUserManager()
 
     class Meta:
         verbose_name = _('user')

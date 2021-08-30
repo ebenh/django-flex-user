@@ -284,31 +284,31 @@ class TestUserManager(TestCase):
         self.assertEqual(user.email, 'validEmail@xn--bcher-kva.example')
 
     def test_normalize_email(self):
-        from django_flex_user.models import SPUserManager
+        from django_flex_user.models import FlexUserManager
 
-        email = SPUserManager.normalize_email(None)
+        email = FlexUserManager.normalize_email(None)
         self.assertIs(email, None)
 
-        email = SPUserManager.normalize_email('')
+        email = FlexUserManager.normalize_email('')
         self.assertEqual(email, '')
 
-        email = SPUserManager.normalize_email('validEmail@example.com')
+        email = FlexUserManager.normalize_email('validEmail@example.com')
         self.assertEqual(email, 'validEmail@example.com')
 
-        email = SPUserManager.normalize_email('validEmail@EXAMPLE.com')
+        email = FlexUserManager.normalize_email('validEmail@EXAMPLE.com')
         self.assertEqual(email, 'validEmail@example.com')
 
-        email = SPUserManager.normalize_email('validEmail@bücher.example')
+        email = FlexUserManager.normalize_email('validEmail@bücher.example')
         self.assertEqual(email, 'validEmail@xn--bcher-kva.example')
 
-        email = SPUserManager.normalize_email('validEmail@bÜcher.example')
+        email = FlexUserManager.normalize_email('validEmail@bÜcher.example')
         self.assertEqual(email, 'validEmail@xn--bcher-kva.example')
 
-        email = SPUserManager.normalize_email('validEmail@xn--bcher-kva.example')
+        email = FlexUserManager.normalize_email('validEmail@xn--bcher-kva.example')
         self.assertEqual(email, 'validEmail@xn--bcher-kva.example')
 
         # Invalid IDNA encoding
-        email = SPUserManager.normalize_email('invalidEmail@xn--123.example')
+        email = FlexUserManager.normalize_email('invalidEmail@xn--123.example')
         self.assertEqual(email, 'invalidEmail@xn--123.example')
 
         # Homograph
@@ -316,7 +316,7 @@ class TestUserManager(TestCase):
         cyrillic_a = 'validEmail@exаmple.com'  # Cyrillic "a" in domain part
         self.assertNotEqual(latin_a, cyrillic_a)
 
-        email = SPUserManager.normalize_email(cyrillic_a)
+        email = FlexUserManager.normalize_email(cyrillic_a)
         self.assertEqual(email, 'validEmail@xn--exmple-4nf.com')
 
-        self.assertNotEqual(SPUserManager.normalize_email(latin_a), SPUserManager.normalize_email(cyrillic_a))
+        self.assertNotEqual(FlexUserManager.normalize_email(latin_a), FlexUserManager.normalize_email(cyrillic_a))
