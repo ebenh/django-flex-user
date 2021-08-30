@@ -141,7 +141,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
 
                             By default, updating a user's password invalidates all sessions for the user. To make it so
                             that the user is *not* signed out by a password change, in
-                            django_flex_user.serializers.SPUserSerializer.update we call
+                            django_flex_user.serializers.FlexUserSerializer.update we call
                             django.contrib.auth.update_session_auth_hash which (1) generates a new session key for the
                             user's current session (2) updates the current session's _auth_user_hash with a value based
                             on the user's new password (because the value of _auth_user_hash for all other sessions are
@@ -246,7 +246,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
 
                             By default, updating a user's password invalidates all sessions for the user. To make it so
                             that the user is *not* signed out by a password change, in
-                            django_flex_user.serializers.SPUserSerializer.update we call
+                            django_flex_user.serializers.FlexUserSerializer.update we call
                             django.contrib.auth.update_session_auth_hash which (1) generates a new session key for the
                             user's current session (2) updates the current session's _auth_user_hash with a value based
                             on the user's new password (because the value of _auth_user_hash for all other sessions are

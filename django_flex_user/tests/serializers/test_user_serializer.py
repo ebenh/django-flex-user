@@ -3,7 +3,7 @@ from django.test import TestCase
 
 class TestUserSerializer(TestCase):
     """
-    This class is designed to test django_flex_user.serializers.SPUserSerializer
+    This class is designed to test django_flex_user.serializers.FlexUserSerializer
     """
     _username_values = [{},
                         {'username': None},
@@ -55,7 +55,7 @@ class TestUserSerializer(TestCase):
                                     ('phone_number' not in data or data['phone_number'] is None):
                                 """
                                 If the supplied username, email, and phone_number are simultaneously undefined or None,
-                                django_flex_user.serializers.SPUserSerializer.is_valid should return False.
+                                django_flex_user.serializers.FlexUserSerializer.is_valid should return False.
 
                                 At least one of username, email or phone_number must be defined and not None.
                                 """
@@ -63,7 +63,7 @@ class TestUserSerializer(TestCase):
                             elif not data.get('password'):
                                 """
                                 If the supplied password is undefined, None or the empty string,
-                                django_flex_user.serializers.SPUserSerializer.is_valid should return False.
+                                django_flex_user.serializers.FlexUserSerializer.is_valid should return False.
                                 """
                                 self.assertIs(serializer.is_valid(), False)
                             elif data.get('username') == '' or \
@@ -71,7 +71,7 @@ class TestUserSerializer(TestCase):
                                     data.get('phone_number') == '':
                                 """
                                 If any of the supplied username, email or phone_number are the empty string
-                                django_flex_user.serializers.SPUserSerializer.is_valid should return False.
+                                django_flex_user.serializers.FlexUserSerializer.is_valid should return False.
                                 """
                                 self.assertIs(serializer.is_valid(), False)
                             elif (data.get('username') and 'invalid' in data['username']) or \
@@ -80,13 +80,13 @@ class TestUserSerializer(TestCase):
                                     (data.get('password') and 'invalid' in data['password']):
                                 """
                                 If any of the supplied username, email, phone_number or password are defined and
-                                invalid,  django_flex_user.serializers.SPUserSerializer.is_valid should return False.
+                                invalid,  django_flex_user.serializers.FlexUserSerializer.is_valid should return False.
                                 """
                                 self.assertIs(serializer.is_valid(), False)
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.serializers.SPUserSerializer.is_valid return
+                                phone_number and password for which django_flex_user.serializers.FlexUserSerializer.is_valid return
                                 True.
                                 """
                                 self.assertIs(serializer.is_valid(), True)
@@ -101,7 +101,7 @@ class TestUserSerializer(TestCase):
                                 self.assertEqual(user.phone_number, data.get('phone_number'))
 
                                 self.assertTrue(user.password)
-                                # django_flex_user.serializers.SPUserSerializer must always return a user with a usable password
+                                # django_flex_user.serializers.FlexUserSerializer must always return a user with a usable password
                                 self.assertTrue(user.has_usable_password())
 
                                 self.assertEqual(user.date_joined, timezone.now())
@@ -143,7 +143,7 @@ class TestUserSerializer(TestCase):
                             if 'password' in data and not data['password']:
                                 """
                                 If the supplied password is defined and either None or the empty string,
-                                django_flex_user.serializers.SPUserSerializer.is_valid should return False.
+                                django_flex_user.serializers.FlexUserSerializer.is_valid should return False.
                                 """
                                 self.assertIs(serializer.is_valid(), False)
                             elif ('username' in data and data['username'] is None) and \
@@ -151,7 +151,7 @@ class TestUserSerializer(TestCase):
                                     ('phone_number' not in data or data['phone_number'] is None):
                                 """
                                 If the supplied username is None, and the supplied email and phone_number are
-                                simultaneously undefined or None, django_flex_user.serializers.SPUserSerializer.is_valid should
+                                simultaneously undefined or None, django_flex_user.serializers.FlexUserSerializer.is_valid should
                                 return False.
                                 """
                                 self.assertIs(serializer.is_valid(), False)
@@ -160,7 +160,7 @@ class TestUserSerializer(TestCase):
                                     data.get('phone_number') == '':
                                 """
                                 If any of the supplied username, email or phone_number are the empty string
-                                django_flex_user.serializers.SPUserSerializer.is_valid should return False.
+                                django_flex_user.serializers.FlexUserSerializer.is_valid should return False.
                                 """
                                 self.assertIs(serializer.is_valid(), False)
                             elif (data.get('username') and 'invalid' in data['username']) or \
@@ -169,13 +169,13 @@ class TestUserSerializer(TestCase):
                                     (data.get('password') and 'invalid' in data['password']):
                                 """
                                 If any of the supplied username, email, phone_number or password are defined and
-                                invalid,  django_flex_user.serializers.SPUserSerializer.is_valid should return False.
+                                invalid,  django_flex_user.serializers.FlexUserSerializer.is_valid should return False.
                                 """
                                 self.assertIs(serializer.is_valid(), False)
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.serializers.SPUserSerializer.is_valid return
+                                phone_number and password for which django_flex_user.serializers.FlexUserSerializer.is_valid return
                                 True.
                                 """
                                 self.assertIs(serializer.is_valid(), True)
@@ -190,7 +190,7 @@ class TestUserSerializer(TestCase):
                                 self.assertEqual(user.phone_number, data.get('phone_number'))
 
                                 self.assertTrue(user.password)
-                                # django_flex_user.serializers.SPUserSerializer must always return a user with a usable password
+                                # django_flex_user.serializers.FlexUserSerializer must always return a user with a usable password
                                 self.assertTrue(user.has_usable_password())
 
                                 self.assertEqual(user.date_joined, timezone.now())
