@@ -19,7 +19,7 @@ from django_otp.plugins.otp_email.models import EmailDevice
 
 from social_django.models import UserSocialAuth
 
-from .serializers import SPUserSerializer, AuthenticationSerializer, EmailDeviceSerializer, OTPSerializer, \
+from .serializers import FlexUserSerializer, AuthenticationSerializer, EmailDeviceSerializer, OTPSerializer, \
     UserSocialAuthSerializer
 
 UserModel = get_user_model()
@@ -36,7 +36,7 @@ def get_csrf_token(request):
 
 
 class SPUsers(generics.GenericAPIView):
-    serializer_class = SPUserSerializer
+    serializer_class = FlexUserSerializer
     authentication_classes = [SessionAuthentication]
     permission_classes = [AllowAny]
 
@@ -51,7 +51,7 @@ class SPUsers(generics.GenericAPIView):
 
 
 class SPUser(generics.GenericAPIView):
-    serializer_class = SPUserSerializer
+    serializer_class = FlexUserSerializer
     authentication_classes = [SessionAuthentication, JWTAuthentication]
     permission_classes = [IsAuthenticated]
 

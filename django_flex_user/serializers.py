@@ -23,7 +23,7 @@ UserModel = get_user_model()
 # https://stackoverflow.com/questions/31278418/django-rest-framework-custom-fields-validation
 # https://stackoverflow.com/questions/27591574/order-of-serializer-validation-in-django-rest-framework
 
-class SPUserSerializer(serializers.ModelSerializer):
+class FlexUserSerializer(serializers.ModelSerializer):
     email_verified = serializers.SerializerMethodField('get_email_verified')
     phone_number_verified = serializers.SerializerMethodField('get_phone_number_verified')
 
@@ -87,7 +87,7 @@ class SPUserSerializer(serializers.ModelSerializer):
 
         # Extract username, email and phone_number from supplied instance and merge it with attrs
         instance = self.instance if self.instance else self.Meta.model()
-        serializer = SPUserSerializer(instance=instance)
+        serializer = FlexUserSerializer(instance=instance)
         data = {**serializer.data, **attrs}
 
         errors = {}
