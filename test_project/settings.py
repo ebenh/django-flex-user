@@ -222,7 +222,7 @@ SOCIAL_AUTH_PIPELINE = (
 
     # Send a validation email to the user to verify its email address.
     # 'social_core.pipeline.mail.mail_validation',
-    'account.verification.mail_validation',
+    'django_flex_user.verification.mail_validation',
 
     # Associates the current social details with another user account with
     # a similar email address.
@@ -243,7 +243,7 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 SOCIAL_AUTH_EMAIL_VALIDATION_URL = 'http://localhost:4200/verify/email/'
-SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'account.verification.email_validation_link'
+SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'django_flex_user.verification.email_validation_link'
 SOCIAL_AUTH_FACEBOOK_FORCE_EMAIL_VALIDATION = True
 
-SOCIAL_AUTH_CLEAN_USERNAME_FUNCTION = 'account.validators.clean_username'
+SOCIAL_AUTH_CLEAN_USERNAME_FUNCTION = 'django_flex_user.validators.clean_username'
