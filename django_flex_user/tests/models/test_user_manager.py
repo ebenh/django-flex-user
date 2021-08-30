@@ -37,11 +37,11 @@ class TestUserManager(TestCase):
         self._test_create_user(superuser=True)
 
     def _test_create_user(self, superuser):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.db import transaction
         from freezegun import freeze_time
 
-        create_user_method = SPUser.objects.create_user if not superuser else SPUser.objects.create_superuser
+        create_user_method = FlexUser.objects.create_user if not superuser else FlexUser.objects.create_superuser
 
         for i in self._username_values:
             for j in self._email_values:
@@ -120,66 +120,66 @@ class TestUserManager(TestCase):
                             transaction.set_rollback(True)
 
     def test_create_user_username_case_insensitivity(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        user = SPUser.objects.create_user(username='validUsername')
+        user = FlexUser.objects.create_user(username='validUsername')
         # Ensure username was saved exactly as it was entered
         self.assertEqual(user.username, 'validUsername')
 
-        self.assertRaises(ValidationError, SPUser.objects.create_user, username='VALIDUSERNAME')
+        self.assertRaises(ValidationError, FlexUser.objects.create_user, username='VALIDUSERNAME')
 
     def test_create_superuser_username_case_insensitivity(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        user = SPUser.objects.create_superuser(username='validUsername')
+        user = FlexUser.objects.create_superuser(username='validUsername')
         # Ensure username was saved exactly as it was entered
         self.assertEqual(user.username, 'validUsername')
 
-        self.assertRaises(ValidationError, SPUser.objects.create_superuser, username='VALIDUSERNAME')
+        self.assertRaises(ValidationError, FlexUser.objects.create_superuser, username='VALIDUSERNAME')
 
     def test_create_user_duplicate_username(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        SPUser.objects.create_user(username='validUsername')
-        self.assertRaises(ValidationError, SPUser.objects.create_user, username='validUsername')
+        FlexUser.objects.create_user(username='validUsername')
+        self.assertRaises(ValidationError, FlexUser.objects.create_user, username='validUsername')
 
     def test_create_superuser_duplicate_username(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        SPUser.objects.create_superuser(username='validUsername')
-        self.assertRaises(ValidationError, SPUser.objects.create_superuser, username='validUsername')
+        FlexUser.objects.create_superuser(username='validUsername')
+        self.assertRaises(ValidationError, FlexUser.objects.create_superuser, username='validUsername')
 
     def test_create_user_duplicate_email(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        SPUser.objects.create_user(email='validEmail@example.com')
-        self.assertRaises(ValidationError, SPUser.objects.create_user, email='validEmail@example.com')
+        FlexUser.objects.create_user(email='validEmail@example.com')
+        self.assertRaises(ValidationError, FlexUser.objects.create_user, email='validEmail@example.com')
 
     def test_create_superuser_duplicate_email(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        SPUser.objects.create_superuser(email='validEmail@example.com')
-        self.assertRaises(ValidationError, SPUser.objects.create_superuser, email='validEmail@example.com')
+        FlexUser.objects.create_superuser(email='validEmail@example.com')
+        self.assertRaises(ValidationError, FlexUser.objects.create_superuser, email='validEmail@example.com')
 
     def test_create_user_duplicate_phone_number(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        SPUser.objects.create_user(phone_number='+12025551234')
-        self.assertRaises(ValidationError, SPUser.objects.create_user, phone_number='+12025551234')
+        FlexUser.objects.create_user(phone_number='+12025551234')
+        self.assertRaises(ValidationError, FlexUser.objects.create_user, phone_number='+12025551234')
 
     def test_create_superuser_duplicate_phone_number(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        SPUser.objects.create_superuser(phone_number='+12025551234')
-        self.assertRaises(ValidationError, SPUser.objects.create_superuser, phone_number='+12025551234')
+        FlexUser.objects.create_superuser(phone_number='+12025551234')
+        self.assertRaises(ValidationError, FlexUser.objects.create_superuser, phone_number='+12025551234')
 
     def test_create_user_ambiguous_username(self):
         """
@@ -187,11 +187,11 @@ class TestUserManager(TestCase):
 
         :return:
         """
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        self.assertRaises(ValidationError, SPUser.objects.create_user, username='validEmail@example.com')
-        self.assertRaises(ValidationError, SPUser.objects.create_user, username='+12025551234')
+        self.assertRaises(ValidationError, FlexUser.objects.create_user, username='validEmail@example.com')
+        self.assertRaises(ValidationError, FlexUser.objects.create_user, username='+12025551234')
 
     def test_create_superuser_ambiguous_username(self):
         """
@@ -199,11 +199,11 @@ class TestUserManager(TestCase):
 
         :return:
         """
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        self.assertRaises(ValidationError, SPUser.objects.create_superuser, username='validEmail@example.com')
-        self.assertRaises(ValidationError, SPUser.objects.create_superuser, username='+12025551234')
+        self.assertRaises(ValidationError, FlexUser.objects.create_superuser, username='validEmail@example.com')
+        self.assertRaises(ValidationError, FlexUser.objects.create_superuser, username='+12025551234')
 
     def test_create_user_ambiguous_email(self):
         """
@@ -211,11 +211,11 @@ class TestUserManager(TestCase):
 
         :return:
         """
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        self.assertRaises(ValidationError, SPUser.objects.create_user, email='validUsername')
-        self.assertRaises(ValidationError, SPUser.objects.create_user, email='+12025551234')
+        self.assertRaises(ValidationError, FlexUser.objects.create_user, email='validUsername')
+        self.assertRaises(ValidationError, FlexUser.objects.create_user, email='+12025551234')
 
     def test_create_superuser_ambiguous_email(self):
         """
@@ -223,11 +223,11 @@ class TestUserManager(TestCase):
 
         :return:
         """
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        self.assertRaises(ValidationError, SPUser.objects.create_superuser, email='validUsername')
-        self.assertRaises(ValidationError, SPUser.objects.create_superuser, email='+12025551234')
+        self.assertRaises(ValidationError, FlexUser.objects.create_superuser, email='validUsername')
+        self.assertRaises(ValidationError, FlexUser.objects.create_superuser, email='+12025551234')
 
     def test_create_user_ambiguous_phone_number(self):
         """
@@ -235,11 +235,11 @@ class TestUserManager(TestCase):
 
         :return:
         """
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        self.assertRaises(ValidationError, SPUser.objects.create_user, phone_number='validUsername')
-        self.assertRaises(ValidationError, SPUser.objects.create_user, phone_number='validEmail@example.com')
+        self.assertRaises(ValidationError, FlexUser.objects.create_user, phone_number='validUsername')
+        self.assertRaises(ValidationError, FlexUser.objects.create_user, phone_number='validEmail@example.com')
 
     def test_create_superuser_ambiguous_phone_number(self):
         """
@@ -247,40 +247,40 @@ class TestUserManager(TestCase):
 
         :return:
         """
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        self.assertRaises(ValidationError, SPUser.objects.create_superuser, phone_number='validUsername')
-        self.assertRaises(ValidationError, SPUser.objects.create_superuser, phone_number='validEmail@example.com')
+        self.assertRaises(ValidationError, FlexUser.objects.create_superuser, phone_number='validUsername')
+        self.assertRaises(ValidationError, FlexUser.objects.create_superuser, phone_number='validEmail@example.com')
 
     def test_create_user_normalize_username(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
         nfd = 'validUsérname'  # é = U+0065 U+0301
         nfkc = 'validUsérname'  # é = U+00e9
 
-        user = SPUser.objects.create_user(username=nfd)
+        user = FlexUser.objects.create_user(username=nfd)
         self.assertEqual(user.username, nfkc)
 
     def test_create_superuser_normalize_username(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
         nfd = 'validUsérname'  # é = U+0065 U+0301
         nfkc = 'validUsérname'  # é = U+00e9
 
-        user = SPUser.objects.create_superuser(username=nfd)
+        user = FlexUser.objects.create_superuser(username=nfd)
         self.assertEqual(user.username, nfkc)
 
     def test_create_user_normalize_email(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
-        user = SPUser.objects.create_user(email='validEmail@bücher.example')
+        user = FlexUser.objects.create_user(email='validEmail@bücher.example')
         self.assertEqual(user.email, 'validEmail@xn--bcher-kva.example')
 
     def test_create_superuser_normalize_email(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
-        user = SPUser.objects.create_superuser(email='validEmail@bücher.example')
+        user = FlexUser.objects.create_superuser(email='validEmail@bücher.example')
         self.assertEqual(user.email, 'validEmail@xn--bcher-kva.example')
 
     def test_normalize_email(self):

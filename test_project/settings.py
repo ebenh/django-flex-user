@@ -138,7 +138,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Tell Django to use our new user model
 
-AUTH_USER_MODEL = 'django_flex_user.SPUser'
+AUTH_USER_MODEL = 'django_flex_user.FlexUser'
 
 # Tell Django to use our authentication backend
 

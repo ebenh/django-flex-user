@@ -34,10 +34,10 @@ class TestAuthenticate(TestCase):
                         {'password': 'invalidPassword'}]
 
     def test_authenticate(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.db import transaction
 
-        SPUser.objects.create_user(
+        FlexUser.objects.create_user(
             username='validUsername',
             email='validEmail@example.com',
             phone_number='+12025551234',
@@ -119,17 +119,17 @@ class TestAuthenticate(TestCase):
                             transaction.set_rollback(True)
 
     def test_authenticate_with_unusable_password(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.contrib.auth import authenticate
 
-        SPUser.objects.create_user(username='validUsername')
+        FlexUser.objects.create_user(username='validUsername')
 
         self.assertIsNone(authenticate(username='validUsername'))
         self.assertIsNone(authenticate(username='validUsername', password=None))
         self.assertIsNone(authenticate(username='validUsername', password=''))
         self.assertIsNone(authenticate(username='validUsername', password='invalidPassword'))
 
-        SPUser.objects.create_user(email='validEmail@example.com', password=None)
+        FlexUser.objects.create_user(email='validEmail@example.com', password=None)
 
         self.assertIsNone(authenticate(email='validEmail@example.com'))
         self.assertIsNone(authenticate(email='validEmail@example.com', password=None))
@@ -137,10 +137,10 @@ class TestAuthenticate(TestCase):
         self.assertIsNone(authenticate(email='validEmail@example.com', password='invalidPassword'))
 
     def test_authenticate_inactive_user(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.contrib.auth import authenticate
 
-        user = SPUser.objects.create_user(username='validUsername', password='validPassword', is_active=False)
+        user = FlexUser.objects.create_user(username='validUsername', password='validPassword', is_active=False)
 
         self.assertIsNone(authenticate(username='validUsername'))
         self.assertIsNone(authenticate(username='validUsername', password=None))
@@ -148,10 +148,10 @@ class TestAuthenticate(TestCase):
         self.assertIsNone(authenticate(username='validUsername', password='validPassword'))
 
     def test_authenticate_username_case_insensitivity(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.contrib.auth import authenticate
 
-        user1 = SPUser.objects.create_user(username='validUsername', password='validPassword')
+        user1 = FlexUser.objects.create_user(username='validUsername', password='validPassword')
         self.assertIsNotNone(authenticate(username='VALIDUSERNAME', password='validPassword'))
 
     def test_authenticate_non_normalized_username(self):
@@ -162,20 +162,20 @@ class TestAuthenticate(TestCase):
 
         :return:
         """
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.contrib.auth import authenticate
 
         nfd = 'validUsérname'  # é = U+0065 U+0301
         nfkc = 'validUsérname'  # é = U+00e9
 
-        user1 = SPUser.objects.create_user(username=nfd, password='validPassword')
+        user1 = FlexUser.objects.create_user(username=nfd, password='validPassword')
         self.assertEqual(user1.username, nfkc)
 
         # This call to authenticate should fail (i.e. return None) because username has not been normalized
         self.assertIsNone(authenticate(username=nfd, password='validPassword'))
 
         # This call to authenticate succeeds because we normalize username
-        user2 = authenticate(username=SPUser.normalize_username(nfd), password='validPassword')
+        user2 = authenticate(username=FlexUser.normalize_username(nfd), password='validPassword')
         self.assertEqual(user1, user2)
 
     def test_authenticate_non_normalized_email(self):
@@ -186,10 +186,10 @@ class TestAuthenticate(TestCase):
 
         :return:
         """
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.contrib.auth import authenticate
 
-        user1 = SPUser.objects.create_user(email='validEmail@bücher.example', password='validPassword')
+        user1 = FlexUser.objects.create_user(email='validEmail@bücher.example', password='validPassword')
         self.assertEqual(user1.email, 'validEmail@xn--bcher-kva.example')
 
         # This call to authenticate should fail (i.e. return None) because email has not been normalized
@@ -197,7 +197,7 @@ class TestAuthenticate(TestCase):
 
         # This call to authenticate succeeds because we normalize email
         user2 = authenticate(
-            email=SPUser.objects.normalize_email('validEmail@bücher.example'),
+            email=FlexUser.objects.normalize_email('validEmail@bücher.example'),
             password='validPassword'
         )
         self.assertEqual(user1, user2)

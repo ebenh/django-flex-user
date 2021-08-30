@@ -87,9 +87,9 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                                {'password': 'invalid'}]
 
     def setUp(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
-        self.user = SPUser.objects.create_user(username='validUsername', password='validPassword')
+        self.user = FlexUser.objects.create_user(username='validUsername', password='validPassword')
 
     def test_method_get(self):
         is_authenticated = self.client.login(username='validUsername', password='validPassword')
@@ -325,9 +325,9 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                                 transaction.set_rollback(True)
 
     def test_method_patch_username_case_insensitivity(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
-        SPUser.objects.create_user(username='validUsername2', password='validPassword')
+        FlexUser.objects.create_user(username='validUsername2', password='validPassword')
 
         self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
 
@@ -338,9 +338,9 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
         self.client.logout()
 
     def test_method_patch_duplicate_username(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
-        SPUser.objects.create_user(username='validUsername2', password='validPassword')
+        FlexUser.objects.create_user(username='validUsername2', password='validPassword')
 
         self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
 
@@ -351,9 +351,9 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
         self.client.logout()
 
     def test_method_patch_duplicate_email(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
-        SPUser.objects.create_user(email='validEmail@example.com', password='validPassword')
+        FlexUser.objects.create_user(email='validEmail@example.com', password='validPassword')
 
         self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
 
@@ -364,9 +364,9 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
         self.client.logout()
 
     def test_method_patch_duplicate_phone_number(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
-        SPUser.objects.create_user(phone_number='+12025551234', password='validPassword')
+        FlexUser.objects.create_user(phone_number='+12025551234', password='validPassword')
 
         self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
 
