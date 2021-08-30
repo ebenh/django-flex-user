@@ -1,5 +1,7 @@
 # This module is based on this blog entry:
 # https://concisecoder.io/2018/10/27/case-insensitive-fields-in-django-models/
+# Further reading:
+# https://stackoverflow.com/questions/7773341/case-insensitive-unique-model-fields-in-django
 
 try:
     from django.contrib.postgres.fields import CICharField as PGCICharField
