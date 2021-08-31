@@ -21,7 +21,7 @@ def _lazy_re_compile(regex, flags=0):
 
 
 @deconstructible
-class MyRegexValidator(RegexValidator):
+class _UnicodeRegexValidator(RegexValidator):
     def __init__(self, regex=None, message=None, code=None, inverse_match=None, flags=None):
         if regex is not None:
             self.regex = regex
@@ -40,7 +40,7 @@ class MyRegexValidator(RegexValidator):
 
 
 @deconstructible()
-class FlexUserUnicodeUsernameValidator(MyRegexValidator):
+class FlexUserUnicodeUsernameValidator(_UnicodeRegexValidator):
     """
     Our implementation of django.contrib.auth.validators.UnicodeUsernameValidator.
 
