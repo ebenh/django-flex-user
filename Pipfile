@@ -15,9 +15,9 @@ django-dirtyfields = "*"
 djangorestframework-simplejwt = "*"
 psycopg2 = "*"
 phonenumbers = "*"
-freezegun = "*"
 
 [dev-packages]
+freezegun = "*"
 
 [requires]
 python_version = "3.7"
