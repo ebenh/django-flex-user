@@ -6,7 +6,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.utils.translation import gettext_lazy as _
 
-from .forms import AuthenticationForm
+from .forms import FlexUserAuthenticationForm
 
 # Reference: https://docs.djangoproject.com/en/3.0/topics/auth/customizing/
 
@@ -100,4 +100,4 @@ class FlexUserAdmin(UserAdmin):
 # Register your models here.
 admin.site.register(UserModel, FlexUserAdmin)
 # admin.site.login_template = 'account/login.html'
-admin.site.login_form = AuthenticationForm
+admin.site.login_form = FlexUserAuthenticationForm
