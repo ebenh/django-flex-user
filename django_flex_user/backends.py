@@ -9,7 +9,7 @@ from social_core.backends.google import GoogleOAuth2
 UserModel = get_user_model()
 
 
-class SPModelBackend(ModelBackend):
+class FlexUserModelBackend(ModelBackend):
     """
     Our implementation of django.contrib.auth.backends.ModelBackend.
     """

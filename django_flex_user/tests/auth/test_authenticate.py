@@ -3,11 +3,11 @@ from django.test import TestCase
 
 class TestAuthenticate(TestCase):
     """
-    This class is designed to test django_flex_user.backends.SPModelBackend.authenticate
+    This class is designed to test django_flex_user.backends.FlexUserModelBackend.authenticate
 
     To make it the active authentication backend, set the following in settings.py:
 
-    AUTHENTICATION_BACKENDS = ['django_flex_user.backends.SPModelBackend']
+    AUTHENTICATION_BACKENDS = ['django_flex_user.backends.FlexUserModelBackend']
     """
     _username_values = [{},
                         {'username': None},
@@ -63,7 +63,7 @@ class TestAuthenticate(TestCase):
                                     args.get('phone_number') is None:
                                 """
                                 If the supplied username, email, and phone_number are simultaneously undefined or None,
-                                django_flex_user.backends.SPModelBackend.authenticate should raise ValueError.
+                                django_flex_user.backends.FlexUserModelBackend.authenticate should raise ValueError.
                                 
                                 At least one of username, email or phone_number must be defined and not None.
                                 """
@@ -71,23 +71,23 @@ class TestAuthenticate(TestCase):
                             elif args.get('password') is None:
                                 """
                                 If the supplied password is undefined or None,
-                                django_flex_user.backends.SPModelBackend.authenticate should return None.
+                                django_flex_user.backends.FlexUserModelBackend.authenticate should return None.
                                 """
                                 self.assertIsNone(authenticate(**args))
                             elif args.get('password') == '':
                                 """
                                 If the supplied password is the empty string,
-                                django_flex_user.backends.SPModelBackend.authenticate should attempt to authenticate it normally.
+                                django_flex_user.backends.FlexUserModelBackend.authenticate should attempt to authenticate it normally.
                                 
                                 django_flex_user.models.FlexUserManager._create_user deliberately puts no restriction on password
                                 complexity, therefore any password is valid. It's worth pointing out that for users
                                 created with None passwords, their passwords are stored as an unusable password. An
-                                unusable password is one for which django_flex_user.backends.SPModelBackend.authenticate should
+                                unusable password is one for which django_flex_user.backends.FlexUserModelBackend.authenticate should
                                 always return None. Unusable passwords are random strings prefixed with the unusable
                                 password prefix "!".                              
                                 
                                 In this test case, empty string does not match the stored password of our test user,
-                                therefore django_flex_user.backends.SPModelBackend.authenticate should return None.
+                                therefore django_flex_user.backends.FlexUserModelBackend.authenticate should return None.
                                 """
                                 self.assertIsNone(authenticate(**args))
                             elif args.get('username') == '' or \
@@ -95,7 +95,7 @@ class TestAuthenticate(TestCase):
                                     args.get('phone_number') == '':
                                 """
                                 If any of the supplied username, email or phone_number are the empty string,
-                                django_flex_user.backends.SPModelBackend.authenticate should return None. This is because empty
+                                django_flex_user.backends.FlexUserModelBackend.authenticate should return None. This is because empty
                                 string does not form a valid username, email or phone_number.
                                 """
                                 self.assertIsNone(authenticate(**args))
@@ -105,13 +105,13 @@ class TestAuthenticate(TestCase):
                                     (args.get('password') and 'invalid' in args['password']):
                                 """
                                 If any of the supplied username, email, phone_number or password are defined and
-                                invalid, django_flex_user.backends.SPModelBackend.authenticate should return None.
+                                invalid, django_flex_user.backends.FlexUserModelBackend.authenticate should return None.
                                 """
                                 self.assertIsNone(authenticate(**args))
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.backends.SPModelBackend.authenticate should
+                                phone_number and password for which django_flex_user.backends.FlexUserModelBackend.authenticate should
                                 return a valid (i.e. not None) FlexUser object.
                                 """
                                 self.assertIsNotNone(authenticate(**args))
@@ -156,7 +156,7 @@ class TestAuthenticate(TestCase):
 
     def test_authenticate_non_normalized_username(self):
         """
-        django_flex_user.backends.SPModelBackend.authenticate deliberately does not normalize input. It is the callers
+        django_flex_user.backends.FlexUserModelBackend.authenticate deliberately does not normalize input. It is the callers
         responsibility to normalize username by calling django_flex_user.models.FlexUser.normalize_username before passing it to
         authenticate.
 
@@ -180,7 +180,7 @@ class TestAuthenticate(TestCase):
 
     def test_authenticate_non_normalized_email(self):
         """
-        django_flex_user.backends.SPModelBackend.authenticate deliberately does not normalize input. It is the caller's
+        django_flex_user.backends.FlexUserModelBackend.authenticate deliberately does not normalize input. It is the caller's
         responsibility to normalize email by calling django_flex_user.models.FlexUserManager.normalize_email before passing it to
         authenticate.
 

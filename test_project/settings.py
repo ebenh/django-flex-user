@@ -143,7 +143,7 @@ AUTH_USER_MODEL = 'django_flex_user.FlexUser'
 # Tell Django to use our authentication backend
 
 AUTHENTICATION_BACKENDS = [
-    'django_flex_user.backends.SPModelBackend',
+    'django_flex_user.backends.FlexUserModelBackend',
     'django_flex_user.backends.SPFacebookOAuth2',
     'django_flex_user.backends.SPGoogleOAuth2',
 ]  # default: ['django.contrib.auth.backends.ModelBackend',]

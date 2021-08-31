@@ -162,7 +162,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
                             For good measure/symmetry we also call django.test.client.Client.logout at the end of each
                             iteration.                       
                             """
-                            self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+                            self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
                             response = self.client.patch(self._REST_ENDPOINT_PATH, data=data, format='json')
 
@@ -267,7 +267,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
                             For good measure/symmetry we also call django.test.client.Client.logout at the end of each
                             iteration.                       
                             """
-                            self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+                            self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
                             response = self.client.patch(self._REST_ENDPOINT_PATH, data=data, format='multipart')
 
@@ -329,7 +329,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
 
         FlexUser.objects.create_user(username='validUsername2', password='validPassword')
 
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         data = {'username': 'VALIDUSERNAME2'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)
@@ -342,7 +342,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
 
         FlexUser.objects.create_user(username='validUsername2', password='validPassword')
 
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         data = {'username': 'validUsername2'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)
@@ -355,7 +355,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
 
         FlexUser.objects.create_user(email='validEmail@example.com', password='validPassword')
 
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         data = {'email': 'validEmail@example.com'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)
@@ -368,7 +368,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
 
         FlexUser.objects.create_user(phone_number='+12025551234', password='validPassword')
 
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         data = {'phone_number': '+12025551234'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)
@@ -382,7 +382,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
 
         :return:
         """
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         data = {'username': 'validEmail@example.com'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)
@@ -400,7 +400,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
 
         :return:
         """
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         data = {'email': 'validUsername'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)
@@ -418,7 +418,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
 
         :return:
         """
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         data = {'phone_number': 'validUsername'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)
@@ -431,7 +431,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
         self.client.logout()
 
     def test_method_patch_normalize_username(self):
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         nfd = 'validUsérname'  # é = U+0065 U+0301
         nfkc = 'validUsérname'  # é = U+00e9
@@ -444,7 +444,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
         self.client.logout()
 
     def test_method_patch_normalize_email(self):
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         data = {'email': 'validEmail@bücher.example'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)

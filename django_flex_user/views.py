@@ -45,7 +45,7 @@ class FlexUsers(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            login(request, user, backend='django_flex_user.backends.SPModelBackend')
+            login(request, user, backend='django_flex_user.backends.FlexUserModelBackend')
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
