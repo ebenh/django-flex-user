@@ -35,7 +35,7 @@ def get_csrf_token(request):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class SPUsers(generics.GenericAPIView):
+class FlexUsers(generics.GenericAPIView):
     serializer_class = FlexUserSerializer
     authentication_classes = [SessionAuthentication]
     permission_classes = [AllowAny]

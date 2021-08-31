@@ -6,7 +6,7 @@ from . import views
 
 urlpatterns = [
     path('csrf-tokens/', views.get_csrf_token),
-    path('users/', views.SPUsers.as_view()),
+    path('users/', views.FlexUsers.as_view()),
     path('users/user/', views.FlexUser.as_view()),
     path('users/user/oauth-providers/', views.OAuthProviders.as_view()),
     path('sessions/', views.Sessions.as_view()),
