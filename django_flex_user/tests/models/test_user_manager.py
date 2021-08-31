@@ -88,7 +88,7 @@ class TestUserManager(TestCase):
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
                                 phone_number and password for which django_flex_user.models.FlexUserManager._create_user should
-                                return a valid SPUser object.
+                                return a valid FlexUser object.
                                 """
                                 user = create_user_method(**args)
 

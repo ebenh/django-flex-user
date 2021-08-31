@@ -121,8 +121,8 @@ class FlexUserSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        # Ordinarily we would call django_flex_user.models.SPUser.objects.create_user to create a new user, but since doing so
-        # would re-perform all the validation we already performed in this serializer, we construct a SPUser object
+        # Ordinarily we would call django_flex_user.models.FlexUser.objects.create_user to create a new user, but since doing so
+        # would re-perform all the validation we already performed in this serializer, we construct a FlexUser object
         # manually.
         password = validated_data.pop('password')
         user = self.Meta.model(**validated_data)

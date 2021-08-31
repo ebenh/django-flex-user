@@ -50,7 +50,7 @@ class SPUsers(generics.GenericAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class SPUser(generics.GenericAPIView):
+class FlexUser(generics.GenericAPIView):
     serializer_class = FlexUserSerializer
     authentication_classes = [SessionAuthentication, JWTAuthentication]
     permission_classes = [IsAuthenticated]

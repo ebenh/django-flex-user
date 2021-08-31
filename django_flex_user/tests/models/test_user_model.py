@@ -3,7 +3,7 @@ from django.test import TestCase
 
 class TestUserModel(TestCase):
     """
-    This class is designed to test django_flex_user.models.SPUser
+    This class is designed to test django_flex_user.models.FlexUser
     """
     _username_values = [{},
                         {'username': None},
@@ -56,7 +56,7 @@ class TestUserModel(TestCase):
                                     ('phone_number' not in args or args['phone_number'] is None):
                                 """
                                 If the supplied username, email, and phone_number are simultaneously undefined or None,
-                                django_flex_user.models.SPUser.full_clean should raise ValidationError.
+                                django_flex_user.models.FlexUser.full_clean should raise ValidationError.
 
                                 At least one of username, email or phone_number must be defined and not None.
                                 """
@@ -64,7 +64,7 @@ class TestUserModel(TestCase):
                             elif not args.get('password'):
                                 """
                                 If the supplied password is undefined, None or the empty string,
-                                django_flex_user.models.SPUser.full_clean should raise ValidationError.
+                                django_flex_user.models.FlexUser.full_clean should raise ValidationError.
                                 """
                                 self.assertRaises(ValidationError, user.full_clean)
                             elif args.get('username') == '' or \
@@ -72,7 +72,7 @@ class TestUserModel(TestCase):
                                     args.get('phone_number') == '':
                                 """
                                 If any of the supplied username, email or phone_number are the empty string
-                                django_flex_user.models.SPUser.full_clean should raise ValidationError.
+                                django_flex_user.models.FlexUser.full_clean should raise ValidationError.
                                 """
                                 self.assertRaises(ValidationError, user.full_clean)
                             elif (args.get('username') and 'invalid' in args['username']) or \
@@ -81,13 +81,13 @@ class TestUserModel(TestCase):
                                     (args.get('password') and 'invalid' in args['password']):
                                 """
                                 If any of the supplied username, email, phone_number or password are defined and
-                                invalid, django_flex_user.models.SPUser.full_clean should raise ValidationError.
+                                invalid, django_flex_user.models.FlexUser.full_clean should raise ValidationError.
                                 """
                                 self.assertRaises(ValidationError, user.full_clean)
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.models.SPUser.full_clean should execute
+                                phone_number and password for which django_flex_user.models.FlexUser.full_clean should execute
                                 successfully without raising an error.
                                 """
                                 user.full_clean()
@@ -286,7 +286,7 @@ class TestUserModel(TestCase):
 
     def test_serialize(self):
         """
-        This purpose of this method is to test django_flex_user.models.SPUser.natural_key and
+        This purpose of this method is to test django_flex_user.models.FlexUser.natural_key and
         django_flex_user.models.FlexUserManager.get_by_natural_key.
 
         :return:
@@ -310,7 +310,7 @@ class TestUserModel(TestCase):
         # Clear user table
         FlexUser.objects.all().delete()
 
-        # Deserialize. Calls django_flex_user.models.SPUser.natural_key and django_flex_user.models.FlexUserManager.get_by_natural_key.
+        # Deserialize. Calls django_flex_user.models.FlexUser.natural_key and django_flex_user.models.FlexUserManager.get_by_natural_key.
         for obj in serializers.deserialize('json', stream):
             obj.save()
 

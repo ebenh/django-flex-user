@@ -112,7 +112,7 @@ class TestAuthenticate(TestCase):
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
                                 phone_number and password for which django_flex_user.backends.SPModelBackend.authenticate should
-                                return a valid (i.e. not None) SPUser object.
+                                return a valid (i.e. not None) FlexUser object.
                                 """
                                 self.assertIsNotNone(authenticate(**args))
 
@@ -157,7 +157,7 @@ class TestAuthenticate(TestCase):
     def test_authenticate_non_normalized_username(self):
         """
         django_flex_user.backends.SPModelBackend.authenticate deliberately does not normalize input. It is the callers
-        responsibility to normalize username by calling django_flex_user.models.SPUser.normalize_username before passing it to
+        responsibility to normalize username by calling django_flex_user.models.FlexUser.normalize_username before passing it to
         authenticate.
 
         :return:

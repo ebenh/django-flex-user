@@ -4,7 +4,7 @@ from rest_framework import status
 
 class TestSPUserRetrieveUpdate(APITestCase):
     """
-    This class is designed to test django_flex_user.views.SPUser
+    This class is designed to test django_flex_user.views.FlexUser
     """
     _REST_ENDPOINT_PATH = '/account/users/user/'
 
@@ -35,7 +35,7 @@ class TestSPUserRetrieveUpdate(APITestCase):
 
 class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
     """
-    This class is designed to test django_flex_user.views.SPUser
+    This class is designed to test django_flex_user.views.FlexUser
     """
     _REST_ENDPOINT_PATH = '/account/users/user/'
 
@@ -169,7 +169,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                             if 'password' in data and not data['password']:
                                 """
                                 If the supplied password is defined and either None or the empty string,
-                                django_flex_user.views.SPUser.put should return HTTP status code HTTP_400_BAD_REQUEST.
+                                django_flex_user.views.FlexUser.put should return HTTP status code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                                 self.client.logout()
@@ -178,7 +178,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                                     ('phone_number' not in data or data['phone_number'] is None):
                                 """
                                 If the supplied username is None, and the supplied email and phone_number are
-                                simultaneously undefined or None, django_flex_user.views.SPUser.put should return HTTP status
+                                simultaneously undefined or None, django_flex_user.views.FlexUser.put should return HTTP status
                                 code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -188,7 +188,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                                     data.get('phone_number') == '':
                                 """
                                 If any of the supplied username, email or phone_number are the empty string
-                                django_flex_user.views.SPUser.put should return HTTP status code HTTP_400_BAD_REQUEST.
+                                django_flex_user.views.FlexUser.put should return HTTP status code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                                 self.client.logout()
@@ -198,7 +198,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                                     (data.get('password') and 'invalid' in data['password']):
                                 """
                                 If any of the supplied username, email, phone_number or password are defined and
-                                invalid, django_flex_user.views.SPUser.put should return HTTP status code
+                                invalid, django_flex_user.views.FlexUser.put should return HTTP status code
                                 HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -206,7 +206,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.views.SPUser.put should return HTTP status
+                                phone_number and password for which django_flex_user.views.FlexUser.put should return HTTP status
                                 code HTTP_200_OK.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -273,7 +273,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
 
                             if 'password' in data and data['password'] == '':
                                 """
-                                If the supplied password is defined and blank, django_flex_user.views.SPUser.put should return
+                                If the supplied password is defined and blank, django_flex_user.views.FlexUser.put should return
                                 HTTP status code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -283,7 +283,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                                     ('phone_number' not in data or data['phone_number'] == ''):
                                 """
                                 If the supplied username is blank, and the supplied email and phone_number are
-                                simultaneously undefined or blank, django_flex_user.views.SPUser.put should return HTTP status
+                                simultaneously undefined or blank, django_flex_user.views.FlexUser.put should return HTTP status
                                 code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -294,14 +294,14 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                                     (data.get('password') and 'invalid' in data['password']):
                                 """
                                 If any of the supplied username, email, phone_number or password are defined and
-                                invalid, django_flex_user.views.SPUser.put should return HTTP status code HTTP_400_BAD_REQUEST.
+                                invalid, django_flex_user.views.FlexUser.put should return HTTP status code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                                 self.client.logout()
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.views.SPUser.put should return HTTP status
+                                phone_number and password for which django_flex_user.views.FlexUser.put should return HTTP status
                                 code HTTP_200_OK.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_200_OK)

@@ -37,7 +37,7 @@ class SPFacebookOAuth2(FacebookOAuth2):
 
         Our implementation of this method is identical to the superclass implementation except when the OAuth service
         doesn't return an email address for the user, we set it to be None instead of the empty string. This is because
-        django_flex_user.models.SPUser does not permit email to be the empty string.
+        django_flex_user.models.FlexUser does not permit email to be the empty string.
 
         :param response:
         :return:
@@ -66,7 +66,7 @@ class SPGoogleOAuth2(GoogleOAuth2):
 
         Our implementation of this method is identical to the superclass implementation except when the OAuth service
         doesn't return an email address for the user, we set it to be None instead of the empty string. This is because
-        django_flex_user.models.SPUser does not permit email to be the empty string.
+        django_flex_user.models.FlexUser does not permit email to be the empty string.
 
         :param response:
         :return:
