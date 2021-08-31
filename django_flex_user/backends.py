@@ -26,7 +26,7 @@ class FlexUserModelBackend(ModelBackend):
                 return user
 
 
-class SPFacebookOAuth2(FacebookOAuth2):
+class FlexUserFacebookOAuth2(FacebookOAuth2):
     """
     Our implementation of social_core.backends.facebook.FacebookOAuth2.
     """
@@ -55,7 +55,7 @@ class SPFacebookOAuth2(FacebookOAuth2):
                 'last_name': last_name}
 
 
-class SPGoogleOAuth2(GoogleOAuth2):
+class FlexUserGoogleOAuth2(GoogleOAuth2):
     """
     Our implementation of social_core.backends.facebook.GoogleOAuth2.
     """

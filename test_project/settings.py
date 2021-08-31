@@ -144,8 +144,8 @@ AUTH_USER_MODEL = 'django_flex_user.FlexUser'
 
 AUTHENTICATION_BACKENDS = [
     'django_flex_user.backends.FlexUserModelBackend',
-    'django_flex_user.backends.SPFacebookOAuth2',
-    'django_flex_user.backends.SPGoogleOAuth2',
+    'django_flex_user.backends.FlexUserFacebookOAuth2',
+    'django_flex_user.backends.FlexUserGoogleOAuth2',
 ]  # default: ['django.contrib.auth.backends.ModelBackend',]
 
 # Tell Django to use our login template
