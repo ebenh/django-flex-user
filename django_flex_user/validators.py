@@ -40,7 +40,7 @@ class MyRegexValidator(RegexValidator):
 
 
 @deconstructible()
-class SPUnicodeUsernameValidator(MyRegexValidator):
+class FlexUserUnicodeUsernameValidator(MyRegexValidator):
     """
     Our implementation of django.contrib.auth.validators.UnicodeUsernameValidator.
 

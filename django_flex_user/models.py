@@ -13,7 +13,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from dirtyfields import DirtyFieldsMixin
 
-from .validators import SPUnicodeUsernameValidator
+from .validators import FlexUserUnicodeUsernameValidator
 
 from .fields import CICharField
 
@@ -134,7 +134,7 @@ class FlexUser(AbstractBaseUser, PermissionsMixin, DirtyFieldsMixin):
         email address or phone number.
     """
 
-    username_validator = SPUnicodeUsernameValidator()
+    username_validator = FlexUserUnicodeUsernameValidator()
 
     email = models.EmailField(
         _('email address'),

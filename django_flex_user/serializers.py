@@ -15,7 +15,7 @@ from social_django.models import UserSocialAuth
 
 import tldextract, regex as re
 
-from .models import SPUnicodeUsernameValidator
+from .models import FlexUserUnicodeUsernameValidator
 
 UserModel = get_user_model()
 
@@ -151,7 +151,7 @@ class FlexUserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'username': {
                 'allow_blank': False,
-                'validators': [SPUnicodeUsernameValidator()]  # Remove Unique validator
+                'validators': [FlexUserUnicodeUsernameValidator()]  # Remove Unique validator
             },
             'email': {
                 'allow_blank': False,
@@ -174,7 +174,7 @@ class AuthenticationSerializer(serializers.Serializer):
         allow_null=True,
         max_length=150,
         required=False,
-        validators=[SPUnicodeUsernameValidator()]
+        validators=[FlexUserUnicodeUsernameValidator()]
     )
     email = serializers.EmailField(
         allow_blank=False,

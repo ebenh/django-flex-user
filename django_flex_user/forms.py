@@ -5,7 +5,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.text import capfirst
 
-from .validators import SPUnicodeUsernameValidator
+from .validators import FlexUserUnicodeUsernameValidator
 
 UserModel = get_user_model()
 
@@ -22,7 +22,7 @@ class FlexUserAuthenticationForm(AuthenticationForm):
         widget=forms.TextInput(attrs={'autofocus': True})
     )
 
-    usernameValidator = SPUnicodeUsernameValidator()
+    usernameValidator = FlexUserUnicodeUsernameValidator()
 
     def __init__(self, request=None, *args, **kwargs):
         """
