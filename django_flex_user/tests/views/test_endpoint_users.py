@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 
 
-class TestSPUserCreate(APITestCase):
+class TestFlexUserCreate(APITestCase):
     """
     This class is designed to test django_flex_user.views.FlexUsers
     """

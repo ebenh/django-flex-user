@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 
 
-class TestSPUserRetrieveUpdate(APITestCase):
+class TestFlexUserRetrieveUpdate(APITestCase):
     """
     This class is designed to test django_flex_user.views.FlexUser
     """
@@ -33,7 +33,7 @@ class TestSPUserRetrieveUpdate(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
-class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
+class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
     """
     This class is designed to test django_flex_user.views.FlexUser
     """
