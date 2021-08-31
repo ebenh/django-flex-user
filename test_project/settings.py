@@ -246,7 +246,7 @@ SOCIAL_AUTH_EMAIL_VALIDATION_URL = 'http://localhost:4200/verify/email/'
 SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'django_flex_user.verification.email_validation_link'
 SOCIAL_AUTH_FACEBOOK_FORCE_EMAIL_VALIDATION = True
 
-SOCIAL_AUTH_CLEAN_USERNAME_FUNCTION = 'django_flex_user.validators.clean_username'
+SOCIAL_AUTH_CLEAN_USERNAME_FUNCTION = 'django_flex_user.validators.flex_user_clean_username'
 
 #
 # Production Variables ... Needed for social-auth-app-django

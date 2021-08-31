@@ -63,7 +63,7 @@ class FlexUserUnicodeUsernameValidator(_UnicodeRegexValidator):
 NO_SPECIAL_REGEX = re.compile(r'[^\w.-]+', re.UNICODE)
 
 
-def clean_username(value):
+def flex_user_clean_username(value):
     """
     Our clean username function for social-auth-app-django. Cleans input username by removing unsupported characters.
 
