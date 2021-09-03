@@ -17,11 +17,11 @@ class TestUserSerializer(TestCase):
                      {'email': 'validEmail@example.com'},
                      {'email': 'invalidEmail'}]
 
-    _phone_number_values = [{},
-                            {'phone_number': None},
-                            {'phone_number': ''},
-                            {'phone_number': '+12025551234'},
-                            {'phone_number': 'invalidPhoneNumber'}]
+    _phone_values = [{},
+                            {'phone': None},
+                            {'phone': ''},
+                            {'phone': '+12025551234'},
+                            {'phone': 'invalidPhoneNumber'}]
 
     _password_values = [{},
                         {'password': None},
@@ -35,7 +35,7 @@ class TestUserSerializer(TestCase):
 
         for i in self._username_values:
             for j in self._email_values:
-                for k in self._phone_number_values:
+                for k in self._phone_values:
                     for l in self._password_values:
 
                         data = {}
@@ -52,12 +52,12 @@ class TestUserSerializer(TestCase):
 
                             if ('username' not in data or data['username'] is None) and \
                                     ('email' not in data or data['email'] is None) and \
-                                    ('phone_number' not in data or data['phone_number'] is None):
+                                    ('phone' not in data or data['phone'] is None):
                                 """
-                                If the supplied username, email, and phone_number are simultaneously undefined or None,
+                                If the supplied username, email, and phone are simultaneously undefined or None,
                                 django_flex_user.serializers.FlexUserSerializer.is_valid should return False.
 
-                                At least one of username, email or phone_number must be defined and not None.
+                                At least one of username, email or phone must be defined and not None.
                                 """
                                 self.assertIs(serializer.is_valid(), False)
                             elif not data.get('password'):
@@ -68,25 +68,25 @@ class TestUserSerializer(TestCase):
                                 self.assertIs(serializer.is_valid(), False)
                             elif data.get('username') == '' or \
                                     data.get('email') == '' or \
-                                    data.get('phone_number') == '':
+                                    data.get('phone') == '':
                                 """
-                                If any of the supplied username, email or phone_number are the empty string
+                                If any of the supplied username, email or phone are the empty string
                                 django_flex_user.serializers.FlexUserSerializer.is_valid should return False.
                                 """
                                 self.assertIs(serializer.is_valid(), False)
                             elif (data.get('username') and 'invalid' in data['username']) or \
                                     (data.get('email') and 'invalid' in data['email']) or \
-                                    (data.get('phone_number') and 'invalid' in data['phone_number']) or \
+                                    (data.get('phone') and 'invalid' in data['phone']) or \
                                     (data.get('password') and 'invalid' in data['password']):
                                 """
-                                If any of the supplied username, email, phone_number or password are defined and
+                                If any of the supplied username, email, phone or password are defined and
                                 invalid,  django_flex_user.serializers.FlexUserSerializer.is_valid should return False.
                                 """
                                 self.assertIs(serializer.is_valid(), False)
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.serializers.FlexUserSerializer.is_valid return
+                                phone and password for which django_flex_user.serializers.FlexUserSerializer.is_valid return
                                 True.
                                 """
                                 self.assertIs(serializer.is_valid(), True)
@@ -98,7 +98,7 @@ class TestUserSerializer(TestCase):
 
                                 self.assertEqual(user.username, data.get('username'))
                                 self.assertEqual(user.email, data.get('email'))
-                                self.assertEqual(user.phone_number, data.get('phone_number'))
+                                self.assertEqual(user.phone, data.get('phone'))
 
                                 self.assertTrue(user.password)
                                 # django_flex_user.serializers.FlexUserSerializer must always return a user with a usable password
@@ -125,7 +125,7 @@ class TestUserSerializer(TestCase):
 
         for i in self._username_values:
             for j in self._email_values:
-                for k in self._phone_number_values:
+                for k in self._phone_values:
                     for l in self._password_values:
 
                         data = {}
@@ -148,34 +148,34 @@ class TestUserSerializer(TestCase):
                                 self.assertIs(serializer.is_valid(), False)
                             elif ('username' in data and data['username'] is None) and \
                                     ('email' not in data or data['email'] is None) and \
-                                    ('phone_number' not in data or data['phone_number'] is None):
+                                    ('phone' not in data or data['phone'] is None):
                                 """
-                                If the supplied username is None, and the supplied email and phone_number are
+                                If the supplied username is None, and the supplied email and phone are
                                 simultaneously undefined or None, django_flex_user.serializers.FlexUserSerializer.is_valid should
                                 return False.
                                 """
                                 self.assertIs(serializer.is_valid(), False)
                             elif data.get('username') == '' or \
                                     data.get('email') == '' or \
-                                    data.get('phone_number') == '':
+                                    data.get('phone') == '':
                                 """
-                                If any of the supplied username, email or phone_number are the empty string
+                                If any of the supplied username, email or phone are the empty string
                                 django_flex_user.serializers.FlexUserSerializer.is_valid should return False.
                                 """
                                 self.assertIs(serializer.is_valid(), False)
                             elif (data.get('username') and 'invalid' in data['username']) or \
                                     (data.get('email') and 'invalid' in data['email']) or \
-                                    (data.get('phone_number') and 'invalid' in data['phone_number']) or \
+                                    (data.get('phone') and 'invalid' in data['phone']) or \
                                     (data.get('password') and 'invalid' in data['password']):
                                 """
-                                If any of the supplied username, email, phone_number or password are defined and
+                                If any of the supplied username, email, phone or password are defined and
                                 invalid,  django_flex_user.serializers.FlexUserSerializer.is_valid should return False.
                                 """
                                 self.assertIs(serializer.is_valid(), False)
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.serializers.FlexUserSerializer.is_valid return
+                                phone and password for which django_flex_user.serializers.FlexUserSerializer.is_valid return
                                 True.
                                 """
                                 self.assertIs(serializer.is_valid(), True)
@@ -187,7 +187,7 @@ class TestUserSerializer(TestCase):
 
                                 self.assertEqual(user.username, data.get('username', 'validUsername'))
                                 self.assertEqual(user.email, data.get('email'))
-                                self.assertEqual(user.phone_number, data.get('phone_number'))
+                                self.assertEqual(user.phone, data.get('phone'))
 
                                 self.assertTrue(user.password)
                                 # django_flex_user.serializers.FlexUserSerializer must always return a user with a usable password
@@ -279,10 +279,10 @@ class TestUserSerializer(TestCase):
         self.assertIs(serializer.is_valid(), False)
         self.assertRaises(AssertionError, serializer.save)
 
-    def test_create_duplicate_phone_number(self):
+    def test_create_duplicate_phone(self):
         from django_flex_user.serializers import FlexUserSerializer
 
-        data = {'phone_number': '+12025551234', 'password': 'validPassword'}
+        data = {'phone': '+12025551234', 'password': 'validPassword'}
 
         serializer = FlexUserSerializer(data=data)
         self.assertIs(serializer.is_valid(), True)
@@ -292,14 +292,14 @@ class TestUserSerializer(TestCase):
         self.assertIs(serializer.is_valid(), False)
         self.assertRaises(AssertionError, serializer.save)
 
-    def test_update_duplicate_phone_number(self):
+    def test_update_duplicate_phone(self):
         from django_flex_user.models import FlexUser
         from django_flex_user.serializers import FlexUserSerializer
 
-        user = FlexUser.objects.create_user(phone_number='+12025551234', password='validPassword')
-        FlexUser.objects.create_user(phone_number='+12025554321', password='validPassword')
+        user = FlexUser.objects.create_user(phone='+12025551234', password='validPassword')
+        FlexUser.objects.create_user(phone='+12025554321', password='validPassword')
 
-        data = {'phone_number': '+12025554321'}
+        data = {'phone': '+12025554321'}
         serializer = FlexUserSerializer(user, data=data, partial=True)
         self.assertIs(serializer.is_valid(), False)
         self.assertRaises(AssertionError, serializer.save)
@@ -382,41 +382,41 @@ class TestUserSerializer(TestCase):
         self.assertIs(serializer.is_valid(), False)
         self.assertRaises(AssertionError, serializer.save)
 
-    def test_create_ambiguous_phone_number(self):
+    def test_create_ambiguous_phone(self):
         """
-        Verify that a username or email address cannot form a valid phone_number.
+        Verify that a username or email address cannot form a valid phone.
 
         :return:
         """
         from django_flex_user.serializers import FlexUserSerializer
 
-        data = {'phone_number': 'validUsername', 'password': 'validPassword'}
+        data = {'phone': 'validUsername', 'password': 'validPassword'}
         serializer = FlexUserSerializer(data=data)
         self.assertIs(serializer.is_valid(), False)
         self.assertRaises(AssertionError, serializer.save)
 
-        data = {'phone_number': 'validEmail@example.com', 'password': 'validPassword'}
+        data = {'phone': 'validEmail@example.com', 'password': 'validPassword'}
         serializer = FlexUserSerializer(data=data)
         self.assertIs(serializer.is_valid(), False)
         self.assertRaises(AssertionError, serializer.save)
 
-    def test_update_ambiguous_phone_number(self):
+    def test_update_ambiguous_phone(self):
         """
-        Verify that a username or email address cannot form a valid phone_number.
+        Verify that a username or email address cannot form a valid phone.
 
         :return:
         """
         from django_flex_user.models import FlexUser
         from django_flex_user.serializers import FlexUserSerializer
 
-        user = FlexUser.objects.create_user(phone_number='+12025551234', password='validPassword')
+        user = FlexUser.objects.create_user(phone='+12025551234', password='validPassword')
 
-        data = {'phone_number': 'validUsername'}
+        data = {'phone': 'validUsername'}
         serializer = FlexUserSerializer(user, data=data, partial=True)
         self.assertIs(serializer.is_valid(), False)
         self.assertRaises(AssertionError, serializer.save)
 
-        data = {'phone_number': 'validEmail@example.com'}
+        data = {'phone': 'validEmail@example.com'}
         serializer = FlexUserSerializer(user, data=data, partial=True)
         self.assertIs(serializer.is_valid(), False)
         self.assertRaises(AssertionError, serializer.save)

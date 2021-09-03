@@ -13,10 +13,10 @@ UserModel = get_user_model()
 class FlexUserAuthenticationForm(AuthenticationForm):
     username = forms.CharField(
         label=capfirst(
-            '{username}, {email} or {phone_number}'.format(
+            '{username}, {email} or {phone}'.format(
                 username=UserModel._meta.get_field('username').verbose_name,
                 email=UserModel._meta.get_field('email').verbose_name,
-                phone_number=UserModel._meta.get_field('phone_number').verbose_name,
+                phone=UserModel._meta.get_field('phone').verbose_name,
             )
         ),
         widget=forms.TextInput(attrs={'autofocus': True})
@@ -58,7 +58,7 @@ class FlexUserAuthenticationForm(AuthenticationForm):
             if '@' in value:
                 d = {'email': UserModel.objects.normalize_email(value)}
             else:
-                d = {'phone_number': value}
+                d = {'phone': value}
         else:
             d = {'username': UserModel.normalize_username(value)}
         finally:

@@ -46,19 +46,19 @@ class FlexUserManager(BaseUserManager):
             pass
         return email
 
-    def _create_user(self, username=None, email=None, phone_number=None, password=None, **extra_fields):
-        user = self.model(username=username, email=email, phone_number=phone_number, **extra_fields)
+    def _create_user(self, username=None, email=None, phone=None, password=None, **extra_fields):
+        user = self.model(username=username, email=email, phone=phone, **extra_fields)
         user.set_password(password)
         user.full_clean()
         user.save(using=self._db)
         return user
 
-    def create_user(self, username=None, email=None, phone_number=None, password=None, **extra_fields):
+    def create_user(self, username=None, email=None, phone=None, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
-        return self._create_user(username, email, phone_number, password, **extra_fields)
+        return self._create_user(username, email, phone, password, **extra_fields)
 
-    def create_superuser(self, username=None, email=None, phone_number=None, password=None, **extra_fields):
+    def create_superuser(self, username=None, email=None, phone=None, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -67,10 +67,10 @@ class FlexUserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
 
-        return self._create_user(username, email, phone_number, password, **extra_fields)
+        return self._create_user(username, email, phone, password, **extra_fields)
 
-    def get_by_natural_key(self, username=None, email=None, phone_number=None):
-        if username is None and email is None and phone_number is None:
+    def get_by_natural_key(self, username=None, email=None, phone=None):
+        if username is None and email is None and phone is None:
             raise ValueError('You must supply at least one of username, email or phone number')
 
         q = {}
@@ -78,8 +78,8 @@ class FlexUserManager(BaseUserManager):
             q.update({'username': username})
         if email is not None:
             q.update({'email': email})
-        if phone_number is not None:
-            q.update({'phone_number': phone_number})
+        if phone is not None:
+            q.update({'phone': phone})
 
         return self.get(**q)
 
@@ -97,38 +97,38 @@ class FlexUser(AbstractBaseUser, PermissionsMixin, DirtyFieldsMixin):
 
         email field sets null=True and blank = True.
 
-        phone_number field is introduced. It defines unique=True, null=True and blank=True.
+        phone field is introduced. It defines unique=True, null=True and blank=True.
 
         first_name and last_name fields are omitted.
 
-        For each of username, email and phone_number we set blank = True to preserve the ordinary functioning of the
+        For each of username, email and phone we set blank = True to preserve the ordinary functioning of the
         admin site. Setting blank = True on model fields results in form fields which have required = False set,
-        thereby enabling users to supply any subset of username, email and phone_number when configuring a user on the
+        thereby enabling users to supply any subset of username, email and phone when configuring a user on the
         admin site. Furthermore, when null = True and blank = True are set together on model fields, the value of empty
         form fields are conveniently coerced to None. Unfortunately, setting blank = True on model fields has the
         undesirable consequence that empty string values will not by rejected by clean_fields/full_clean methods. To
-        remedy this, we reject empty string values for username, email and phone_number in our clean method (see below).
+        remedy this, we reject empty string values for username, email and phone in our clean method (see below).
 
         clean method:
-            - Ensures that at least one of username, email or phone_number is defined for the user.
-            - Ensures that none of username, email and phone_number are equal to the empty string. We must do this
+            - Ensures that at least one of username, email or phone is defined for the user.
+            - Ensures that none of username, email and phone are equal to the empty string. We must do this
             because we set blank = True for each of these fields (see above).
             - Normalizes email in addition to username.
 
-        get_username method returns one of username, email, phone_number or id. This method evaluates each of these
+        get_username method returns one of username, email, phone or id. This method evaluates each of these
         fields in order and returns the first truthy value.
 
-        natural_key method returns a tuple of username, email and phone_number.
+        natural_key method returns a tuple of username, email and phone.
 
-        We place the following restrictions on username, email and phone_number:
+        We place the following restrictions on username, email and phone:
             - It shouldn't be possible to interpret username as an email address or phone number
             - It shouldn't be possible to interpret email as a username or phone number
-            - It shouldn't be possible to interpret phone_number as a username or email address
+            - It shouldn't be possible to interpret phone as a username or email address
 
         These restrictions are enforced by field validators which apply the constraints below:
             - username may not begin with "+" or a decimal number, nor may it contain "@"
             - email must contain "@"
-            - phone_number must contain "+" and may not contain "@"
+            - phone must contain "+" and may not contain "@"
 
         These constraints make it possible to receive an unspecified user identifier and infer whether it is a username,
         email address or phone number.
@@ -145,7 +145,7 @@ class FlexUser(AbstractBaseUser, PermissionsMixin, DirtyFieldsMixin):
             'unique': _("A user with that email address already exists."),
         },
     )
-    phone_number = PhoneNumberField(  # new
+    phone = PhoneNumberField(  # new
         _('phone number'),
         unique=True,
         null=True,
@@ -210,11 +210,11 @@ class FlexUser(AbstractBaseUser, PermissionsMixin, DirtyFieldsMixin):
     def clean(self):
         errors = {}
 
-        if self.username is None and self.email is None and self.phone_number is None:
-            errors[NON_FIELD_ERRORS] = 'You must supply at least one of {username}, {email} or {phone_number}.'.format(
+        if self.username is None and self.email is None and self.phone is None:
+            errors[NON_FIELD_ERRORS] = 'You must supply at least one of {username}, {email} or {phone}.'.format(
                 username=self._meta.get_field('username').verbose_name,
                 email=self._meta.get_field('email').verbose_name,
-                phone_number=self._meta.get_field('phone_number').verbose_name
+                phone=self._meta.get_field('phone').verbose_name
             )
 
         # For fields which have blank = False:
@@ -235,8 +235,8 @@ class FlexUser(AbstractBaseUser, PermissionsMixin, DirtyFieldsMixin):
         if self.email == '':
             errors['email'] = 'This field may not be blank.'
 
-        if self.phone_number == '':
-            errors['phone_number'] = 'This field may not be blank.'
+        if self.phone == '':
+            errors['phone'] = 'This field may not be blank.'
 
         if errors:
             raise ValidationError(errors)
@@ -247,10 +247,10 @@ class FlexUser(AbstractBaseUser, PermissionsMixin, DirtyFieldsMixin):
 
     def get_username(self):
         """Return the identifying username for this user"""
-        return self.username or self.email or (str(self.phone_number) if self.phone_number else None) or str(self.id)
+        return self.username or self.email or (str(self.phone) if self.phone else None) or str(self.id)
 
     def natural_key(self):
-        return self.username, self.email, self.phone_number
+        return self.username, self.email, self.phone
 
 
 @receiver(pre_save, sender=FlexUser)

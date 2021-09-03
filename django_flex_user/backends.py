@@ -14,9 +14,9 @@ class FlexUserModelBackend(ModelBackend):
     Our implementation of django.contrib.auth.backends.ModelBackend.
     """
 
-    def authenticate(self, request, username=None, email=None, phone_number=None, password=None):
+    def authenticate(self, request, username=None, email=None, phone=None, password=None):
         try:
-            user = UserModel._default_manager.get_by_natural_key(username, email, phone_number)
+            user = UserModel._default_manager.get_by_natural_key(username, email, phone)
         except UserModel.DoesNotExist:
             # Run the default password hasher once to reduce the timing
             # difference between an existing and a nonexistent user (#20760).

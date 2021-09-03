@@ -128,11 +128,11 @@ class OTPDevices(generics.GenericAPIView):
         if email is not None:
             filter_kwargs.update({'email': UserModel.objects.normalize_email(email)})
 
-        phone_number = self.request.query_params.get('phone_number', None)
-        if phone_number is not None:
-            filter_kwargs.update({'phone_number': phone_number})
+        phone = self.request.query_params.get('phone', None)
+        if phone is not None:
+            filter_kwargs.update({'phone': phone})
 
-        if not username and not email and not phone_number:
+        if not username and not email and not phone:
             raise Http404  # todo: this should be 400 bad request
 
         obj = get_object_or_404(queryset, **filter_kwargs)

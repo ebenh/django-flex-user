@@ -23,11 +23,11 @@ class TestFlexUserCreate(APITestCase):
                             {'email': 'validEmail@example.com'},
                             {'email': 'invalidEmail'}]
 
-            phone_number_values = [{},
-                                   {'phone_number': None},
-                                   {'phone_number': ''},
-                                   {'phone_number': '+12025551234'},
-                                   {'phone_number': 'invalidPhoneNumber'}]
+            phone_values = [{},
+                                   {'phone': None},
+                                   {'phone': ''},
+                                   {'phone': '+12025551234'},
+                                   {'phone': 'invalidPhoneNumber'}]
 
             password_values = [{},
                                {'password': None},
@@ -46,10 +46,10 @@ class TestFlexUserCreate(APITestCase):
                             {'email': 'validEmail@example.com'},
                             {'email': 'invalidEmail'}]
 
-            phone_number_values = [{},
-                                   {'phone_number': ''},
-                                   {'phone_number': '+12025551234'},
-                                   {'phone_number': 'invalidPhoneNumber'}]
+            phone_values = [{},
+                                   {'phone': ''},
+                                   {'phone': '+12025551234'},
+                                   {'phone': 'invalidPhoneNumber'}]
 
             password_values = [{},
                                {'password': ''},
@@ -77,7 +77,7 @@ class TestFlexUserCreate(APITestCase):
 
         for i in self._ContentType.ApplicationJSON.username_values:
             for j in self._ContentType.ApplicationJSON.email_values:
-                for k in self._ContentType.ApplicationJSON.phone_number_values:
+                for k in self._ContentType.ApplicationJSON.phone_values:
                     for l in self._ContentType.ApplicationJSON.password_values:
 
                         data = {}
@@ -97,12 +97,12 @@ class TestFlexUserCreate(APITestCase):
 
                             if ('username' not in data or data['username'] is None) and \
                                     ('email' not in data or data['email'] is None) and \
-                                    ('phone_number' not in data or data['phone_number'] is None):
+                                    ('phone' not in data or data['phone'] is None):
                                 """
-                                If the supplied username, email, and phone_number are simultaneously undefined or None,
+                                If the supplied username, email, and phone are simultaneously undefined or None,
                                 django_flex_user.views.FlexUsers.post should return HTTP status code HTTP_400_BAD_REQUEST.
 
-                                At least one of username, email or phone_number must be defined and not None.
+                                At least one of username, email or phone must be defined and not None.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                             elif not data.get('password'):
@@ -113,18 +113,18 @@ class TestFlexUserCreate(APITestCase):
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                             elif data.get('username') == '' or \
                                     data.get('email') == '' or \
-                                    data.get('phone_number') == '':
+                                    data.get('phone') == '':
                                 """
-                                If any of the supplied username, email or phone_number are the empty string
+                                If any of the supplied username, email or phone are the empty string
                                 django_flex_user.views.FlexUsers.post should return HTTP status code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                             elif (data.get('username') and 'invalid' in data['username']) or \
                                     (data.get('email') and 'invalid' in data['email']) or \
-                                    (data.get('phone_number') and 'invalid' in data['phone_number']) or \
+                                    (data.get('phone') and 'invalid' in data['phone']) or \
                                     (data.get('password') and 'invalid' in data['password']):
                                 """
-                                If any of the supplied username, email, phone_number or password are defined and
+                                If any of the supplied username, email, phone or password are defined and
                                 invalid, django_flex_user.views.FlexUsers.post should return HTTP status code
                                 HTTP_400_BAD_REQUEST.
                                 """
@@ -132,7 +132,7 @@ class TestFlexUserCreate(APITestCase):
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.views.FlexUsers.post should return HTTP status
+                                phone and password for which django_flex_user.views.FlexUsers.post should return HTTP status
                                 code HTTP_201_CREATED.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -150,8 +150,8 @@ class TestFlexUserCreate(APITestCase):
                                         'username': data.get('username'),
                                         'email': data.get('email'),
                                         'email_verified': False,
-                                        'phone_number': data.get('phone_number'),
-                                        'phone_number_verified': False
+                                        'phone': data.get('phone'),
+                                        'phone_verified': False
                                     }
                                 )
 
@@ -162,7 +162,7 @@ class TestFlexUserCreate(APITestCase):
 
         for i in self._ContentType.MultipartFormData.username_values:
             for j in self._ContentType.MultipartFormData.email_values:
-                for k in self._ContentType.MultipartFormData.phone_number_values:
+                for k in self._ContentType.MultipartFormData.phone_values:
                     for l in self._ContentType.MultipartFormData.password_values:
 
                         data = {}
@@ -182,12 +182,12 @@ class TestFlexUserCreate(APITestCase):
 
                             if ('username' not in data or data['username'] == '') and \
                                     ('email' not in data or data['email'] == '') and \
-                                    ('phone_number' not in data or data['phone_number'] == ''):
+                                    ('phone' not in data or data['phone'] == ''):
                                 """
-                                If the supplied username, email, and phone_number are simultaneously undefined or blank,
+                                If the supplied username, email, and phone are simultaneously undefined or blank,
                                 django_flex_user.views.FlexUsers.post should return HTTP status code HTTP_400_BAD_REQUEST.
 
-                                At least one of username, email or phone_number must be defined and not blank.
+                                At least one of username, email or phone must be defined and not blank.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                             elif 'password' not in data or data['password'] == '':
@@ -198,17 +198,17 @@ class TestFlexUserCreate(APITestCase):
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                             elif (data.get('username') and 'invalid' in data['username']) or \
                                     (data.get('email') and 'invalid' in data['email']) or \
-                                    (data.get('phone_number') and 'invalid' in data['phone_number']) or \
+                                    (data.get('phone') and 'invalid' in data['phone']) or \
                                     (data.get('password') and 'invalid' in data['password']):
                                 """
-                                If any of the supplied username, email, phone_number or password are defined and
+                                If any of the supplied username, email, phone or password are defined and
                                 invalid, django_flex_user.views.FlexUsers.post should return HTTP status code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.views.FlexUsers.post should return HTTP status
+                                phone and password for which django_flex_user.views.FlexUsers.post should return HTTP status
                                 code HTTP_201_CREATED.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -226,9 +226,9 @@ class TestFlexUserCreate(APITestCase):
                                         'username': data.get('username') if data.get('username') != '' else None,
                                         'email': data.get('email') if data.get('email') != '' else None,
                                         'email_verified': False,
-                                        'phone_number':
-                                            data.get('phone_number') if data.get('phone_number') != '' else None,
-                                        'phone_number_verified': False
+                                        'phone':
+                                            data.get('phone') if data.get('phone') != '' else None,
+                                        'phone_verified': False
                                     }
                                 )
 
@@ -282,8 +282,8 @@ class TestFlexUserCreate(APITestCase):
         response = self.client.post(self._REST_ENDPOINT_PATH, data=data, HTTP_X_CSRFTOKEN=self.csrf_token)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_method_post_duplicate_phone_number(self):
-        data = {'phone_number': '+12025551234', 'password': 'validPassword'}
+    def test_method_post_duplicate_phone(self):
+        data = {'phone': '+12025551234', 'password': 'validPassword'}
 
         response = self.client.post(self._REST_ENDPOINT_PATH, data=data, HTTP_X_CSRFTOKEN=self.csrf_token)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -326,17 +326,17 @@ class TestFlexUserCreate(APITestCase):
         response = self.client.post(self._REST_ENDPOINT_PATH, data=data, HTTP_X_CSRFTOKEN=self.csrf_token)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_method_post_ambiguous_phone_number(self):
+    def test_method_post_ambiguous_phone(self):
         """
-        Verify that a username or email address cannot form a valid phone_number.
+        Verify that a username or email address cannot form a valid phone.
 
         :return:
         """
-        data = {'phone_number': 'validUsername', 'password': 'validPassword'}
+        data = {'phone': 'validUsername', 'password': 'validPassword'}
         response = self.client.post(self._REST_ENDPOINT_PATH, data=data, HTTP_X_CSRFTOKEN=self.csrf_token)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        data = {'phone_number': 'validEmail@example.com', 'password': 'validPassword'}
+        data = {'phone': 'validEmail@example.com', 'password': 'validPassword'}
         response = self.client.post(self._REST_ENDPOINT_PATH, data=data, HTTP_X_CSRFTOKEN=self.csrf_token)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 

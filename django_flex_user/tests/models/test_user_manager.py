@@ -17,11 +17,11 @@ class TestUserManager(TestCase):
                      {'email': 'validEmail@example.com'},
                      {'email': 'invalidEmail'}]
 
-    _phone_number_values = [{},
-                            {'phone_number': None},
-                            {'phone_number': ''},
-                            {'phone_number': '+12025551234'},
-                            {'phone_number': 'invalidPhoneNumber'}]
+    _phone_values = [{},
+                            {'phone': None},
+                            {'phone': ''},
+                            {'phone': '+12025551234'},
+                            {'phone': 'invalidPhoneNumber'}]
 
     # note eben: Because django_flex_user.models.FlexUserManager._create_user deliberately has no password constraints, there is no
     # such invalid password that we can test.
@@ -45,7 +45,7 @@ class TestUserManager(TestCase):
 
         for i in self._username_values:
             for j in self._email_values:
-                for k in self._phone_number_values:
+                for k in self._phone_values:
                     for l in self._password_values:
 
                         args = {}
@@ -60,34 +60,34 @@ class TestUserManager(TestCase):
 
                             if ('username' not in args or args['username'] is None) and \
                                     ('email' not in args or args['email'] is None) and \
-                                    ('phone_number' not in args or args['phone_number'] is None):
+                                    ('phone' not in args or args['phone'] is None):
                                 """
-                                If the supplied username, email, and phone_number are simultaneously undefined or None,
+                                If the supplied username, email, and phone are simultaneously undefined or None,
                                 django_flex_user.models.FlexUserManager._create_user should raise ValidationError.
 
-                                At least one of username, email or phone_number must be defined and not None.
+                                At least one of username, email or phone must be defined and not None.
                                 """
                                 self.assertRaises(ValidationError, create_user_method, **args)
                             elif args.get('username') == '' or \
                                     args.get('email') == '' or \
-                                    args.get('phone_number') == '':
+                                    args.get('phone') == '':
                                 """
-                                If any of the supplied username, email or phone_number are the empty string
+                                If any of the supplied username, email or phone are the empty string
                                 django_flex_user.models.FlexUserManager._create_user should raise ValidationError.
                                 """
                                 self.assertRaises(ValidationError, create_user_method, **args)
                             elif (args.get('username') and 'invalid' in args['username']) or \
                                     (args.get('email') and 'invalid' in args['email']) or \
-                                    (args.get('phone_number') and 'invalid' in args['phone_number']):
+                                    (args.get('phone') and 'invalid' in args['phone']):
                                 """
-                                If any of the supplied username, email or phone_number are defined and invalid,
+                                If any of the supplied username, email or phone are defined and invalid,
                                 django_flex_user.models.FlexUserManager._create_user should raise ValidationError.
                                 """
                                 self.assertRaises(ValidationError, create_user_method, **args)
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.models.FlexUserManager._create_user should
+                                phone and password for which django_flex_user.models.FlexUserManager._create_user should
                                 return a valid FlexUser object.
                                 """
                                 user = create_user_method(**args)
@@ -97,7 +97,7 @@ class TestUserManager(TestCase):
 
                                 self.assertEqual(user.username, args.get('username'))
                                 self.assertEqual(user.email, args.get('email'))
-                                self.assertEqual(user.phone_number, args.get('phone_number'))
+                                self.assertEqual(user.phone, args.get('phone'))
 
                                 self.assertTrue(user.password)
                                 # If the supplied password is undefined or None, ensure that an unusable password is set
@@ -167,19 +167,19 @@ class TestUserManager(TestCase):
         FlexUser.objects.create_superuser(email='validEmail@example.com')
         self.assertRaises(ValidationError, FlexUser.objects.create_superuser, email='validEmail@example.com')
 
-    def test_create_user_duplicate_phone_number(self):
+    def test_create_user_duplicate_phone(self):
         from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        FlexUser.objects.create_user(phone_number='+12025551234')
-        self.assertRaises(ValidationError, FlexUser.objects.create_user, phone_number='+12025551234')
+        FlexUser.objects.create_user(phone='+12025551234')
+        self.assertRaises(ValidationError, FlexUser.objects.create_user, phone='+12025551234')
 
-    def test_create_superuser_duplicate_phone_number(self):
+    def test_create_superuser_duplicate_phone(self):
         from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        FlexUser.objects.create_superuser(phone_number='+12025551234')
-        self.assertRaises(ValidationError, FlexUser.objects.create_superuser, phone_number='+12025551234')
+        FlexUser.objects.create_superuser(phone='+12025551234')
+        self.assertRaises(ValidationError, FlexUser.objects.create_superuser, phone='+12025551234')
 
     def test_create_user_ambiguous_username(self):
         """
@@ -229,29 +229,29 @@ class TestUserManager(TestCase):
         self.assertRaises(ValidationError, FlexUser.objects.create_superuser, email='validUsername')
         self.assertRaises(ValidationError, FlexUser.objects.create_superuser, email='+12025551234')
 
-    def test_create_user_ambiguous_phone_number(self):
+    def test_create_user_ambiguous_phone(self):
         """
-        Verify that a username or email address cannot form a valid phone_number.
+        Verify that a username or email address cannot form a valid phone.
 
         :return:
         """
         from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        self.assertRaises(ValidationError, FlexUser.objects.create_user, phone_number='validUsername')
-        self.assertRaises(ValidationError, FlexUser.objects.create_user, phone_number='validEmail@example.com')
+        self.assertRaises(ValidationError, FlexUser.objects.create_user, phone='validUsername')
+        self.assertRaises(ValidationError, FlexUser.objects.create_user, phone='validEmail@example.com')
 
-    def test_create_superuser_ambiguous_phone_number(self):
+    def test_create_superuser_ambiguous_phone(self):
         """
-        Verify that a username or email address cannot form a valid phone_number.
+        Verify that a username or email address cannot form a valid phone.
 
         :return:
         """
         from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        self.assertRaises(ValidationError, FlexUser.objects.create_superuser, phone_number='validUsername')
-        self.assertRaises(ValidationError, FlexUser.objects.create_superuser, phone_number='validEmail@example.com')
+        self.assertRaises(ValidationError, FlexUser.objects.create_superuser, phone='validUsername')
+        self.assertRaises(ValidationError, FlexUser.objects.create_superuser, phone='validEmail@example.com')
 
     def test_create_user_normalize_username(self):
         from django_flex_user.models import FlexUser

@@ -25,7 +25,7 @@ UserModel = get_user_model()
 
 class FlexUserSerializer(serializers.ModelSerializer):
     email_verified = serializers.SerializerMethodField('get_email_verified')
-    phone_number_verified = serializers.SerializerMethodField('get_phone_number_verified')
+    phone_verified = serializers.SerializerMethodField('get_phone_verified')
 
     @staticmethod
     def get_email_verified(obj):
@@ -35,7 +35,7 @@ class FlexUserSerializer(serializers.ModelSerializer):
             return False  # todo: remove this try/catch after resetting database
 
     @staticmethod
-    def get_phone_number_verified(obj):
+    def get_phone_verified(obj):
         return False
 
     def validate_username(self, value):
@@ -85,20 +85,20 @@ class FlexUserSerializer(serializers.ModelSerializer):
 
         # https://github.com/encode/django-rest-framework/issues/5521
 
-        # Extract username, email and phone_number from supplied instance and merge it with attrs
+        # Extract username, email and phone from supplied instance and merge it with attrs
         instance = self.instance if self.instance else self.Meta.model()
         serializer = FlexUserSerializer(instance=instance)
         data = {**serializer.data, **attrs}
 
         errors = {}
 
-        # Check that the caller has supplied at least one of username, email or phone_number
-        if data.get('username') is None and data.get('email') is None and data.get('phone_number') is None:
+        # Check that the caller has supplied at least one of username, email or phone
+        if data.get('username') is None and data.get('email') is None and data.get('phone') is None:
             errors[api_settings.NON_FIELD_ERRORS_KEY] = \
-                'You must supply at least one of {username}, {email} or {phone_number}.'.format(
+                'You must supply at least one of {username}, {email} or {phone}.'.format(
                     username=self.Meta.model._meta.get_field('username').verbose_name,
                     email=self.Meta.model._meta.get_field('email').verbose_name,
-                    phone_number=self.Meta.model._meta.get_field('phone_number').verbose_name
+                    phone=self.Meta.model._meta.get_field('phone').verbose_name
                 )
 
         # Check password strength
@@ -108,7 +108,7 @@ class FlexUserSerializer(serializers.ModelSerializer):
                 # note eben: Be aware that there may be issues if a password validator expects the user instance to have
                 # a valid id and/or have been persisted to the database. For example, issues may occur in a password
                 # validator that checks for password reuse.
-                filter_keys = ('email_verified', 'phone_number_verified', 'password')
+                filter_keys = ('email_verified', 'phone_verified', 'password')
                 temp_user = self.Meta.model(**{k: v for k, v in data.items() if k not in filter_keys})
                 temp_user.set_unusable_password()
                 password_validation.validate_password(attrs['password'], temp_user)
@@ -147,7 +147,7 @@ class FlexUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserModel
-        fields = ['username', 'email', 'email_verified', 'phone_number', 'phone_number_verified', 'password']
+        fields = ['username', 'email', 'email_verified', 'phone', 'phone_verified', 'password']
         extra_kwargs = {
             'username': {
                 'allow_blank': False,
@@ -157,7 +157,7 @@ class FlexUserSerializer(serializers.ModelSerializer):
                 'allow_blank': False,
                 'validators': [EmailValidator()]  # Remove Unique validator
             },
-            'phone_number': {
+            'phone': {
                 'allow_blank': False
             },
             'password': {
@@ -183,14 +183,14 @@ class AuthenticationSerializer(serializers.Serializer):
         required=False
     )
     email_verified = serializers.SerializerMethodField('get_email_verified')
-    phone_number = serializers.CharField(
+    phone = serializers.CharField(
         allow_blank=False,
         allow_null=True,
         max_length=128,
         required=False,
         validators=[validate_international_phonenumber]
     )
-    phone_number_verified = serializers.SerializerMethodField('get_phone_number_verified')
+    phone_verified = serializers.SerializerMethodField('get_phone_verified')
     password = serializers.CharField(
         allow_blank=False,
         allow_null=False,
@@ -205,7 +205,7 @@ class AuthenticationSerializer(serializers.Serializer):
         return EmailDevice.objects.get(user=obj.id, email=None).confirmed
 
     @staticmethod
-    def get_phone_number_verified(obj):
+    def get_phone_verified(obj):
         return False
 
     @staticmethod
@@ -233,17 +233,17 @@ class AuthenticationSerializer(serializers.Serializer):
         self.user = None
 
     def validate(self, attrs):
-        # Check that the caller has supplied at least one of username, email or phone_number
-        if attrs.get('username') is None and attrs.get('email') is None and attrs.get('phone_number') is None:
+        # Check that the caller has supplied at least one of username, email or phone
+        if attrs.get('username') is None and attrs.get('email') is None and attrs.get('phone') is None:
             raise serializers.ValidationError(
-                'You must supply at least one of {username}, {email} or {phone_number}.'.format(
+                'You must supply at least one of {username}, {email} or {phone}.'.format(
                     username=UserModel._meta.get_field('username').verbose_name,
                     email=UserModel._meta.get_field('email').verbose_name,
-                    phone_number=UserModel._meta.get_field('phone_number').verbose_name
+                    phone=UserModel._meta.get_field('phone').verbose_name
                 )
             )
 
-        # Check that the supplied username, email and phone_number match an existing user
+        # Check that the supplied username, email and phone match an existing user
         query = {k: v for k, v in attrs.items() if k is not 'password' and v is not None}
         try:
             user = UserModel.objects.get(**query)
@@ -271,10 +271,10 @@ class AuthenticationSerializer(serializers.Serializer):
         if self.user is None:
             raise serializers.ValidationError({'password': 'The password you entered is invalid.'})
 
-        # Populate the serializer with the authenticated user's username, email and phone_number
+        # Populate the serializer with the authenticated user's username, email and phone
         attrs['username'] = self.user.username
         attrs['email'] = self.user.email
-        attrs['phone_number'] = self.user.phone_number
+        attrs['phone'] = self.user.phone
 
         return attrs
 
