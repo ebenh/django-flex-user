@@ -19,7 +19,7 @@ from django_otp.plugins.otp_email.models import EmailDevice
 
 from social_django.models import UserSocialAuth
 
-from .serializers import SPUserSerializer, AuthenticationSerializer, EmailDeviceSerializer, OTPSerializer, \
+from .serializers import FlexUserSerializer, AuthenticationSerializer, EmailDeviceSerializer, OTPSerializer, \
     UserSocialAuthSerializer
 
 UserModel = get_user_model()
@@ -35,8 +35,8 @@ def get_csrf_token(request):
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class SPUsers(generics.GenericAPIView):
-    serializer_class = SPUserSerializer
+class FlexUsers(generics.GenericAPIView):
+    serializer_class = FlexUserSerializer
     authentication_classes = [SessionAuthentication]
     permission_classes = [AllowAny]
 
@@ -45,13 +45,13 @@ class SPUsers(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            login(request, user, backend='django_flex_user.backends.SPModelBackend')
+            login(request, user, backend='django_flex_user.backends.FlexUserModelBackend')
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class SPUser(generics.GenericAPIView):
-    serializer_class = SPUserSerializer
+class FlexUser(generics.GenericAPIView):
+    serializer_class = FlexUserSerializer
     authentication_classes = [SessionAuthentication, JWTAuthentication]
     permission_classes = [IsAuthenticated]
 

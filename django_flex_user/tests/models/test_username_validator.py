@@ -102,19 +102,19 @@ class TestUserSerializer(TestCase):
     ]
 
     def test_valid_usernames(self):
-        from django_flex_user.validators import SPUnicodeUsernameValidator
+        from django_flex_user.validators import FlexUserUnicodeUsernameValidator
 
-        username_validator = SPUnicodeUsernameValidator()
+        username_validator = FlexUserUnicodeUsernameValidator()
 
         for username in self._valid_usernames:
             with self.subTest(username):
                 username_validator(username)
 
     def test_invalid_usernames(self):
-        from django_flex_user.validators import SPUnicodeUsernameValidator
+        from django_flex_user.validators import FlexUserUnicodeUsernameValidator
         from django.core.exceptions import ValidationError
 
-        username_validator = SPUnicodeUsernameValidator()
+        username_validator = FlexUserUnicodeUsernameValidator()
 
         for username in self._invalid_usernames:
             with self.subTest(username):

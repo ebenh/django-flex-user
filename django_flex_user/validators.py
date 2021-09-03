@@ -21,7 +21,7 @@ def _lazy_re_compile(regex, flags=0):
 
 
 @deconstructible
-class MyRegexValidator(RegexValidator):
+class _UnicodeRegexValidator(RegexValidator):
     def __init__(self, regex=None, message=None, code=None, inverse_match=None, flags=None):
         if regex is not None:
             self.regex = regex
@@ -40,7 +40,7 @@ class MyRegexValidator(RegexValidator):
 
 
 @deconstructible()
-class SPUnicodeUsernameValidator(MyRegexValidator):
+class FlexUserUnicodeUsernameValidator(_UnicodeRegexValidator):
     """
     Our implementation of django.contrib.auth.validators.UnicodeUsernameValidator.
 
@@ -63,7 +63,7 @@ class SPUnicodeUsernameValidator(MyRegexValidator):
 NO_SPECIAL_REGEX = re.compile(r'[^\w.-]+', re.UNICODE)
 
 
-def clean_username(value):
+def flex_user_clean_username(value):
     """
     Our clean username function for social-auth-app-django. Cleans input username by removing unsupported characters.
 

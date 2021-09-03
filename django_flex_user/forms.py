@@ -2,15 +2,15 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.views import LoginView
-from django.contrib.auth.forms import AuthenticationForm as BuiltInAuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm
 from django.utils.text import capfirst
 
-from .validators import SPUnicodeUsernameValidator
+from .validators import FlexUserUnicodeUsernameValidator
 
 UserModel = get_user_model()
 
 
-class AuthenticationForm(BuiltInAuthenticationForm):
+class FlexUserAuthenticationForm(AuthenticationForm):
     username = forms.CharField(
         label=capfirst(
             '{username}, {email} or {phone_number}'.format(
@@ -22,7 +22,7 @@ class AuthenticationForm(BuiltInAuthenticationForm):
         widget=forms.TextInput(attrs={'autofocus': True})
     )
 
-    usernameValidator = SPUnicodeUsernameValidator()
+    usernameValidator = FlexUserUnicodeUsernameValidator()
 
     def __init__(self, request=None, *args, **kwargs):
         """
@@ -73,4 +73,4 @@ class AuthenticationForm(BuiltInAuthenticationForm):
 
 
 # Set our custom authentication form to be the default authentication form for Django
-LoginView.authentication_form = AuthenticationForm
+LoginView.authentication_form = FlexUserAuthenticationForm

@@ -15,7 +15,7 @@ from social_django.models import UserSocialAuth
 
 import tldextract, regex as re
 
-from .models import SPUnicodeUsernameValidator
+from .models import FlexUserUnicodeUsernameValidator
 
 UserModel = get_user_model()
 
@@ -23,7 +23,7 @@ UserModel = get_user_model()
 # https://stackoverflow.com/questions/31278418/django-rest-framework-custom-fields-validation
 # https://stackoverflow.com/questions/27591574/order-of-serializer-validation-in-django-rest-framework
 
-class SPUserSerializer(serializers.ModelSerializer):
+class FlexUserSerializer(serializers.ModelSerializer):
     email_verified = serializers.SerializerMethodField('get_email_verified')
     phone_number_verified = serializers.SerializerMethodField('get_phone_number_verified')
 
@@ -87,7 +87,7 @@ class SPUserSerializer(serializers.ModelSerializer):
 
         # Extract username, email and phone_number from supplied instance and merge it with attrs
         instance = self.instance if self.instance else self.Meta.model()
-        serializer = SPUserSerializer(instance=instance)
+        serializer = FlexUserSerializer(instance=instance)
         data = {**serializer.data, **attrs}
 
         errors = {}
@@ -121,8 +121,8 @@ class SPUserSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        # Ordinarily we would call django_flex_user.models.SPUser.objects.create_user to create a new user, but since doing so
-        # would re-perform all the validation we already performed in this serializer, we construct a SPUser object
+        # Ordinarily we would call django_flex_user.models.FlexUser.objects.create_user to create a new user, but since doing so
+        # would re-perform all the validation we already performed in this serializer, we construct a FlexUser object
         # manually.
         password = validated_data.pop('password')
         user = self.Meta.model(**validated_data)
@@ -151,7 +151,7 @@ class SPUserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'username': {
                 'allow_blank': False,
-                'validators': [SPUnicodeUsernameValidator()]  # Remove Unique validator
+                'validators': [FlexUserUnicodeUsernameValidator()]  # Remove Unique validator
             },
             'email': {
                 'allow_blank': False,
@@ -174,7 +174,7 @@ class AuthenticationSerializer(serializers.Serializer):
         allow_null=True,
         max_length=150,
         required=False,
-        validators=[SPUnicodeUsernameValidator()]
+        validators=[FlexUserUnicodeUsernameValidator()]
     )
     email = serializers.EmailField(
         allow_blank=False,

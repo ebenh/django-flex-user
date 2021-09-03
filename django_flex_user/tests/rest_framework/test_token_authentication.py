@@ -32,13 +32,13 @@ class TestTokenAuthentication(APITestCase, URLPatternsTestCase):
     ]
 
     def test_create_token(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
         from django.utils import timezone
         from django.db.utils import IntegrityError
         from freezegun import freeze_time
 
         with freeze_time():
-            user = SPUser.objects.create_user(username='validUsername', password='validPassword')
+            user = FlexUser.objects.create_user(username='validUsername', password='validPassword')
             token = Token.objects.create(user=user)
 
             self.assertIsNotNone(token)
@@ -58,9 +58,9 @@ class TestTokenAuthentication(APITestCase, URLPatternsTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_successful_authentication_unrestricted_view(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
-        user = SPUser.objects.create_user(username='validUsername', password='validPassword')
+        user = FlexUser.objects.create_user(username='validUsername', password='validPassword')
         token = Token.objects.create(user=user)
 
         self.client.credentials(HTTP_AUTHORIZATION=f'Token {token.key}')
@@ -85,9 +85,9 @@ class TestTokenAuthentication(APITestCase, URLPatternsTestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_successful_authentication_restricted_view(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
-        user = SPUser.objects.create_user(username='validUsername', password='validPassword')
+        user = FlexUser.objects.create_user(username='validUsername', password='validPassword')
         token = Token.objects.create(user=user)
 
         self.client.credentials(HTTP_AUTHORIZATION=f'Token {token.key}')

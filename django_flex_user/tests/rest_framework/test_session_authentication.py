@@ -45,11 +45,11 @@ class TestSessionAuthenticationCSRFToken(APITestCase, URLPatternsTestCase):
     ]
 
     def setUp(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
         self.client = APIClient(enforce_csrf_checks=True)
 
-        SPUser.objects.create_user(username='validUsername', password='validPassword')
+        FlexUser.objects.create_user(username='validUsername', password='validPassword')
         is_authenticated = self.client.login(username='validUsername', password='validPassword')
         self.assertIs(is_authenticated, True)
 
@@ -132,9 +132,9 @@ class TestSessionAuthentication(APITestCase, URLPatternsTestCase):
     ]
 
     def setUp(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
-        self.user = SPUser.objects.create_user(username='validUsername', password='validPassword')
+        self.user = FlexUser.objects.create_user(username='validUsername', password='validPassword')
 
     def test_no_authentication_unrestricted_view(self):
         response = self.client.get('/session-authentication-unrestricted-view')

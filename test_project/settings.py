@@ -138,14 +138,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Tell Django to use our new user model
 
-AUTH_USER_MODEL = 'django_flex_user.SPUser'
+AUTH_USER_MODEL = 'django_flex_user.FlexUser'
 
 # Tell Django to use our authentication backend
 
 AUTHENTICATION_BACKENDS = [
-    'django_flex_user.backends.SPModelBackend',
-    'django_flex_user.backends.SPFacebookOAuth2',
-    'django_flex_user.backends.SPGoogleOAuth2',
+    'django_flex_user.backends.FlexUserModelBackend',
+    'django_flex_user.backends.FlexUserFacebookOAuth2',
+    'django_flex_user.backends.FlexUserGoogleOAuth2',
 ]  # default: ['django.contrib.auth.backends.ModelBackend',]
 
 # Tell Django to use our login template
@@ -246,7 +246,7 @@ SOCIAL_AUTH_EMAIL_VALIDATION_URL = 'http://localhost:4200/verify/email/'
 SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'django_flex_user.verification.email_validation_link'
 SOCIAL_AUTH_FACEBOOK_FORCE_EMAIL_VALIDATION = True
 
-SOCIAL_AUTH_CLEAN_USERNAME_FUNCTION = 'django_flex_user.validators.clean_username'
+SOCIAL_AUTH_CLEAN_USERNAME_FUNCTION = 'django_flex_user.validators.flex_user_clean_username'
 
 #
 # Production Variables ... Needed for social-auth-app-django

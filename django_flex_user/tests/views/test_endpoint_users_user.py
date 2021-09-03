@@ -2,9 +2,9 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 
 
-class TestSPUserRetrieveUpdate(APITestCase):
+class TestFlexUserRetrieveUpdate(APITestCase):
     """
-    This class is designed to test django_flex_user.views.SPUser
+    This class is designed to test django_flex_user.views.FlexUser
     """
     _REST_ENDPOINT_PATH = '/account/users/user/'
 
@@ -33,9 +33,9 @@ class TestSPUserRetrieveUpdate(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
-class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
+class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
     """
-    This class is designed to test django_flex_user.views.SPUser
+    This class is designed to test django_flex_user.views.FlexUser
     """
     _REST_ENDPOINT_PATH = '/account/users/user/'
 
@@ -87,9 +87,9 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                                {'password': 'invalid'}]
 
     def setUp(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
-        self.user = SPUser.objects.create_user(username='validUsername', password='validPassword')
+        self.user = FlexUser.objects.create_user(username='validUsername', password='validPassword')
 
     def test_method_get(self):
         is_authenticated = self.client.login(username='validUsername', password='validPassword')
@@ -141,7 +141,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
 
                             By default, updating a user's password invalidates all sessions for the user. To make it so
                             that the user is *not* signed out by a password change, in
-                            django_flex_user.serializers.SPUserSerializer.update we call
+                            django_flex_user.serializers.FlexUserSerializer.update we call
                             django.contrib.auth.update_session_auth_hash which (1) generates a new session key for the
                             user's current session (2) updates the current session's _auth_user_hash with a value based
                             on the user's new password (because the value of _auth_user_hash for all other sessions are
@@ -162,14 +162,14 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                             For good measure/symmetry we also call django.test.client.Client.logout at the end of each
                             iteration.                       
                             """
-                            self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+                            self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
                             response = self.client.patch(self._REST_ENDPOINT_PATH, data=data, format='json')
 
                             if 'password' in data and not data['password']:
                                 """
                                 If the supplied password is defined and either None or the empty string,
-                                django_flex_user.views.SPUser.put should return HTTP status code HTTP_400_BAD_REQUEST.
+                                django_flex_user.views.FlexUser.put should return HTTP status code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                                 self.client.logout()
@@ -178,7 +178,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                                     ('phone_number' not in data or data['phone_number'] is None):
                                 """
                                 If the supplied username is None, and the supplied email and phone_number are
-                                simultaneously undefined or None, django_flex_user.views.SPUser.put should return HTTP status
+                                simultaneously undefined or None, django_flex_user.views.FlexUser.put should return HTTP status
                                 code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -188,7 +188,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                                     data.get('phone_number') == '':
                                 """
                                 If any of the supplied username, email or phone_number are the empty string
-                                django_flex_user.views.SPUser.put should return HTTP status code HTTP_400_BAD_REQUEST.
+                                django_flex_user.views.FlexUser.put should return HTTP status code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                                 self.client.logout()
@@ -198,7 +198,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                                     (data.get('password') and 'invalid' in data['password']):
                                 """
                                 If any of the supplied username, email, phone_number or password are defined and
-                                invalid, django_flex_user.views.SPUser.put should return HTTP status code
+                                invalid, django_flex_user.views.FlexUser.put should return HTTP status code
                                 HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -206,7 +206,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.views.SPUser.put should return HTTP status
+                                phone_number and password for which django_flex_user.views.FlexUser.put should return HTTP status
                                 code HTTP_200_OK.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -246,7 +246,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
 
                             By default, updating a user's password invalidates all sessions for the user. To make it so
                             that the user is *not* signed out by a password change, in
-                            django_flex_user.serializers.SPUserSerializer.update we call
+                            django_flex_user.serializers.FlexUserSerializer.update we call
                             django.contrib.auth.update_session_auth_hash which (1) generates a new session key for the
                             user's current session (2) updates the current session's _auth_user_hash with a value based
                             on the user's new password (because the value of _auth_user_hash for all other sessions are
@@ -267,13 +267,13 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                             For good measure/symmetry we also call django.test.client.Client.logout at the end of each
                             iteration.                       
                             """
-                            self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+                            self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
                             response = self.client.patch(self._REST_ENDPOINT_PATH, data=data, format='multipart')
 
                             if 'password' in data and data['password'] == '':
                                 """
-                                If the supplied password is defined and blank, django_flex_user.views.SPUser.put should return
+                                If the supplied password is defined and blank, django_flex_user.views.FlexUser.put should return
                                 HTTP status code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -283,7 +283,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                                     ('phone_number' not in data or data['phone_number'] == ''):
                                 """
                                 If the supplied username is blank, and the supplied email and phone_number are
-                                simultaneously undefined or blank, django_flex_user.views.SPUser.put should return HTTP status
+                                simultaneously undefined or blank, django_flex_user.views.FlexUser.put should return HTTP status
                                 code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -294,14 +294,14 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                                     (data.get('password') and 'invalid' in data['password']):
                                 """
                                 If any of the supplied username, email, phone_number or password are defined and
-                                invalid, django_flex_user.views.SPUser.put should return HTTP status code HTTP_400_BAD_REQUEST.
+                                invalid, django_flex_user.views.FlexUser.put should return HTTP status code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                                 self.client.logout()
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.views.SPUser.put should return HTTP status
+                                phone_number and password for which django_flex_user.views.FlexUser.put should return HTTP status
                                 code HTTP_200_OK.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -325,11 +325,11 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
                                 transaction.set_rollback(True)
 
     def test_method_patch_username_case_insensitivity(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
-        SPUser.objects.create_user(username='validUsername2', password='validPassword')
+        FlexUser.objects.create_user(username='validUsername2', password='validPassword')
 
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         data = {'username': 'VALIDUSERNAME2'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)
@@ -338,11 +338,11 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
         self.client.logout()
 
     def test_method_patch_duplicate_username(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
-        SPUser.objects.create_user(username='validUsername2', password='validPassword')
+        FlexUser.objects.create_user(username='validUsername2', password='validPassword')
 
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         data = {'username': 'validUsername2'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)
@@ -351,11 +351,11 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
         self.client.logout()
 
     def test_method_patch_duplicate_email(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
-        SPUser.objects.create_user(email='validEmail@example.com', password='validPassword')
+        FlexUser.objects.create_user(email='validEmail@example.com', password='validPassword')
 
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         data = {'email': 'validEmail@example.com'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)
@@ -364,11 +364,11 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
         self.client.logout()
 
     def test_method_patch_duplicate_phone_number(self):
-        from django_flex_user.models import SPUser
+        from django_flex_user.models import FlexUser
 
-        SPUser.objects.create_user(phone_number='+12025551234', password='validPassword')
+        FlexUser.objects.create_user(phone_number='+12025551234', password='validPassword')
 
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         data = {'phone_number': '+12025551234'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)
@@ -382,7 +382,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
 
         :return:
         """
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         data = {'username': 'validEmail@example.com'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)
@@ -400,7 +400,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
 
         :return:
         """
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         data = {'email': 'validUsername'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)
@@ -418,7 +418,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
 
         :return:
         """
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         data = {'phone_number': 'validUsername'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)
@@ -431,7 +431,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
         self.client.logout()
 
     def test_method_patch_normalize_username(self):
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         nfd = 'validUsérname'  # é = U+0065 U+0301
         nfkc = 'validUsérname'  # é = U+00e9
@@ -444,7 +444,7 @@ class TestSPUserRetrieveUpdateAuthenticated(APITestCase):
         self.client.logout()
 
     def test_method_patch_normalize_email(self):
-        self.client.force_login(self.user, 'django_flex_user.backends.SPModelBackend')
+        self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
         data = {'email': 'validEmail@bücher.example'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)

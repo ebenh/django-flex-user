@@ -9,7 +9,7 @@ from social_core.backends.google import GoogleOAuth2
 UserModel = get_user_model()
 
 
-class SPModelBackend(ModelBackend):
+class FlexUserModelBackend(ModelBackend):
     """
     Our implementation of django.contrib.auth.backends.ModelBackend.
     """
@@ -26,7 +26,7 @@ class SPModelBackend(ModelBackend):
                 return user
 
 
-class SPFacebookOAuth2(FacebookOAuth2):
+class FlexUserFacebookOAuth2(FacebookOAuth2):
     """
     Our implementation of social_core.backends.facebook.FacebookOAuth2.
     """
@@ -37,7 +37,7 @@ class SPFacebookOAuth2(FacebookOAuth2):
 
         Our implementation of this method is identical to the superclass implementation except when the OAuth service
         doesn't return an email address for the user, we set it to be None instead of the empty string. This is because
-        django_flex_user.models.SPUser does not permit email to be the empty string.
+        django_flex_user.models.FlexUser does not permit email to be the empty string.
 
         :param response:
         :return:
@@ -55,7 +55,7 @@ class SPFacebookOAuth2(FacebookOAuth2):
                 'last_name': last_name}
 
 
-class SPGoogleOAuth2(GoogleOAuth2):
+class FlexUserGoogleOAuth2(GoogleOAuth2):
     """
     Our implementation of social_core.backends.facebook.GoogleOAuth2.
     """
@@ -66,7 +66,7 @@ class SPGoogleOAuth2(GoogleOAuth2):
 
         Our implementation of this method is identical to the superclass implementation except when the OAuth service
         doesn't return an email address for the user, we set it to be None instead of the empty string. This is because
-        django_flex_user.models.SPUser does not permit email to be the empty string.
+        django_flex_user.models.FlexUser does not permit email to be the empty string.
 
         :param response:
         :return:

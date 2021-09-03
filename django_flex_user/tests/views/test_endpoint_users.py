@@ -2,9 +2,9 @@ from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
 
 
-class TestSPUserCreate(APITestCase):
+class TestFlexUserCreate(APITestCase):
     """
-    This class is designed to test django_flex_user.views.SPUsers
+    This class is designed to test django_flex_user.views.FlexUsers
     """
     _CSRF_TOKENS_PATH = '/account/csrf-tokens/'
     _REST_ENDPOINT_PATH = '/account/users/'
@@ -100,7 +100,7 @@ class TestSPUserCreate(APITestCase):
                                     ('phone_number' not in data or data['phone_number'] is None):
                                 """
                                 If the supplied username, email, and phone_number are simultaneously undefined or None,
-                                django_flex_user.views.SPUsers.post should return HTTP status code HTTP_400_BAD_REQUEST.
+                                django_flex_user.views.FlexUsers.post should return HTTP status code HTTP_400_BAD_REQUEST.
 
                                 At least one of username, email or phone_number must be defined and not None.
                                 """
@@ -108,7 +108,7 @@ class TestSPUserCreate(APITestCase):
                             elif not data.get('password'):
                                 """
                                 If the supplied password is undefined, None or the empty string,
-                                django_flex_user.views.SPUsers.post should return HTTP status code HTTP_400_BAD_REQUEST.
+                                django_flex_user.views.FlexUsers.post should return HTTP status code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                             elif data.get('username') == '' or \
@@ -116,7 +116,7 @@ class TestSPUserCreate(APITestCase):
                                     data.get('phone_number') == '':
                                 """
                                 If any of the supplied username, email or phone_number are the empty string
-                                django_flex_user.views.SPUsers.post should return HTTP status code HTTP_400_BAD_REQUEST.
+                                django_flex_user.views.FlexUsers.post should return HTTP status code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                             elif (data.get('username') and 'invalid' in data['username']) or \
@@ -125,20 +125,20 @@ class TestSPUserCreate(APITestCase):
                                     (data.get('password') and 'invalid' in data['password']):
                                 """
                                 If any of the supplied username, email, phone_number or password are defined and
-                                invalid, django_flex_user.views.SPUsers.post should return HTTP status code
+                                invalid, django_flex_user.views.FlexUsers.post should return HTTP status code
                                 HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.views.SPUsers.post should return HTTP status
+                                phone_number and password for which django_flex_user.views.FlexUsers.post should return HTTP status
                                 code HTTP_201_CREATED.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
                                 """
-                                When REST parameters are valid, django_flex_user.views.SPUsers calls django.contrib.auth.login
+                                When REST parameters are valid, django_flex_user.views.FlexUsers calls django.contrib.auth.login
                                 which in turn calls django.middleware.csrf.rotate_token which resets the current CSRF
                                 token. Therefore we need to extract the new CSRF token from the response.
                                 """
@@ -185,14 +185,14 @@ class TestSPUserCreate(APITestCase):
                                     ('phone_number' not in data or data['phone_number'] == ''):
                                 """
                                 If the supplied username, email, and phone_number are simultaneously undefined or blank,
-                                django_flex_user.views.SPUsers.post should return HTTP status code HTTP_400_BAD_REQUEST.
+                                django_flex_user.views.FlexUsers.post should return HTTP status code HTTP_400_BAD_REQUEST.
 
                                 At least one of username, email or phone_number must be defined and not blank.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                             elif 'password' not in data or data['password'] == '':
                                 """
-                                If the supplied password is undefined or blank, django_flex_user.views.SPUsers.post should return
+                                If the supplied password is undefined or blank, django_flex_user.views.FlexUsers.post should return
                                 HTTP status code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -202,19 +202,19 @@ class TestSPUserCreate(APITestCase):
                                     (data.get('password') and 'invalid' in data['password']):
                                 """
                                 If any of the supplied username, email, phone_number or password are defined and
-                                invalid, django_flex_user.views.SPUsers.post should return HTTP status code HTTP_400_BAD_REQUEST.
+                                invalid, django_flex_user.views.FlexUsers.post should return HTTP status code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.views.SPUsers.post should return HTTP status
+                                phone_number and password for which django_flex_user.views.FlexUsers.post should return HTTP status
                                 code HTTP_201_CREATED.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
                                 """
-                                When REST parameters are valid, django_flex_user.views.SPUsers calls django.contrib.auth.login
+                                When REST parameters are valid, django_flex_user.views.FlexUsers calls django.contrib.auth.login
                                 which in turn calls django.middleware.csrf.rotate_token which resets the current CSRF
                                 token. Therefore we need to extract the new CSRF token from the response.
                                 """
@@ -240,7 +240,7 @@ class TestSPUserCreate(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         """
-        When REST parameters are valid, django_flex_user.views.SPUsers calls django.contrib.auth.login which in turn calls
+        When REST parameters are valid, django_flex_user.views.FlexUsers calls django.contrib.auth.login which in turn calls
         django.middleware.csrf.rotate_token which resets the current CSRF token. Therefore we need to extract the new
         CSRF token from the response.
         """
@@ -257,7 +257,7 @@ class TestSPUserCreate(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         """
-        When REST parameters are valid, django_flex_user.views.SPUsers calls django.contrib.auth.login which in turn calls
+        When REST parameters are valid, django_flex_user.views.FlexUsers calls django.contrib.auth.login which in turn calls
         django.middleware.csrf.rotate_token which resets the current CSRF token. Therefore we need to extract the new
         CSRF token from the response.
         """
@@ -273,7 +273,7 @@ class TestSPUserCreate(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         """
-        When REST parameters are valid, django_flex_user.views.SPUsers calls django.contrib.auth.login which in turn calls
+        When REST parameters are valid, django_flex_user.views.FlexUsers calls django.contrib.auth.login which in turn calls
         django.middleware.csrf.rotate_token which resets the current CSRF token. Therefore we need to extract the new
         CSRF token from the response.
         """
@@ -289,7 +289,7 @@ class TestSPUserCreate(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         """
-        When REST parameters are valid, django_flex_user.views.SPUsers calls django.contrib.auth.login which in turn calls
+        When REST parameters are valid, django_flex_user.views.FlexUsers calls django.contrib.auth.login which in turn calls
         django.middleware.csrf.rotate_token which resets the current CSRF token. Therefore we need to extract the new
         CSRF token from the response.
         """

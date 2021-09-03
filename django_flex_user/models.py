@@ -13,7 +13,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from dirtyfields import DirtyFieldsMixin
 
-from .validators import SPUnicodeUsernameValidator
+from .validators import FlexUserUnicodeUsernameValidator
 
 from .fields import CICharField
 
@@ -21,7 +21,7 @@ from .fields import CICharField
 # Reference: https://docs.djangoproject.com/en/3.0/topics/auth/customizing/
 # Reference: https://simpleisbetterthancomplex.com/tutorial/2016/07/22/how-to-extend-django-user-model.html
 
-class SPUserManager(BaseUserManager):
+class FlexUserManager(BaseUserManager):
     """
     Our custom implementation of django.contrib.auth.models.UserManager.
     """
@@ -84,7 +84,7 @@ class SPUserManager(BaseUserManager):
         return self.get(**q)
 
 
-class SPUser(AbstractBaseUser, PermissionsMixin, DirtyFieldsMixin):
+class FlexUser(AbstractBaseUser, PermissionsMixin, DirtyFieldsMixin):
     """
     Our implementation django.contrib.auth.models.User.
 
@@ -134,7 +134,7 @@ class SPUser(AbstractBaseUser, PermissionsMixin, DirtyFieldsMixin):
         email address or phone number.
     """
 
-    username_validator = SPUnicodeUsernameValidator()
+    username_validator = FlexUserUnicodeUsernameValidator()
 
     email = models.EmailField(
         _('email address'),
@@ -201,7 +201,7 @@ class SPUser(AbstractBaseUser, PermissionsMixin, DirtyFieldsMixin):
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = []
 
-    objects = SPUserManager()
+    objects = FlexUserManager()
 
     class Meta:
         verbose_name = _('user')
@@ -243,7 +243,7 @@ class SPUser(AbstractBaseUser, PermissionsMixin, DirtyFieldsMixin):
 
         # Normalize username and email
         self.username = self.normalize_username(self.username)
-        self.email = SPUser.objects.normalize_email(self.email)
+        self.email = FlexUser.objects.normalize_email(self.email)
 
     def get_username(self):
         """Return the identifying username for this user"""
@@ -253,12 +253,12 @@ class SPUser(AbstractBaseUser, PermissionsMixin, DirtyFieldsMixin):
         return self.username, self.email, self.phone_number
 
 
-@receiver(pre_save, sender=SPUser)
+@receiver(pre_save, sender=FlexUser)
 def my_pre__save_handler(sender, **kwargs):
     pass
 
 
-@receiver(post_save, sender=SPUser)
+@receiver(post_save, sender=FlexUser)
 def my_post_save_handler(sender, **kwargs):
     if kwargs['created']:
         EmailDevice.objects.create(name="default", user_id=kwargs['instance'].id, confirmed=False)
