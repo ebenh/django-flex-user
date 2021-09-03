@@ -21,10 +21,14 @@
 
         py manage.py createsuperuser
 
-7. Run the development server
+6. Run the development server
 
         py manage.py runserver
 
-8. Run tests
+7. Run tests
 
         py manage.py test
+
+8. Build the Python package
+
+        py setup.py sdist
