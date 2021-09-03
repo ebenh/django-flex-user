@@ -21,11 +21,11 @@ class TestAuthenticate(TestCase):
                      {'email': 'validEmail@example.com'},
                      {'email': 'invalidEmail@example.com'}]
 
-    _phone_number_values = [{},
-                            {'phone_number': None},
-                            {'phone_number': ''},
-                            {'phone_number': '+12025551234'},
-                            {'phone_number': 'invalidPhoneNumber'}]
+    _phone_values = [{},
+                            {'phone': None},
+                            {'phone': ''},
+                            {'phone': '+12025551234'},
+                            {'phone': 'invalidPhoneNumber'}]
 
     _password_values = [{},
                         {'password': None},
@@ -40,13 +40,13 @@ class TestAuthenticate(TestCase):
         FlexUser.objects.create_user(
             username='validUsername',
             email='validEmail@example.com',
-            phone_number='+12025551234',
+            phone='+12025551234',
             password='validPassword'
         )
 
         for i in self._username_values:
             for j in self._email_values:
-                for k in self._phone_number_values:
+                for k in self._phone_values:
                     for l in self._password_values:
 
                         args = {}
@@ -60,12 +60,12 @@ class TestAuthenticate(TestCase):
 
                             if args.get('username') is None and \
                                     args.get('email') is None and \
-                                    args.get('phone_number') is None:
+                                    args.get('phone') is None:
                                 """
-                                If the supplied username, email, and phone_number are simultaneously undefined or None,
+                                If the supplied username, email, and phone are simultaneously undefined or None,
                                 django_flex_user.backends.FlexUserModelBackend.authenticate should raise ValueError.
                                 
-                                At least one of username, email or phone_number must be defined and not None.
+                                At least one of username, email or phone must be defined and not None.
                                 """
                                 self.assertRaises(ValueError, authenticate, **args)
                             elif args.get('password') is None:
@@ -92,26 +92,26 @@ class TestAuthenticate(TestCase):
                                 self.assertIsNone(authenticate(**args))
                             elif args.get('username') == '' or \
                                     args.get('email') == '' or \
-                                    args.get('phone_number') == '':
+                                    args.get('phone') == '':
                                 """
-                                If any of the supplied username, email or phone_number are the empty string,
+                                If any of the supplied username, email or phone are the empty string,
                                 django_flex_user.backends.FlexUserModelBackend.authenticate should return None. This is because empty
-                                string does not form a valid username, email or phone_number.
+                                string does not form a valid username, email or phone.
                                 """
                                 self.assertIsNone(authenticate(**args))
                             elif (args.get('username') and 'invalid' in args['username']) or \
                                     (args.get('email') and 'invalid' in args['email']) or \
-                                    (args.get('phone_number') and 'invalid' in args['phone_number']) or \
+                                    (args.get('phone') and 'invalid' in args['phone']) or \
                                     (args.get('password') and 'invalid' in args['password']):
                                 """
-                                If any of the supplied username, email, phone_number or password are defined and
+                                If any of the supplied username, email, phone or password are defined and
                                 invalid, django_flex_user.backends.FlexUserModelBackend.authenticate should return None.
                                 """
                                 self.assertIsNone(authenticate(**args))
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.backends.FlexUserModelBackend.authenticate should
+                                phone and password for which django_flex_user.backends.FlexUserModelBackend.authenticate should
                                 return a valid (i.e. not None) FlexUser object.
                                 """
                                 self.assertIsNotNone(authenticate(**args))

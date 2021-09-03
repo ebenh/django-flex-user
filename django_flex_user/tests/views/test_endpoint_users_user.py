@@ -53,11 +53,11 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
                             {'email': 'validEmail@example.com'},
                             {'email': 'invalidEmail'}]
 
-            phone_number_values = [{},
-                                   {'phone_number': None},
-                                   {'phone_number': ''},
-                                   {'phone_number': '+12025551234'},
-                                   {'phone_number': 'invalidPhoneNumber'}]
+            phone_values = [{},
+                                   {'phone': None},
+                                   {'phone': ''},
+                                   {'phone': '+12025551234'},
+                                   {'phone': 'invalidPhoneNumber'}]
 
             password_values = [{},
                                {'password': None},
@@ -76,10 +76,10 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
                             {'email': 'validEmail@example.com'},
                             {'email': 'invalidEmail'}]
 
-            phone_number_values = [{},
-                                   {'phone_number': ''},
-                                   {'phone_number': '+12025551234'},
-                                   {'phone_number': 'invalidPhoneNumber'}]
+            phone_values = [{},
+                                   {'phone': ''},
+                                   {'phone': '+12025551234'},
+                                   {'phone': 'invalidPhoneNumber'}]
 
             password_values = [{},
                                {'password': ''},
@@ -104,8 +104,8 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
                 'username': 'validUsername',
                 'email': None,
                 'email_verified': False,
-                'phone_number': None,
-                'phone_number_verified': False
+                'phone': None,
+                'phone_verified': False
             }
         )
 
@@ -125,7 +125,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
 
         for i in self._ContentType.ApplicationJSON.username_values:
             for j in self._ContentType.ApplicationJSON.email_values:
-                for k in self._ContentType.ApplicationJSON.phone_number_values:
+                for k in self._ContentType.ApplicationJSON.phone_values:
                     for l in self._ContentType.ApplicationJSON.password_values:
 
                         data = {}
@@ -175,9 +175,9 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
                                 self.client.logout()
                             elif ('username' in data and data['username'] is None) and \
                                     ('email' not in data or data['email'] is None) and \
-                                    ('phone_number' not in data or data['phone_number'] is None):
+                                    ('phone' not in data or data['phone'] is None):
                                 """
-                                If the supplied username is None, and the supplied email and phone_number are
+                                If the supplied username is None, and the supplied email and phone are
                                 simultaneously undefined or None, django_flex_user.views.FlexUser.put should return HTTP status
                                 code HTTP_400_BAD_REQUEST.
                                 """
@@ -185,19 +185,19 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
                                 self.client.logout()
                             elif data.get('username') == '' or \
                                     data.get('email') == '' or \
-                                    data.get('phone_number') == '':
+                                    data.get('phone') == '':
                                 """
-                                If any of the supplied username, email or phone_number are the empty string
+                                If any of the supplied username, email or phone are the empty string
                                 django_flex_user.views.FlexUser.put should return HTTP status code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
                                 self.client.logout()
                             elif (data.get('username') and 'invalid' in data['username']) or \
                                     (data.get('email') and 'invalid' in data['email']) or \
-                                    (data.get('phone_number') and 'invalid' in data['phone_number']) or \
+                                    (data.get('phone') and 'invalid' in data['phone']) or \
                                     (data.get('password') and 'invalid' in data['password']):
                                 """
-                                If any of the supplied username, email, phone_number or password are defined and
+                                If any of the supplied username, email, phone or password are defined and
                                 invalid, django_flex_user.views.FlexUser.put should return HTTP status code
                                 HTTP_400_BAD_REQUEST.
                                 """
@@ -206,7 +206,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.views.FlexUser.put should return HTTP status
+                                phone and password for which django_flex_user.views.FlexUser.put should return HTTP status
                                 code HTTP_200_OK.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -217,8 +217,8 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
                                         'username': data.get('username', 'validUsername'),
                                         'email': data.get('email'),
                                         'email_verified': False,
-                                        'phone_number': data.get('phone_number'),
-                                        'phone_number_verified': False
+                                        'phone': data.get('phone'),
+                                        'phone_verified': False
                                     }
                                 )
 
@@ -230,7 +230,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
 
         for i in self._ContentType.MultipartFormData.username_values:
             for j in self._ContentType.MultipartFormData.email_values:
-                for k in self._ContentType.MultipartFormData.phone_number_values:
+                for k in self._ContentType.MultipartFormData.phone_values:
                     for l in self._ContentType.MultipartFormData.password_values:
 
                         data = {}
@@ -280,9 +280,9 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
                                 self.client.logout()
                             elif ('username' in data and data['username'] == '') and \
                                     ('email' not in data or data['email'] == '') and \
-                                    ('phone_number' not in data or data['phone_number'] == ''):
+                                    ('phone' not in data or data['phone'] == ''):
                                 """
-                                If the supplied username is blank, and the supplied email and phone_number are
+                                If the supplied username is blank, and the supplied email and phone are
                                 simultaneously undefined or blank, django_flex_user.views.FlexUser.put should return HTTP status
                                 code HTTP_400_BAD_REQUEST.
                                 """
@@ -290,10 +290,10 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
                                 self.client.logout()
                             elif (data.get('username') and 'invalid' in data['username']) or \
                                     (data.get('email') and 'invalid' in data['email']) or \
-                                    (data.get('phone_number') and 'invalid' in data['phone_number']) or \
+                                    (data.get('phone') and 'invalid' in data['phone']) or \
                                     (data.get('password') and 'invalid' in data['password']):
                                 """
-                                If any of the supplied username, email, phone_number or password are defined and
+                                If any of the supplied username, email, phone or password are defined and
                                 invalid, django_flex_user.views.FlexUser.put should return HTTP status code HTTP_400_BAD_REQUEST.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -301,7 +301,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.views.FlexUser.put should return HTTP status
+                                phone and password for which django_flex_user.views.FlexUser.put should return HTTP status
                                 code HTTP_200_OK.
                                 """
                                 self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -315,9 +315,9 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
                                         'email':
                                             data.get('email') if data.get('email') != '' else None,
                                         'email_verified': False,
-                                        'phone_number':
-                                            data.get('phone_number') if data.get('phone_number') != '' else None,
-                                        'phone_number_verified': False
+                                        'phone':
+                                            data.get('phone') if data.get('phone') != '' else None,
+                                        'phone_verified': False
                                     }
                                 )
 
@@ -363,14 +363,14 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
 
         self.client.logout()
 
-    def test_method_patch_duplicate_phone_number(self):
+    def test_method_patch_duplicate_phone(self):
         from django_flex_user.models import FlexUser
 
-        FlexUser.objects.create_user(phone_number='+12025551234', password='validPassword')
+        FlexUser.objects.create_user(phone='+12025551234', password='validPassword')
 
         self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
-        data = {'phone_number': '+12025551234'}
+        data = {'phone': '+12025551234'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -412,19 +412,19 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
 
         self.client.logout()
 
-    def test_method_patch_ambiguous_phone_number(self):
+    def test_method_patch_ambiguous_phone(self):
         """
-        Verify that a username or email address cannot form a valid phone_number.
+        Verify that a username or email address cannot form a valid phone.
 
         :return:
         """
         self.client.force_login(self.user, 'django_flex_user.backends.FlexUserModelBackend')
 
-        data = {'phone_number': 'validUsername'}
+        data = {'phone': 'validUsername'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        data = {'phone_number': 'validEmail@example.com'}
+        data = {'phone': 'validEmail@example.com'}
         response = self.client.patch(self._REST_ENDPOINT_PATH, data=data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 

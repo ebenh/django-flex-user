@@ -92,7 +92,7 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     # Added UserAttributeSimilarityValidator
-    # todo: add phone_number to user_attributes
+    # todo: add phone to user_attributes
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
         'OPTIONS': {

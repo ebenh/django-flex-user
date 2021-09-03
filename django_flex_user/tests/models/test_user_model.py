@@ -17,11 +17,11 @@ class TestUserModel(TestCase):
                      {'email': 'validEmail@example.com'},
                      {'email': 'invalidEmail'}]
 
-    _phone_number_values = [{},
-                            {'phone_number': None},
-                            {'phone_number': ''},
-                            {'phone_number': '+12025551234'},
-                            {'phone_number': 'invalidPhoneNumber'}]
+    _phone_values = [{},
+                            {'phone': None},
+                            {'phone': ''},
+                            {'phone': '+12025551234'},
+                            {'phone': 'invalidPhoneNumber'}]
 
     _password_values = [{},
                         {'password': None},
@@ -35,7 +35,7 @@ class TestUserModel(TestCase):
 
         for i in self._username_values:
             for j in self._email_values:
-                for k in self._phone_number_values:
+                for k in self._phone_values:
                     for l in self._password_values:
 
                         args = {}
@@ -53,12 +53,12 @@ class TestUserModel(TestCase):
 
                             if ('username' not in args or args['username'] is None) and \
                                     ('email' not in args or args['email'] is None) and \
-                                    ('phone_number' not in args or args['phone_number'] is None):
+                                    ('phone' not in args or args['phone'] is None):
                                 """
-                                If the supplied username, email, and phone_number are simultaneously undefined or None,
+                                If the supplied username, email, and phone are simultaneously undefined or None,
                                 django_flex_user.models.FlexUser.full_clean should raise ValidationError.
 
-                                At least one of username, email or phone_number must be defined and not None.
+                                At least one of username, email or phone must be defined and not None.
                                 """
                                 self.assertRaises(ValidationError, user.full_clean)
                             elif not args.get('password'):
@@ -69,25 +69,25 @@ class TestUserModel(TestCase):
                                 self.assertRaises(ValidationError, user.full_clean)
                             elif args.get('username') == '' or \
                                     args.get('email') == '' or \
-                                    args.get('phone_number') == '':
+                                    args.get('phone') == '':
                                 """
-                                If any of the supplied username, email or phone_number are the empty string
+                                If any of the supplied username, email or phone are the empty string
                                 django_flex_user.models.FlexUser.full_clean should raise ValidationError.
                                 """
                                 self.assertRaises(ValidationError, user.full_clean)
                             elif (args.get('username') and 'invalid' in args['username']) or \
                                     (args.get('email') and 'invalid' in args['email']) or \
-                                    (args.get('phone_number') and 'invalid' in args['phone_number']) or \
+                                    (args.get('phone') and 'invalid' in args['phone']) or \
                                     (args.get('password') and 'invalid' in args['password']):
                                 """
-                                If any of the supplied username, email, phone_number or password are defined and
+                                If any of the supplied username, email, phone or password are defined and
                                 invalid, django_flex_user.models.FlexUser.full_clean should raise ValidationError.
                                 """
                                 self.assertRaises(ValidationError, user.full_clean)
                             else:
                                 """
                                 This case encompasses all possible permutations of supplied username, email,
-                                phone_number and password for which django_flex_user.models.FlexUser.full_clean should execute
+                                phone and password for which django_flex_user.models.FlexUser.full_clean should execute
                                 successfully without raising an error.
                                 """
                                 user.full_clean()
@@ -96,7 +96,7 @@ class TestUserModel(TestCase):
 
                                 self.assertEqual(user.username, args.get('username'))
                                 self.assertEqual(user.email, args.get('email'))
-                                self.assertEqual(user.phone_number, args.get('phone_number'))
+                                self.assertEqual(user.phone, args.get('phone'))
 
                                 self.assertEqual(user.password, args.get('password'))
 
@@ -154,16 +154,16 @@ class TestUserModel(TestCase):
         user2.set_unusable_password()
         self.assertRaises(ValidationError, user2.full_clean)
 
-    def test_full_clean_and_save_duplicate_phone_number(self):
+    def test_full_clean_and_save_duplicate_phone(self):
         from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        user1 = FlexUser(phone_number='+12025551234')
+        user1 = FlexUser(phone='+12025551234')
         user1.set_unusable_password()
         user1.full_clean()
         user1.save()
 
-        user2 = FlexUser(phone_number='+12025551234')
+        user2 = FlexUser(phone='+12025551234')
         user2.set_unusable_password()
         self.assertRaises(ValidationError, user2.full_clean)
 
@@ -201,20 +201,20 @@ class TestUserModel(TestCase):
         user2.set_unusable_password()
         self.assertRaises(ValidationError, user2.full_clean)
 
-    def test_full_clean_and_save_ambiguous_phone_number(self):
+    def test_full_clean_and_save_ambiguous_phone(self):
         """
-        Verify that a username or email address cannot form a valid phone_number.
+        Verify that a username or email address cannot form a valid phone.
 
         :return:
         """
         from django_flex_user.models import FlexUser
         from django.core.exceptions import ValidationError
 
-        user1 = FlexUser(phone_number='validUsername')
+        user1 = FlexUser(phone='validUsername')
         user1.set_unusable_password()
         self.assertRaises(ValidationError, user1.full_clean)
 
-        user2 = FlexUser(phone_number='validEmail@example.com')
+        user2 = FlexUser(phone='validEmail@example.com')
         user2.set_unusable_password()
         self.assertRaises(ValidationError, user2.full_clean)
 
@@ -298,7 +298,7 @@ class TestUserModel(TestCase):
         user1 = FlexUser(
             username='validUsername',
             email='validEmail@example.com',
-            phone_number='+12025551234'
+            phone='+12025551234'
         )
         user1.set_unusable_password()
         user1.full_clean()
@@ -318,4 +318,4 @@ class TestUserModel(TestCase):
         user2 = FlexUser.objects.all().first()
         self.assertEqual(user2.username, 'validUsername')
         self.assertEqual(user2.email, 'validEmail@example.com')
-        self.assertEqual(user2.phone_number, '+12025551234')
+        self.assertEqual(user2.phone, '+12025551234')

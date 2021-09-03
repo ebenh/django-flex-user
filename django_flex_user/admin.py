@@ -58,19 +58,19 @@ class FlexUserChangeForm(UserChangeForm):
 
 class FlexUserAdmin(UserAdmin):
     # The fields to search when using the search widget on /admin/account/users/
-    search_fields = ('username', 'email', 'phone_number')
+    search_fields = ('username', 'email', 'phone')
     # The fields to display on /admin/account/users/
-    list_display = ('username', 'email', 'phone_number', 'is_staff')
+    list_display = ('username', 'email', 'phone', 'is_staff')
     # The fields to be displayed on the user creation form (/admin/account/user/add/)
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'email', 'phone_number', 'password1', 'password2'),
+            'fields': ('username', 'email', 'phone', 'password1', 'password2'),
         }),
     )
     # The fields to be displayed on the user modification form (/admin/account/user/<int:user_id>/change/)
     fieldsets = (
-        (None, {'fields': ('username', 'email', 'phone_number', 'password')}),
+        (None, {'fields': ('username', 'email', 'phone', 'password')}),
         (_('Permissions'), {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
