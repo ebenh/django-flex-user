@@ -47,5 +47,8 @@ def obscure_email(email):
 
 
 def obscure_phone(phone):
+    if not phone:
+        return ''
+
     count = sum(c.isdigit() for c in phone)
     return re.sub(r'\d', '*', phone, count=count - 2)
