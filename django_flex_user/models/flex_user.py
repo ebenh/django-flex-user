@@ -13,9 +13,9 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from dirtyfields import DirtyFieldsMixin
 
-from .validators import FlexUserUnicodeUsernameValidator
+from django_flex_user.validators import FlexUserUnicodeUsernameValidator
 
-from .fields import CICharField
+from django_flex_user.fields import CICharField
 
 
 # Reference: https://docs.djangoproject.com/en/3.0/topics/auth/customizing/
