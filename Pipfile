@@ -13,7 +13,6 @@ django-otp = "*"
 social-auth-app-django = "*"
 django-dirtyfields = "*"
 djangorestframework-simplejwt = "*"
-psycopg2 = "*"
 phonenumbers = "*"
 
 [dev-packages]
