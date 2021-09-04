@@ -1,6 +1,7 @@
 import string, random
 
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -8,7 +9,7 @@ from django_flex_user.util import obscure_email, obscure_phone
 
 
 class Device(models.Model):
-    confirmed = models.BooleanField(default=False)
+    confirmed = models.BooleanField(_('confirmed'), default=False)
 
     def get_name(self):
         raise NotImplementedError
@@ -18,7 +19,7 @@ class Device(models.Model):
 
 
 class OOBDevice(Device):
-    challenge = models.CharField(max_length=256)
+    challenge = models.CharField(_('challenge'), max_length=256)
     challenge_length = 6
     challenge_alphabet = string.digits
 
@@ -35,7 +36,7 @@ class EmailDevice(OOBDevice):
     challenge_length = 256
     challenge_alphabet = string.printable
 
-    email = models.EmailField()
+    email = models.EmailField(_('email address'))
 
     def get_name(self):
         return self.email
@@ -45,7 +46,7 @@ class EmailDevice(OOBDevice):
 
 
 class PhoneDevice(OOBDevice):
-    phone = PhoneNumberField()
+    phone = PhoneNumberField(_('phone number'),)
 
     def get_name(self):
         return self.phone.as_international
