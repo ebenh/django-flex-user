@@ -17,6 +17,9 @@ class Device(models.Model):
     def get_obscured_name(self):
         raise NotImplementedError
 
+    class Meta:
+        abstract = True
+
 
 class OOBDevice(Device):
     challenge = models.CharField(_('challenge'), max_length=256)
@@ -30,6 +33,9 @@ class OOBDevice(Device):
 
     def verify_challenge(self, challenge):
         return self.challenge == challenge
+
+    class Meta:
+        abstract = True
 
 
 class EmailDevice(OOBDevice):
