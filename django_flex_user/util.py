@@ -44,3 +44,8 @@ def obscure_email(email):
     suffix = re.sub('[^.]', '*', suffix)  # always obscure the TLD and SLD
 
     return f'{user}@{subdomain}{"." if subdomain and domain else ""}{domain}{"." if domain and suffix else ""}{suffix}'
+
+
+def obscure_phone(phone):
+    count = sum(c.isdigit() for c in phone)
+    return re.sub(r'\d', '*', phone, count=count - 2)

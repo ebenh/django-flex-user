@@ -4,7 +4,7 @@ from django.db import models
 
 from phonenumber_field.modelfields import PhoneNumberField
 
-from django_flex_user.util import obscure_email
+from django_flex_user.util import obscure_email, obscure_phone
 
 
 class Device(models.Model):
@@ -48,7 +48,7 @@ class PhoneDevice(OOBDevice):
     phone = PhoneNumberField()
 
     def get_name(self):
-        return self.phone
+        return self.phone.as_international
 
     def get_obscured_name(self):
-        raise NotImplementedError
+        return obscure_phone(self.phone.as_international)
