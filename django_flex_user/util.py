@@ -3,7 +3,7 @@ import re
 import tldextract
 
 
-def _obfuscate_email_part(part):
+def _obscure_email_part(part):
     """
     For parts longer than three characters, we reveal the first two characters and obscure the rest.
 
@@ -38,9 +38,9 @@ def obscure_email(email):
     user, host = email.split('@')
     subdomain, domain, suffix = tldextract.extract(host)
 
-    user = _obfuscate_email_part(user)
-    subdomain = _obfuscate_email_part(subdomain)
-    domain = _obfuscate_email_part(domain)
+    user = _obscure_email_part(user)
+    subdomain = _obscure_email_part(subdomain)
+    domain = _obscure_email_part(domain)
     suffix = re.sub('[^.]', '*', suffix)  # always obscure the TLD and SLD
 
     return f'{user}@{subdomain}{"." if subdomain and domain else ""}{domain}{"." if domain and suffix else ""}{suffix}'
