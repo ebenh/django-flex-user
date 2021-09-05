@@ -274,7 +274,7 @@ def my_post_save_handler(sender, **kwargs):
     if 'phone' in kwargs['instance'].get_dirty_fields():
         phone = kwargs['instance'].phone
         if phone:
-            phone_device = PhoneDevice.objects.get_or_create(user=kwargs['instance'])
+            phone_device, created = PhoneDevice.objects.get_or_create(user=kwargs['instance'])
             phone_device.phone = phone
             phone_device.confirmed = False
             phone_device.save(update_fields=['phone', 'confirmed'])
