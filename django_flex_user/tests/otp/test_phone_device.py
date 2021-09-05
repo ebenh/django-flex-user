@@ -2,45 +2,83 @@ from django.test import TestCase
 
 
 class TestPhoneDevice(TestCase):
-    def test_no_phone(self):
+    def test_create_user_with_username(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import EmailDevice, PhoneDevice
+
+        user = FlexUser.objects.create_user(username='validUsername')
+
+        self.assertRaises(EmailDevice.DoesNotExist, EmailDevice.objects.get, user_id=user.id)
+        self.assertRaises(PhoneDevice.DoesNotExist, PhoneDevice.objects.get, user_id=user.id)
+
+    def test_create_user_with_phone(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import EmailDevice, PhoneDevice
+
+        user = FlexUser.objects.create_user(phone='+12025551234')
+
+        self.assertRaises(EmailDevice.DoesNotExist, EmailDevice.objects.get, user_id=user.id)
+        phone_device = PhoneDevice.objects.get(user_id=user.id)
+        self.assertEqual(phone_device.phone, user.phone)
+        self.assertFalse(phone_device.confirmed)
+        self.assertIsNone(phone_device.challenge)
+
+    def test_add_phone(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import EmailDevice, PhoneDevice
+
+        user = FlexUser.objects.create_user(username='validUsername')
+        user.phone = '+12025551234'
+        user.save()
+
+        self.assertRaises(EmailDevice.DoesNotExist, EmailDevice.objects.get, user_id=user.id)
+        phone_device = PhoneDevice.objects.get(user_id=user.id)
+        self.assertEqual(phone_device.phone, user.phone)
+        self.assertFalse(phone_device.confirmed)
+        self.assertIsNone(phone_device.challenge)
+
+    def test_remove_phone(self):
+        from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import PhoneDevice
-        from django.core.exceptions import ValidationError
 
-        phone_device = PhoneDevice()
-        self.assertRaises(ValidationError, phone_device.full_clean)
+        user = FlexUser.objects.create_user(username='validUsername', phone='+12025551234')
+        user.phone = None
+        user.save()
 
-    def test_valid_phone(self):
+        self.assertRaises(PhoneDevice.DoesNotExist, PhoneDevice.objects.get, user_id=user.id)
+
+    def test_update_phone(self):
+        from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import PhoneDevice
 
-        phone_device = PhoneDevice(phone='+12025551234')
-        phone_device.full_clean()
+        user = FlexUser.objects.create_user(username='validUsername', phone='+12025551234')
+        user.email = '+12025556789'
+        user.save()
 
-    def test_invalid_phone(self):
-        from django_flex_user.models.otp import PhoneDevice
-        from django.core.exceptions import ValidationError
-
-        phone_device = PhoneDevice(phone='invalidPhoneNumber')
-        self.assertRaises(ValidationError, phone_device.full_clean)
+        phone_device = PhoneDevice.objects.get(user_id=user.id)
+        self.assertEqual(phone_device.phone, user.phone)
+        self.assertFalse(phone_device.confirmed)
+        self.assertIsNone(phone_device.challenge)
 
     def test_generate_challenge(self):
+        from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import PhoneDevice
 
-        phone_device = PhoneDevice(phone='+12025551234')
+        user = FlexUser.objects.create_user(phone='+12025551234')
+        phone_device = PhoneDevice.objects.get(user_id=user.id)
         phone_device.generate_challenge()
-        phone_device.full_clean()
-        phone_device.save()
 
         self.assertIsNotNone(phone_device.challenge)
         self.assertNotEqual(phone_device.challenge, '')
         self.assertEqual(len(phone_device.challenge), phone_device.challenge_length)
 
     def test_verify_challenge(self):
+        from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import PhoneDevice
 
-        phone_device = PhoneDevice(phone='+12025551234')
+        user = FlexUser.objects.create_user(phone='+12025551234')
+        phone_device = PhoneDevice.objects.get(user_id=user.id)
         phone_device.generate_challenge()
-        phone_device.full_clean()
-        phone_device.save()
 
         self.assertFalse(phone_device.verify_challenge(None))
         self.assertFalse(phone_device.verify_challenge(''))

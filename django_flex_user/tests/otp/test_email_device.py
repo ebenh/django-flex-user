@@ -2,45 +2,83 @@ from django.test import TestCase
 
 
 class TestEmailDevice(TestCase):
-    def test_no_email(self):
+    def test_create_user_with_username(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import EmailDevice, PhoneDevice
+
+        user = FlexUser.objects.create_user(username='validUsername')
+
+        self.assertRaises(EmailDevice.DoesNotExist, EmailDevice.objects.get, user_id=user.id)
+        self.assertRaises(PhoneDevice.DoesNotExist, PhoneDevice.objects.get, user_id=user.id)
+
+    def test_create_user_with_email(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import EmailDevice, PhoneDevice
+
+        user = FlexUser.objects.create_user(email='validEmail@example.com')
+
+        self.assertRaises(PhoneDevice.DoesNotExist, PhoneDevice.objects.get, user_id=user.id)
+        email_device = EmailDevice.objects.get(user_id=user.id)
+        self.assertEqual(email_device.email, user.email)
+        self.assertFalse(email_device.confirmed)
+        self.assertIsNone(email_device.challenge)
+
+    def test_add_email(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import EmailDevice, PhoneDevice
+
+        user = FlexUser.objects.create_user(username='validUsername')
+        user.email = 'validEmail@example.com'
+        user.save()
+
+        self.assertRaises(PhoneDevice.DoesNotExist, PhoneDevice.objects.get, user_id=user.id)
+        email_device = EmailDevice.objects.get(user_id=user.id)
+        self.assertEqual(email_device.email, user.email)
+        self.assertFalse(email_device.confirmed)
+        self.assertIsNone(email_device.challenge)
+
+    def test_remove_email(self):
+        from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import EmailDevice
-        from django.core.exceptions import ValidationError
 
-        email_device = EmailDevice()
-        self.assertRaises(ValidationError, email_device.full_clean)
+        user = FlexUser.objects.create_user(username='validUsername', email='validEmail@example.com')
+        user.email = None
+        user.save()
 
-    def test_valid_email(self):
+        self.assertRaises(EmailDevice.DoesNotExist, EmailDevice.objects.get, user_id=user.id)
+
+    def test_update_email(self):
+        from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import EmailDevice
 
-        email_device = EmailDevice(email='validEmail@example.com')
-        email_device.full_clean()
+        user = FlexUser.objects.create_user(username='validUsername', email='validEmail@example.com')
+        user.email = 'validEmail2@example.com'
+        user.save()
 
-    def test_invalid_email(self):
-        from django_flex_user.models.otp import EmailDevice
-        from django.core.exceptions import ValidationError
-
-        email_device = EmailDevice(email='invalidEmail')
-        self.assertRaises(ValidationError, email_device.full_clean)
+        email_device = EmailDevice.objects.get(user_id=user.id)
+        self.assertEqual(email_device.email, user.email)
+        self.assertFalse(email_device.confirmed)
+        self.assertIsNone(email_device.challenge)
 
     def test_generate_challenge(self):
+        from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import EmailDevice
 
-        email_device = EmailDevice(email='validEmail@example.com')
+        user = FlexUser.objects.create_user(email='validEmail@example.com')
+        email_device = EmailDevice.objects.get(user_id=user.id)
         email_device.generate_challenge()
-        email_device.full_clean()
-        email_device.save()
 
         self.assertIsNotNone(email_device.challenge)
         self.assertNotEqual(email_device.challenge, '')
         self.assertEqual(len(email_device.challenge), email_device.challenge_length)
 
     def test_verify_challenge(self):
+        from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import EmailDevice
 
-        email_device = EmailDevice(email='validEmail@example.com')
+        user = FlexUser.objects.create_user(email='validEmail@example.com')
+        email_device = EmailDevice.objects.get(user_id=user.id)
         email_device.generate_challenge()
-        email_device.full_clean()
-        email_device.save()
 
         self.assertFalse(email_device.verify_challenge(None))
         self.assertFalse(email_device.verify_challenge(''))
