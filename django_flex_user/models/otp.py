@@ -9,6 +9,7 @@ from django_flex_user.util import obscure_email, obscure_phone
 
 
 class Device(models.Model):
+    user = models.ForeignKey('FlexUser', on_delete=models.CASCADE)
     confirmed = models.BooleanField(_('confirmed'), default=False)
 
     def get_name(self):
