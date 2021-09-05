@@ -22,7 +22,7 @@ class Device(models.Model):
 
 
 class OOBDevice(Device):
-    challenge = models.CharField(_('challenge'), max_length=256)
+    challenge = models.CharField(_('challenge'), blank=True, null=True, max_length=256)
     challenge_length = 6
     challenge_alphabet = string.digits
 
