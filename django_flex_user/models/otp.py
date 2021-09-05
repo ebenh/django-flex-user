@@ -29,7 +29,6 @@ class OOBDevice(Device):
     def generate_challenge(self):
         self.challenge = ''.join(
             random.SystemRandom().choice(self.challenge_alphabet) for _ in range(self.challenge_length))
-        return self.challenge
 
     def verify_challenge(self, challenge):
         return self.challenge == challenge
