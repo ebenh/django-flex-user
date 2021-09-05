@@ -50,6 +50,5 @@ def obscure_phone(phone):
     if not phone:
         return ''
 
-    pattern = r'[0-9a-zA-Z]'
-    count = len(re.findall(pattern, phone))
-    return re.sub(pattern, '*', phone, count=count - 2)
+    count = sum(c.isdigit() for c in phone)
+    return re.sub(r'\d', '*', phone, count=count - 2)
