@@ -7,15 +7,12 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 
-from django_otp.plugins.otp_email.models import EmailDevice
-
 from phonenumber_field.modelfields import PhoneNumberField
-
 from dirtyfields import DirtyFieldsMixin
 
 from django_flex_user.validators import FlexUserUnicodeUsernameValidator
-
 from django_flex_user.fields import CICharField
+from django_flex_user.models.otp import EmailDevice, PhoneDevice
 
 
 # Reference: https://docs.djangoproject.com/en/3.0/topics/auth/customizing/
@@ -261,8 +258,25 @@ def my_pre__save_handler(sender, **kwargs):
 @receiver(post_save, sender=FlexUser)
 def my_post_save_handler(sender, **kwargs):
     if kwargs['created']:
-        EmailDevice.objects.create(name="default", user_id=kwargs['instance'].id, confirmed=False)
+        if kwargs['instance'].email:
+            EmailDevice.objects.create(user_id=kwargs['instance'].id, email=kwargs['instance'].email)
+        if kwargs['instance'].phone:
+            PhoneDevice.objects.create(user_id=kwargs['instance'].id, phone=kwargs['instance'].phone)
     if 'email' in kwargs['instance'].get_dirty_fields():
-        email_device = EmailDevice.objects.get(user=kwargs['instance'], email=None)
-        email_device.confirmed = False
-        email_device.save(update_fields=['confirmed'])
+        email = kwargs['instance'].email
+        if email:
+            email_device, created = EmailDevice.objects.get_or_create(user=kwargs['instance'])
+            email_device.email = email
+            email_device.confirmed = False
+            email_device.save(update_fields=['email', 'confirmed'])
+        else:
+            EmailDevice.objects.filter(user_id=kwargs['instance'].id).delete()
+    if 'phone' in kwargs['instance'].get_dirty_fields():
+        phone = kwargs['instance'].phone
+        if phone:
+            phone_device = PhoneDevice.objects.get_or_create(user=kwargs['instance'])
+            phone_device.phone = phone
+            phone_device.confirmed = False
+            phone_device.save(update_fields=['phone', 'confirmed'])
+        else:
+            PhoneDevice.objects.filter(user_id=kwargs['instance'].id).delete()
