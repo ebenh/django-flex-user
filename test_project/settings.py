@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'rest_framework',  # djangorestframework
     'rest_framework.authtoken',  # djangorestframework
+    'drf_multiple_model', # django-rest-multiple-models
     'social_django',  # social-auth-app-django
     'django_otp',  # django-otp
     'django_otp.plugins.otp_email',  # django-otp
