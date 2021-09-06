@@ -1,7 +1,6 @@
 from django.core import exceptions
 from django.core.validators import EmailValidator
 from django.contrib.auth import get_user_model, authenticate, password_validation, update_session_auth_hash
-from django.contrib.admin.utils import quote
 
 from rest_framework import serializers
 from rest_framework.fields import empty
@@ -9,13 +8,10 @@ from rest_framework.settings import api_settings
 
 from phonenumber_field.validators import validate_international_phonenumber
 
-from django_otp.plugins.otp_email.models import EmailDevice
-
 from social_django.models import UserSocialAuth
 
-import tldextract, regex as re
-
 from .models import FlexUserUnicodeUsernameValidator
+from .models.otp import EmailDevice, PhoneDevice
 
 UserModel = get_user_model()
 
@@ -287,72 +283,14 @@ class AuthenticationSerializer(serializers.Serializer):
         return self.user
 
 
-class OTPSerializer(serializers.Serializer):
-    pin = serializers.CharField(write_only=True)
-
-    def update(self, instance, validated_data):
-        pass
-
-    def create(self, validated_data):
-        pass
-
-
-class EmailDeviceSerializer(serializers.ModelSerializer):
-    id = serializers.SerializerMethodField('get_id')
-    email = serializers.SerializerMethodField('get_email')
-
-    @staticmethod
-    def _obscure_part(part):
-        """
-        For parts longer than three characters, we reveal the first two characters and obscure the rest.
-
-        Parts up to three characters long are handled as special cases.
-
-        We reveal no more than 50% of the characters for any part.
-
-        :param part:
-        :return:
-        """
-        if not part:
-            return part  # part is None or the empty string, nothing to obscure
-
-        length = len(part)
-        if length == 1:
-            return '*'  # 0% revealed, 100% obscured
-
-        if length == 2:
-            return part[:1] + '*'  # 50% revealed, 50% obscured
-
-        if length == 3:
-            return part[:1] + '**'  # 33% revealed, 66% obscured
-
-        if length > 3:
-            return part[:2] + '*' * (length - 2)  # At most 50% revealed, At least 50% obscured
-
-    @staticmethod
-    def get_id(obj):
-        return quote(obj.persistent_id)
-
-    def get_email(self, obj):
-        email = obj.email or obj.user.email
-
-        if not email:
-            return ''
-
-        user, host = email.split('@')
-        subdomain, domain, suffix = tldextract.extract(host)
-
-        user = self._obscure_part(user)
-        subdomain = self._obscure_part(subdomain)
-        domain = self._obscure_part(domain)
-        suffix = re.sub('[^.]', '*', suffix)  # always obscure the TLD and SLD
-
-        return f'{user}@{subdomain}{"." if subdomain and domain else ""}{domain}{"." if domain and suffix else ""}{suffix}'
-
-    class Meta:
-        model = EmailDevice
-        fields = ['id', 'email']
-
+# class OTPSerializer(serializers.Serializer):
+#     pin = serializers.CharField(write_only=True)
+#
+#     def update(self, instance, validated_data):
+#         pass
+#
+#     def create(self, validated_data):
+#         pass
 
 class UserSocialAuthSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField('get_name')
@@ -374,3 +312,27 @@ class UserSocialAuthSerializer(serializers.ModelSerializer):
             'uid': {'read_only': True},
             'provider': {'read_only': True}
         }
+
+
+class EmailDeviceSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField('get_name')
+
+    @staticmethod
+    def get_name(obj):
+        return obj.get_obscured_name()
+
+    class Meta:
+        model = EmailDevice
+        fields = ['id', 'name']
+
+
+class PhoneDeviceSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField('get_name')
+
+    @staticmethod
+    def get_name(obj):
+        return obj.get_obscured_name()
+
+    class Meta:
+        model = PhoneDevice
+        fields = ['id', 'name']

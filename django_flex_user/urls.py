@@ -12,7 +12,7 @@ urlpatterns = [
     path('sessions/', views.Sessions.as_view()),
 
     path('otp-devices/', views.OTPDevices.as_view()),
-    path('otp-devices/<str:pk>', views.OTPDevice.as_view()),
+    # path('otp-devices/<str:pk>', views.OTPDevice.as_view()),
 
     path('', include('social_django.urls', namespace='social')),
     # Password Reset

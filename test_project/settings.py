@@ -33,8 +33,6 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',  # djangorestframework
     'drf_multiple_model', # django-rest-multiple-models
     'social_django',  # social-auth-app-django
-    'django_otp',  # django-otp
-    'django_otp.plugins.otp_email',  # django-otp
     'django_flex_user.apps.DjangoFlexUserConfig',  # django-flex-user
     'django.contrib.admin',
     'django.contrib.auth',
@@ -51,7 +49,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django_otp.middleware.OTPMiddleware',  # django-otp
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
