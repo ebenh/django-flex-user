@@ -18,6 +18,9 @@ class Device(models.Model):
     def get_obscured_name(self):
         raise NotImplementedError
 
+    def __str__(self):
+        return self.get_name()
+
     class Meta:
         abstract = True
 
