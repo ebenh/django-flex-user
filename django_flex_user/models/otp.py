@@ -10,6 +10,7 @@ from django_flex_user.util import obscure_email, obscure_phone
 
 class Device(models.Model):
     user = models.ForeignKey('FlexUser', on_delete=models.CASCADE)
+    challenge = models.CharField(_('challenge'), blank=True, null=True, max_length=256)
     confirmed = models.BooleanField(_('confirmed'), default=False)
 
     def get_name(self):
@@ -26,7 +27,6 @@ class Device(models.Model):
 
 
 class OOBDevice(Device):
-    challenge = models.CharField(_('challenge'), blank=True, null=True, max_length=256)
     challenge_length = 6
     challenge_alphabet = string.digits
 
@@ -57,7 +57,7 @@ class EmailDevice(OOBDevice):
 
 
 class PhoneDevice(OOBDevice):
-    phone = PhoneNumberField(_('phone number'),)
+    phone = PhoneNumberField(_('phone number'), )
 
     def get_name(self):
         return self.phone.as_international
