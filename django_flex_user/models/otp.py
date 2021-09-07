@@ -37,7 +37,12 @@ class OOBDevice(Device):
         self.save(update_fields=['challenge'])
 
     def verify_challenge(self, challenge):
-        return self.challenge == challenge
+        success = self.challenge == challenge
+        if success:
+            self.challenge = None
+            self.confirmed = True
+            self.save(update_fields=['challenge', 'confirmed'])
+        return success
 
     class Meta:
         abstract = True
