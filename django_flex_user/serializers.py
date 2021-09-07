@@ -324,6 +324,9 @@ class EmailDeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailDevice
         fields = ['id', 'name', 'challenge']
+        extra_kwargs = {
+            'challenge': {'write_only': True}
+        }
 
 
 class PhoneDeviceSerializer(serializers.ModelSerializer):
@@ -336,3 +339,6 @@ class PhoneDeviceSerializer(serializers.ModelSerializer):
     class Meta:
         model = PhoneDevice
         fields = ['id', 'name', 'challenge']
+        extra_kwargs = {
+            'challenge': {'write_only': True}
+        }
