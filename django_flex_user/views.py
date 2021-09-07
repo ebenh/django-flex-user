@@ -10,6 +10,7 @@ from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from drf_multiple_model.views import ObjectMultipleModelAPIView
 
@@ -226,3 +227,26 @@ class OTPDevices(ObjectMultipleModelAPIView):
         {'queryset': EmailDevice.objects.all(), 'serializer_class': EmailDeviceSerializer, 'filter_fn': my_filter},
         {'queryset': PhoneDevice.objects.all(), 'serializer_class': PhoneDeviceSerializer, 'filter_fn': my_filter},
     )
+
+
+class OTPEmailDevice(generics.GenericAPIView):
+    queryset = EmailDevice.objects.all()
+    serializer_class = EmailDeviceSerializer
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [AllowAny]
+
+    def get(self, request, pk):
+        email_device = self.get_object()
+        email_device.generate_challenge()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def post(self, request, pk):
+        email_device = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            if email_device.verify_challenge(serializer.validated_data['challenge']):
+                jwt = RefreshToken.for_user(email_device.user)
+                return Response({'refresh': str(jwt), 'access': str(jwt.access_token)}, status=status.HTTP_200_OK)
+            else:
+                return Response(status=status.HTTP_401_UNAUTHORIZED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

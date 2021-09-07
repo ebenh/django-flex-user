@@ -323,7 +323,7 @@ class EmailDeviceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EmailDevice
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'challenge']
 
 
 class PhoneDeviceSerializer(serializers.ModelSerializer):
@@ -335,4 +335,4 @@ class PhoneDeviceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PhoneDevice
-        fields = ['id', 'name']
+        fields = ['id', 'name', 'challenge']
