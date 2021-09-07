@@ -204,7 +204,10 @@ class Sessions(generics.GenericAPIView):
 def my_filter(queryset, request, *args, **kwargs):
     my_filter.username_validator = FlexUserUnicodeUsernameValidator()
 
-    q = request.query_params['search']
+    q = request.query_params.get('search')
+
+    if not q:
+        return queryset.model.objects.none()
 
     try:
         my_filter.username_validator(q)
