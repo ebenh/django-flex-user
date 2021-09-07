@@ -253,3 +253,8 @@ class OTPEmailDevice(generics.GenericAPIView):
             else:
                 return Response(status=status.HTTP_401_UNAUTHORIZED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class OTPPhoneDevice(OTPEmailDevice):
+    queryset = PhoneDevice.objects.all()
+    serializer_class = PhoneDeviceSerializer
