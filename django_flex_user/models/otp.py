@@ -31,8 +31,10 @@ class OOBDevice(Device):
     challenge_alphabet = string.digits
 
     def generate_challenge(self):
-        self.challenge = ''.join(
+        challenge = ''.join(
             random.SystemRandom().choice(self.challenge_alphabet) for _ in range(self.challenge_length))
+        self.challenge = challenge.encode('unicode_escape').decode('utf-8')
+        self.save(update_fields=['challenge'])
 
     def verify_challenge(self, challenge):
         return self.challenge == challenge
@@ -42,7 +44,7 @@ class OOBDevice(Device):
 
 
 class EmailDevice(OOBDevice):
-    challenge_length = 256
+    challenge_length = 128
     challenge_alphabet = string.printable
 
     email = models.EmailField(_('email address'))
