@@ -80,7 +80,9 @@ class TestPhoneDevice(TestCase):
         phone_device = PhoneDevice.objects.get(user_id=user.id)
         phone_device.generate_challenge()
 
+        self.assertFalse(phone_device.confirmed)
         self.assertFalse(phone_device.verify_challenge(None))
+        self.assertFalse(phone_device.confirmed)
 
     def test_verify_challenge_empty_string(self):
         from django_flex_user.models.flex_user import FlexUser
@@ -90,7 +92,9 @@ class TestPhoneDevice(TestCase):
         phone_device = PhoneDevice.objects.get(user_id=user.id)
         phone_device.generate_challenge()
 
+        self.assertFalse(phone_device.confirmed)
         self.assertFalse(phone_device.verify_challenge(''))
+        self.assertFalse(phone_device.confirmed)
 
     def test_verify_challenge_invalid_challenge(self):
         from django_flex_user.models.flex_user import FlexUser
@@ -100,7 +104,9 @@ class TestPhoneDevice(TestCase):
         phone_device = PhoneDevice.objects.get(user_id=user.id)
         phone_device.generate_challenge()
 
+        self.assertFalse(phone_device.confirmed)
         self.assertFalse(phone_device.verify_challenge('INVALID_CHALLENGE'))
+        self.assertFalse(phone_device.confirmed)
 
     def test_verify_challenge_valid_challenge(self):
         from django_flex_user.models.flex_user import FlexUser
@@ -110,4 +116,6 @@ class TestPhoneDevice(TestCase):
         phone_device = PhoneDevice.objects.get(user_id=user.id)
         phone_device.generate_challenge()
 
+        self.assertFalse(phone_device.confirmed)
         self.assertTrue(phone_device.verify_challenge(phone_device.challenge))
+        self.assertTrue(phone_device.confirmed)

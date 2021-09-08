@@ -82,7 +82,9 @@ class TestEmailDevice(TestCase):
         email_device = EmailDevice.objects.get(user_id=user.id)
         email_device.generate_challenge()
 
+        self.assertFalse(email_device.confirmed)
         self.assertFalse(email_device.verify_challenge(None))
+        self.assertFalse(email_device.confirmed)
 
     def test_verify_challenge_empty_string(self):
         from django_flex_user.models.flex_user import FlexUser
@@ -92,7 +94,9 @@ class TestEmailDevice(TestCase):
         email_device = EmailDevice.objects.get(user_id=user.id)
         email_device.generate_challenge()
 
+        self.assertFalse(email_device.confirmed)
         self.assertFalse(email_device.verify_challenge(''))
+        self.assertFalse(email_device.confirmed)
 
     def test_verify_challenge_invalid_challenge(self):
         from django_flex_user.models.flex_user import FlexUser
@@ -102,7 +106,9 @@ class TestEmailDevice(TestCase):
         email_device = EmailDevice.objects.get(user_id=user.id)
         email_device.generate_challenge()
 
+        self.assertFalse(email_device.confirmed)
         self.assertFalse(email_device.verify_challenge('INVALID_CHALLENGE'))
+        self.assertFalse(email_device.confirmed)
 
     def test_verify_challenge_valid_challenge(self):
         from django_flex_user.models.flex_user import FlexUser
@@ -112,7 +118,9 @@ class TestEmailDevice(TestCase):
         email_device = EmailDevice.objects.get(user_id=user.id)
         email_device.generate_challenge()
 
+        self.assertFalse(email_device.confirmed)
         self.assertTrue(email_device.verify_challenge(email_device.challenge))
+        self.assertTrue(email_device.confirmed)
 
 
 
