@@ -14,8 +14,8 @@ class Device(models.Model):
     user = models.ForeignKey('FlexUser', on_delete=models.CASCADE)
     confirmed = models.BooleanField(_('confirmed'), default=False)
 
-    verification_timeout = models.DateTimeField(_('failure time'), null=True, blank=True)
-    verification_failure_count = models.PositiveIntegerField(_('failure count'), default=0)
+    verification_timeout = models.DateTimeField(_('verification timeout'), null=True, blank=True)
+    verification_failure_count = models.PositiveIntegerField(_('verification failure count'), default=0)
 
     def get_name(self):
         raise NotImplementedError
