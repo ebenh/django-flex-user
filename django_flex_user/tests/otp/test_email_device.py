@@ -74,7 +74,7 @@ class TestEmailDevice(TestCase):
         # be greater than or equal to its configured length
         self.assertGreaterEqual(len(email_device.challenge), email_device.challenge_length)
 
-    def test_verify_challenge(self):
+    def test_verify_challenge_none(self):
         from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import EmailDevice
 
@@ -83,6 +83,36 @@ class TestEmailDevice(TestCase):
         email_device.generate_challenge()
 
         self.assertFalse(email_device.verify_challenge(None))
+
+    def test_verify_challenge_empty_string(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import EmailDevice
+
+        user = FlexUser.objects.create_user(email='validEmail@example.com')
+        email_device = EmailDevice.objects.get(user_id=user.id)
+        email_device.generate_challenge()
+
         self.assertFalse(email_device.verify_challenge(''))
+
+    def test_verify_challenge_invalid_challenge(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import EmailDevice
+
+        user = FlexUser.objects.create_user(email='validEmail@example.com')
+        email_device = EmailDevice.objects.get(user_id=user.id)
+        email_device.generate_challenge()
+
         self.assertFalse(email_device.verify_challenge('INVALID_CHALLENGE'))
+
+    def test_verify_challenge_valid_challenge(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import EmailDevice
+
+        user = FlexUser.objects.create_user(email='validEmail@example.com')
+        email_device = EmailDevice.objects.get(user_id=user.id)
+        email_device.generate_challenge()
+
         self.assertTrue(email_device.verify_challenge(email_device.challenge))
+
+
+

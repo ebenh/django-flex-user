@@ -72,7 +72,7 @@ class TestPhoneDevice(TestCase):
         self.assertNotEqual(phone_device.challenge, '')
         self.assertEqual(len(phone_device.challenge), phone_device.challenge_length)
 
-    def test_verify_challenge(self):
+    def test_verify_challenge_none(self):
         from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import PhoneDevice
 
@@ -81,6 +81,33 @@ class TestPhoneDevice(TestCase):
         phone_device.generate_challenge()
 
         self.assertFalse(phone_device.verify_challenge(None))
+
+    def test_verify_challenge_empty_string(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import PhoneDevice
+
+        user = FlexUser.objects.create_user(phone='+12025551234')
+        phone_device = PhoneDevice.objects.get(user_id=user.id)
+        phone_device.generate_challenge()
+
         self.assertFalse(phone_device.verify_challenge(''))
+
+    def test_verify_challenge_invalid_challenge(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import PhoneDevice
+
+        user = FlexUser.objects.create_user(phone='+12025551234')
+        phone_device = PhoneDevice.objects.get(user_id=user.id)
+        phone_device.generate_challenge()
+
         self.assertFalse(phone_device.verify_challenge('INVALID_CHALLENGE'))
+
+    def test_verify_challenge_valid_challenge(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import PhoneDevice
+
+        user = FlexUser.objects.create_user(phone='+12025551234')
+        phone_device = PhoneDevice.objects.get(user_id=user.id)
+        phone_device.generate_challenge()
+
         self.assertTrue(phone_device.verify_challenge(phone_device.challenge))
