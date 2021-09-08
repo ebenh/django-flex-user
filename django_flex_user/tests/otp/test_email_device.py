@@ -70,7 +70,9 @@ class TestEmailDevice(TestCase):
 
         self.assertIsNotNone(email_device.challenge)
         self.assertNotEqual(email_device.challenge, '')
-        self.assertEqual(len(email_device.challenge), email_device.challenge_length)
+        # note eben: Because escape characters are inserted into the challenge string, the challenge string's length may
+        # be greater than or equal to its configured length
+        self.assertGreaterEqual(len(email_device.challenge), email_device.challenge_length)
 
     def test_verify_challenge(self):
         from django_flex_user.models.flex_user import FlexUser
