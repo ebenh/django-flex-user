@@ -1,6 +1,8 @@
 import string, random
+from datetime import timedelta
 
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from phonenumber_field.modelfields import PhoneNumberField
@@ -13,6 +15,9 @@ class Device(models.Model):
     challenge = models.CharField(_('challenge'), null=True, blank=True, max_length=256)
     confirmed = models.BooleanField(_('confirmed'), default=False)
 
+    verification_timeout = models.DateTimeField(_('failure time'), null=True, blank=True)
+    verification_failure_count = models.PositiveIntegerField(_('failure count'), default=0)
+
     def get_name(self):
         raise NotImplementedError
 
@@ -21,6 +26,23 @@ class Device(models.Model):
 
     def __str__(self):
         return self.get_name()
+
+    def throttle_increment(self, save=False):
+        self.verification_timeout = timezone.now() + timedelta(seconds=2 ** self.verification_failure_count)
+        self.verification_failure_count += 1
+        if save:
+            self.save(update_fields=['verification_timeout', 'verification_failure_count'])
+
+    def throttle_reset(self, save=False):
+        self.verification_timeout = None
+        self.verification_failure_count = 0
+        if save:
+            self.save(update_fields=['verification_timeout', 'verification_failure_count'])
+
+    def can_verify(self):
+        if self.verification_timeout and timezone.now() < self.verification_timeout:
+            return False
+        return True
 
     class Meta:
         abstract = True
@@ -34,15 +56,21 @@ class OOBDevice(Device):
         challenge = ''.join(
             random.SystemRandom().choice(self.challenge_alphabet) for _ in range(self.challenge_length))
         self.challenge = challenge.encode('unicode_escape').decode('utf-8')
-        self.save(update_fields=['challenge'])
+        self.throttle_reset()
+        self.save()
 
     def verify_challenge(self, challenge):
-        success = self.challenge == challenge
-        if success:
-            self.challenge = None
-            self.confirmed = True
-            self.save(update_fields=['challenge', 'confirmed'])
-        return success
+        if self.can_verify():
+            success = self.challenge == challenge
+            if success:
+                self.challenge = None
+                self.confirmed = True
+                self.throttle_reset()
+                self.save()
+            else:
+                self.throttle_increment()
+                self.save()
+            return success
 
     class Meta:
         abstract = True
