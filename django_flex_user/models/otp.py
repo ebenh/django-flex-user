@@ -25,15 +25,6 @@ class Device(models.Model):
     verification_timeout = models.DateTimeField(_('verification timeout'), null=True, blank=True)
     verification_failure_count = models.PositiveIntegerField(_('verification failure count'), default=0)
 
-    def get_name(self):
-        raise NotImplementedError
-
-    def get_obscured_name(self):
-        raise NotImplementedError
-
-    def __str__(self):
-        return self.get_name()
-
     def set_timeout(self, save=False):
         self.verification_timeout = timezone.now() + timedelta(seconds=2 ** self.verification_failure_count)
         self.verification_failure_count += 1
@@ -71,6 +62,15 @@ class Device(models.Model):
 
     def _verify_challenge(self, challenge):
         raise NotImplementedError
+
+    def get_name(self):
+        raise NotImplementedError
+
+    def get_obscured_name(self):
+        raise NotImplementedError
+
+    def __str__(self):
+        return self.get_name()
 
     class Meta:
         abstract = True
