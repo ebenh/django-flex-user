@@ -10,6 +10,14 @@ from phonenumber_field.modelfields import PhoneNumberField
 from django_flex_user.util import obscure_email, obscure_phone
 
 
+class VerificationTimeout(Exception):
+    def __init__(self, verification_timeout, verification_failure_count, message):
+        self.verification_timeout = verification_timeout
+        self.verification_failure_count = verification_failure_count
+
+        super().__init__(message)
+
+
 class Device(models.Model):
     user = models.ForeignKey('FlexUser', on_delete=models.CASCADE)
     confirmed = models.BooleanField(_('confirmed'), default=False)
@@ -26,22 +34,22 @@ class Device(models.Model):
     def __str__(self):
         return self.get_name()
 
-    def throttle_increment(self, save=False):
+    def set_timeout(self, save=False):
         self.verification_timeout = timezone.now() + timedelta(seconds=2 ** self.verification_failure_count)
         self.verification_failure_count += 1
         if save:
             self.save(update_fields=['verification_timeout', 'verification_failure_count'])
 
-    def throttle_reset(self, save=False):
+    def reset_timeout(self, save=False):
         self.verification_timeout = None
         self.verification_failure_count = 0
         if save:
             self.save(update_fields=['verification_timeout', 'verification_failure_count'])
 
-    def can_verify(self):
+    def is_timed_out(self):
         if self.verification_timeout and timezone.now() < self.verification_timeout:
-            return False
-        return True
+            raise VerificationTimeout(self.verification_timeout, self.verification_failure_count,
+                                      "Too many failed verification attempts. Please try again later.")
 
     class Meta:
         abstract = True
@@ -56,19 +64,23 @@ class OOBDevice(Device):
         challenge = ''.join(
             random.SystemRandom().choice(self.challenge_alphabet) for _ in range(self.challenge_length))
         self.challenge = challenge.encode('unicode_escape').decode('utf-8')
-        self.throttle_reset()
+        self.reset_timeout()
         self.save()
 
     def verify_challenge(self, challenge):
-        if self.can_verify():
+        try:
+            self.is_timed_out()
+        except VerificationTimeout:
+            raise
+        else:
             success = self.challenge == challenge
             if success:
                 self.challenge = None
                 self.confirmed = True
-                self.throttle_reset()
+                self.reset_timeout()
                 self.save()
             else:
-                self.throttle_increment()
+                self.set_timeout()
                 self.save()
             return success
 
