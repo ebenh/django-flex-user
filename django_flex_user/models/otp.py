@@ -51,6 +51,14 @@ class Device(models.Model):
             raise VerificationTimeout(self.verification_timeout, self.verification_failure_count,
                                       "Too many failed verification attempts. Please try again later.")
 
+    def generate_challenge(self):
+        self._generate_challenge()
+        self.reset_timeout()
+        self.save()
+
+    def _generate_challenge(self):
+        raise NotImplementedError
+
     def verify_challenge(self, challenge):
         self.is_timed_out()
         success = self._verify_challenge(challenge)
@@ -73,12 +81,10 @@ class OOBDevice(Device):
     challenge_length = 6
     challenge_alphabet = string.digits
 
-    def generate_challenge(self):
+    def _generate_challenge(self):
         challenge = ''.join(
             random.SystemRandom().choice(self.challenge_alphabet) for _ in range(self.challenge_length))
         self.challenge = challenge.encode('unicode_escape').decode('utf-8')
-        self.reset_timeout()
-        self.save()
 
     def _verify_challenge(self, challenge):
         success = self.challenge == challenge
