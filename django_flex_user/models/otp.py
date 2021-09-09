@@ -53,7 +53,13 @@ class Device(models.Model):
 
     def verify_challenge(self, challenge):
         self.is_timed_out()
-        self._verify_challenge(challenge)
+        success = self._verify_challenge(challenge)
+        if success:
+            self.reset_timeout()
+        else:
+            self.set_timeout()
+        self.save()
+        return success
 
     def _verify_challenge(self, challenge):
         raise NotImplementedError
@@ -79,11 +85,6 @@ class OOBDevice(Device):
         if success:
             self.challenge = None
             self.confirmed = True
-            self.reset_timeout()
-            self.save()
-        else:
-            self.set_timeout()
-            self.save()
         return success
 
     class Meta:
