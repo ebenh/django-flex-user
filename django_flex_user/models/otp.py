@@ -51,6 +51,13 @@ class Device(models.Model):
             raise VerificationTimeout(self.verification_timeout, self.verification_failure_count,
                                       "Too many failed verification attempts. Please try again later.")
 
+    def verify_challenge(self, challenge):
+        self.is_timed_out()
+        self._verify_challenge(challenge)
+
+    def _verify_challenge(self, challenge):
+        raise NotImplementedError
+
     class Meta:
         abstract = True
 
@@ -67,22 +74,17 @@ class OOBDevice(Device):
         self.reset_timeout()
         self.save()
 
-    def verify_challenge(self, challenge):
-        try:
-            self.is_timed_out()
-        except VerificationTimeout:
-            raise
+    def _verify_challenge(self, challenge):
+        success = self.challenge == challenge
+        if success:
+            self.challenge = None
+            self.confirmed = True
+            self.reset_timeout()
+            self.save()
         else:
-            success = self.challenge == challenge
-            if success:
-                self.challenge = None
-                self.confirmed = True
-                self.reset_timeout()
-                self.save()
-            else:
-                self.set_timeout()
-                self.save()
-            return success
+            self.set_timeout()
+            self.save()
+        return success
 
     class Meta:
         abstract = True
