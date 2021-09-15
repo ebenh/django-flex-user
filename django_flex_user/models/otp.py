@@ -97,6 +97,9 @@ class OOBDevice(Device):
             self.confirmed = True
         return success
 
+    def send_challenge(self):
+        raise NotImplementedError
+
     class Meta:
         abstract = True
 
