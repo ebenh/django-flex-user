@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'rest_framework',  # djangorestframework
     'rest_framework.authtoken',  # djangorestframework
-    'drf_multiple_model', # django-rest-multiple-models
+    'drf_multiple_model',  # django-rest-multiple-models
     'social_django',  # social-auth-app-django
     'django_flex_user.apps.DjangoFlexUserConfig',  # django-flex-user
     'django.contrib.admin',
@@ -251,3 +251,10 @@ SOCIAL_AUTH_CLEAN_USERNAME_FUNCTION = 'django_flex_user.validators.flex_user_cle
 #
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+#
+# Configure django-flex-user
+#
+
+FLEX_USER_EMAIL_FUNCTION = 'django_flex_user.verification.email_otp'
+FLEX_USER_SMS_FUNCTION = 'django_flex_user.verification.sms_otp'

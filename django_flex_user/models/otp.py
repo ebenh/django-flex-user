@@ -1,4 +1,4 @@
-import string, random
+import string, random, importlib
 from datetime import timedelta
 
 from django.conf import settings
@@ -9,6 +9,13 @@ from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
 from django_flex_user.util import obscure_email, obscure_phone
+
+
+def get_module_member(name):
+    module_name, member_name = name.rsplit('.', 1)
+    module = importlib.import_module(module_name, member_name)
+    member = getattr(module, member_name)
+    return member
 
 
 class VerificationTimeout(Exception):
@@ -118,9 +125,9 @@ class EmailDevice(OOBDevice):
         return obscure_email(self.email)
 
     def send_challenge(self):
-        fun = getattr(settings, 'FLEX_USER_EMAIL_FUNCTION', None)
-        if fun:
-            fun(self.challenge)
+        flex_user_email_function = getattr(settings, 'FLEX_USER_EMAIL_FUNCTION', None)
+        fun = get_module_member(flex_user_email_function)
+        fun(self.challenge)
 
 
 class PhoneDevice(OOBDevice):
@@ -133,6 +140,6 @@ class PhoneDevice(OOBDevice):
         return obscure_phone(self.phone.as_international)
 
     def send_challenge(self):
-        fun = getattr(settings, 'FLEX_USER_SMS_FUNCTION', None)
-        if fun:
-            fun(self.challenge)
+        flex_user_sms_function = getattr(settings, 'FLEX_USER_SMS_FUNCTION', None)
+        fun = get_module_member(flex_user_sms_function)
+        fun(self.challenge)
