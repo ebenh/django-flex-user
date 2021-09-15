@@ -1,6 +1,7 @@
 import string, random
 from datetime import timedelta
 
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -117,7 +118,9 @@ class EmailDevice(OOBDevice):
         return obscure_email(self.email)
 
     def send_challenge(self):
-        pass
+        fun = getattr(settings, 'FLEX_USER_EMAIL_FUNCTION', None)
+        if fun:
+            fun(self.challenge)
 
 
 class PhoneDevice(OOBDevice):
@@ -130,4 +133,6 @@ class PhoneDevice(OOBDevice):
         return obscure_phone(self.phone.as_international)
 
     def send_challenge(self):
-        pass
+        fun = getattr(settings, 'FLEX_USER_SMS_FUNCTION', None)
+        if fun:
+            fun(self.challenge)
