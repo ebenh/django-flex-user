@@ -167,4 +167,5 @@ class TestPhoneDevice(TestCase):
                     self.assertRaises(VerificationTimeout, phone_device.verify_challenge, 'INVALID_CHALLENGE')
                     # The verify method should raise VerificationTimeout even if we submit the correct challenge
                     self.assertRaises(VerificationTimeout, phone_device.verify_challenge, phone_device.challenge)
+                    # Advance time by 1 second
                     frozen_datetime.tick()
