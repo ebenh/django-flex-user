@@ -25,42 +25,44 @@ class Device(models.Model):
     verification_timeout = models.DateTimeField(_('verification timeout'), null=True, blank=True)
     verification_failure_count = models.PositiveIntegerField(_('verification failure count'), default=0)
 
-    def set_timeout(self, save=False):
+    def _set_timeout(self, save=False):
         self.verification_timeout = timezone.now() + timedelta(seconds=2 ** self.verification_failure_count)
         self.verification_failure_count += 1
         if save:
             self.save(update_fields=['verification_timeout', 'verification_failure_count'])
 
-    def reset_timeout(self, save=False):
+    def _reset_timeout(self, save=False):
         self.verification_timeout = None
         self.verification_failure_count = 0
         if save:
             self.save(update_fields=['verification_timeout', 'verification_failure_count'])
 
-    def is_timed_out(self):
+    def _is_timed_out(self):
         if self.verification_timeout and timezone.now() < self.verification_timeout:
             raise VerificationTimeout(self.verification_timeout, self.verification_failure_count,
                                       "Too many failed verification attempts. Please try again later.")
 
-    def generate_challenge(self):
-        self._generate_challenge()
-        self.reset_timeout()
-        self.save()
+    def throttle_reset(fun):
+        def inner(self):
+            fun(self)
+            self._reset_timeout()
+            self.save()
 
-    def _generate_challenge(self):
-        raise NotImplementedError
+        return inner
+
+    def throttle(verify_challenge_fun):
+        def inner(self, challenge):
+            self._is_timed_out()
+            success = verify_challenge_fun(self, challenge)
+            if success:
+                self._reset_timeout()
+            else:
+                self._set_timeout()
+            self.save()
+
+        return inner
 
     def verify_challenge(self, challenge):
-        self.is_timed_out()
-        success = self._verify_challenge(challenge)
-        if success:
-            self.reset_timeout()
-        else:
-            self.set_timeout()
-        self.save()
-        return success
-
-    def _verify_challenge(self, challenge):
         raise NotImplementedError
 
     def get_name(self):
@@ -81,12 +83,14 @@ class OOBDevice(Device):
     challenge_length = 6
     challenge_alphabet = string.digits
 
-    def _generate_challenge(self):
+    @Device.throttle_reset
+    def generate_challenge(self):
         challenge = ''.join(
             random.SystemRandom().choice(self.challenge_alphabet) for _ in range(self.challenge_length))
         self.challenge = challenge.encode('unicode_escape').decode('utf-8')
 
-    def _verify_challenge(self, challenge):
+    @Device.throttle
+    def verify_challenge(self, challenge):
         success = self.challenge == challenge
         if success:
             self.challenge = None
