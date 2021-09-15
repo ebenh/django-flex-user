@@ -241,6 +241,7 @@ class OTPEmailDevice(generics.GenericAPIView):
     def get(self, request, pk):
         email_device = self.get_object()
         email_device.generate_challenge()
+        email_device.send_challenge()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request, pk):

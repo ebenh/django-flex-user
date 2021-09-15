@@ -116,6 +116,9 @@ class EmailDevice(OOBDevice):
     def get_obscured_name(self):
         return obscure_email(self.email)
 
+    def send_challenge(self):
+        pass
+
 
 class PhoneDevice(OOBDevice):
     phone = PhoneNumberField(_('phone number'), )
@@ -125,3 +128,6 @@ class PhoneDevice(OOBDevice):
 
     def get_obscured_name(self):
         return obscure_phone(self.phone.as_international)
+
+    def send_challenge(self):
+        pass
