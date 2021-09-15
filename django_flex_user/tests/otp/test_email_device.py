@@ -167,4 +167,6 @@ class TestEmailDevice(TestCase):
                 for j in range(0, 2 ** i):
                     # Try to verify again, the method should raise VerificationTimeout exception
                     self.assertRaises(VerificationTimeout, email_device.verify_challenge, 'INVALID_CHALLENGE')
+                    # The verify method should raise VerificationTimeout even if we submit the correct challenge
+                    self.assertRaises(VerificationTimeout, email_device.verify_challenge, email_device.challenge)
                     frozen_datetime.tick()
