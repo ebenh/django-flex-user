@@ -125,7 +125,8 @@ class EmailDevice(OOBDevice):
         return obscure_email(self.email)
 
     def send_challenge(self):
-        flex_user_email_function = getattr(settings, 'FLEX_USER_EMAIL_FUNCTION', None)
+        flex_user_email_function = getattr(settings, 'FLEX_USER_EMAIL_FUNCTION',
+                                           'django_flex_user.verification.email_otp')
         fun = get_module_member(flex_user_email_function)
         fun(self.challenge)
 
@@ -139,7 +140,11 @@ class PhoneDevice(OOBDevice):
     def get_obscured_name(self):
         return obscure_phone(self.phone.as_international)
 
+    def _send_challenge(self):
+        pass
+
     def send_challenge(self):
-        flex_user_sms_function = getattr(settings, 'FLEX_USER_SMS_FUNCTION', None)
+        flex_user_sms_function = getattr(settings, 'FLEX_USER_SMS_FUNCTION',
+                                         'django_flex_user.verification.sms_otp')
         fun = get_module_member(flex_user_sms_function)
         fun(self.challenge)
