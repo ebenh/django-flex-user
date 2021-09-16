@@ -136,10 +136,10 @@ class PhoneDevice(OOBDevice):
     phone = PhoneNumberField(_('phone number'), )
 
     def get_name(self):
-        return self.phone
+        return str(self.phone)
 
     def get_obscured_name(self):
-        return obscure_phone(self.phone.as_international)
+        return obscure_phone(str(self.phone))
 
     def _send_challenge(self):
         pass
