@@ -128,7 +128,7 @@ class EmailDevice(OOBDevice):
         flex_user_email_function = getattr(settings, 'FLEX_USER_EMAIL_FUNCTION',
                                            'django_flex_user.verification.email_otp')
         fun = get_module_member(flex_user_email_function)
-        fun(self.challenge)
+        fun(self.email,self.challenge)
 
 
 class PhoneDevice(OOBDevice):
@@ -147,4 +147,4 @@ class PhoneDevice(OOBDevice):
         flex_user_sms_function = getattr(settings, 'FLEX_USER_SMS_FUNCTION',
                                          'django_flex_user.verification.sms_otp')
         fun = get_module_member(flex_user_sms_function)
-        fun(self.challenge)
+        fun(self.phone, self.challenge)

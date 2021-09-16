@@ -81,9 +81,11 @@ def mail_validation(backend, details, is_new=False, *args, **kwargs):
             )
 
 
-def email_otp(challenge):
+def email_otp(recipient, challenge):
+    print(recipient)
     print(challenge)
 
 
-def sms_otp(challenge):
+def sms_otp(recipient, challenge):
+    print(recipient)
     print(challenge)
