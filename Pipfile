@@ -14,6 +14,7 @@ django-dirtyfields = "*"
 djangorestframework-simplejwt = "*"
 phonenumbers = "*"
 django-rest-multiple-models = "*"
+django-environ = "*"
 
 [dev-packages]
 freezegun = "*"
