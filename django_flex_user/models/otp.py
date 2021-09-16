@@ -67,6 +67,7 @@ class Device(models.Model):
             else:
                 self._set_timeout()
             self.save()
+            return success
 
         return inner
 
@@ -135,7 +136,7 @@ class PhoneDevice(OOBDevice):
     phone = PhoneNumberField(_('phone number'), )
 
     def get_name(self):
-        return self.phone.as_international
+        return self.phone
 
     def get_obscured_name(self):
         return obscure_phone(self.phone.as_international)
