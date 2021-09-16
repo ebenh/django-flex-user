@@ -26,22 +26,32 @@ class TestOTPDevicesRetrieve(APITestCase):
     def test_method_get_search_existing_user_by_username(self):
         from django_flex_user.models import FlexUser
 
-        FlexUser.objects.create_user(username='validUsername')
+        FlexUser.objects.create_user(username='validUsername', email='validEmail@example.com', phone='+12025551234')
 
         response = self.client.get(self._REST_ENDPOINT_PATH, {'search': 'validUsername'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
             response.data,
             {
-                'EmailDevice': [],
-                'PhoneDevice': []
+                'EmailDevice': [
+                    {
+                        'id': 1,
+                        'name': 'va********@ex*****.***'
+                    }
+                ],
+                'PhoneDevice': [
+                    {
+                        'id': 1,
+                        'name': '+*********34'
+                    }
+                ]
             }
         )
 
     def test_method_get_search_existing_user_by_email(self):
         from django_flex_user.models import FlexUser
 
-        FlexUser.objects.create_user(email='validEmail@example.com')
+        FlexUser.objects.create_user(username='validUsername', email='validEmail@example.com', phone='+12025551234')
 
         response = self.client.get(self._REST_ENDPOINT_PATH, {'search': 'validEmail@example.com'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -54,21 +64,31 @@ class TestOTPDevicesRetrieve(APITestCase):
                         'name': 'va********@ex*****.***'
                     }
                 ],
-                'PhoneDevice': []
+                'PhoneDevice': [
+                    {
+                        'id': 1,
+                        'name': '+*********34'
+                    }
+                ]
             }
         )
 
     def test_method_get_search_existing_user_by_phone(self):
         from django_flex_user.models import FlexUser
 
-        FlexUser.objects.create_user(phone='+12025551234')
+        FlexUser.objects.create_user(username='validUsername', email='validEmail@example.com', phone='+12025551234')
 
         response = self.client.get(self._REST_ENDPOINT_PATH, {'search': '+12025551234'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(
             response.data,
             {
-                'EmailDevice': [],
+                'EmailDevice': [
+                    {
+                        'id': 1,
+                        'name': 'va********@ex*****.***'
+                    }
+                ],
                 'PhoneDevice': [
                     {
                         'id': 1,
