@@ -18,7 +18,6 @@ urlpatterns = [
     path('', include('social_django.urls', namespace='social')),
     # Password Reset
     path('', include('django.contrib.auth.urls')),
-    # path('password_reset', include('django_rest_passwordreset.urls', namespace='password_reset')),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
