@@ -4,7 +4,7 @@ from rest_framework import status
 
 class TestOTPDevicesRetrieve(APITestCase):
     """
-    This class is designed to test django_flex_user.views.FlexUser
+    This class is designed to test django_flex_user.views.OTPDevices
     """
     _REST_ENDPOINT_PATH = '/account/otp-devices/'
 
