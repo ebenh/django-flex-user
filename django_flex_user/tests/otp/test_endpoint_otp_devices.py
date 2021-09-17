@@ -17,6 +17,13 @@ class TestOTPDevicesRetrieve(APITestCase):
     def test_method_get(self):
         response = self.client.get(self._REST_ENDPOINT_PATH)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(
+            response.data,
+            {
+                'EmailDevice': [],
+                'PhoneDevice': []
+            }
+        )
 
     def test_method_get_no_matches(self):
         search_values = (
