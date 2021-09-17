@@ -30,15 +30,16 @@ class TestOTPDevicesRetrieve(APITestCase):
         )
 
         for v in query_values:
-            response = self.client.get(self._REST_ENDPOINT_PATH, {'search': v})
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
-            self.assertEqual(
-                response.data,
-                {
-                    'EmailDevice': [],
-                    'PhoneDevice': []
-                }
-            )
+            with self.subTest(search_value=v):
+                response = self.client.get(self._REST_ENDPOINT_PATH, {'search': v})
+                self.assertEqual(response.status_code, status.HTTP_200_OK)
+                self.assertEqual(
+                    response.data,
+                    {
+                        'EmailDevice': [],
+                        'PhoneDevice': []
+                    }
+                )
 
     def test_method_get_match_found(self):
         query_values = (
@@ -48,25 +49,26 @@ class TestOTPDevicesRetrieve(APITestCase):
         )
 
         for v in query_values:
-            response = self.client.get(self._REST_ENDPOINT_PATH, {'search': v})
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
-            self.assertEqual(
-                response.data,
-                {
-                    'EmailDevice': [
-                        {
-                            'id': 1,
-                            'name': 'va*********@ex*****.***'
-                        }
-                    ],
-                    'PhoneDevice': [
-                        {
-                            'id': 1,
-                            'name': '+*********01'
-                        }
-                    ]
-                }
-            )
+            with self.subTest(search_value=v):
+                response = self.client.get(self._REST_ENDPOINT_PATH, {'search': v})
+                self.assertEqual(response.status_code, status.HTTP_200_OK)
+                self.assertEqual(
+                    response.data,
+                    {
+                        'EmailDevice': [
+                            {
+                                'id': 1,
+                                'name': 'va*********@ex*****.***'
+                            }
+                        ],
+                        'PhoneDevice': [
+                            {
+                                'id': 1,
+                                'name': '+*********01'
+                            }
+                        ]
+                    }
+                )
 
     def test_method_post(self):
         response = self.client.post(self._REST_ENDPOINT_PATH)
