@@ -8,20 +8,17 @@ class TestOTPDevicesRetrieve(APITestCase):
     """
     _REST_ENDPOINT_PATH = '/account/otp-devices/'
 
-    _search_values_no_match = (
-        '',  # Empty string
-        'validUsername3',  # Non-existent username
-        'validEmail3@example.com',  # Non-existent email
-        '+12025550003',  # Non-existent phone
-        'validUsername',  # Partial match username
-        'validEmail1@'  # Partial match email
-        '+1202'  # Partial match phone
-    )
-
-    _search_values_match = (
-        'validUsername1',
-        'validEmail1@example.com',
-        '+12025550001'
+    _search_values = (
+        ('', False),  # Empty string
+        ('validUsername3', False),  # Non-existent username
+        ('validEmail3@example.com', False),  # Non-existent email
+        ('+12025550003', False),  # Non-existent phone
+        ('validUsername', False),  # Partial match username
+        ('validEmail1@', False),  # Partial match email
+        ('+1202', False),  # Partial match phone
+        ('validUsername1', True), # Matching username
+        ('validEmail1@example.com', True), # Matching email
+        ('+12025550001', True) # Matching phone
     )
 
     def setUp(self):
@@ -42,39 +39,36 @@ class TestOTPDevicesRetrieve(APITestCase):
         )
 
     def test_method_get_with_query_string(self):
-        for v in self._search_values_no_match:
-            with self.subTest(search_value=v):
-                response = self.client.get(self._REST_ENDPOINT_PATH, {'search': v})
+        for value, expect_match in self._search_values:
+            with self.subTest(search_value=value):
+                response = self.client.get(self._REST_ENDPOINT_PATH, {'search': value})
                 self.assertEqual(response.status_code, status.HTTP_200_OK)
-                self.assertEqual(
-                    response.data,
-                    {
-                        'EmailDevice': [],
-                        'PhoneDevice': []
-                    }
-                )
-
-        for v in self._search_values_match:
-            with self.subTest(search_value=v):
-                response = self.client.get(self._REST_ENDPOINT_PATH, {'search': v})
-                self.assertEqual(response.status_code, status.HTTP_200_OK)
-                self.assertEqual(
-                    response.data,
-                    {
-                        'EmailDevice': [
-                            {
-                                'id': 1,
-                                'name': 'va*********@ex*****.***'
-                            }
-                        ],
-                        'PhoneDevice': [
-                            {
-                                'id': 1,
-                                'name': '+*********01'
-                            }
-                        ]
-                    }
-                )
+                if expect_match:
+                    self.assertEqual(
+                        response.data,
+                        {
+                            'EmailDevice': [
+                                {
+                                    'id': 1,
+                                    'name': 'va*********@ex*****.***'
+                                }
+                            ],
+                            'PhoneDevice': [
+                                {
+                                    'id': 1,
+                                    'name': '+*********01'
+                                }
+                            ]
+                        }
+                    )
+                else:
+                    self.assertEqual(
+                        response.data,
+                        {
+                            'EmailDevice': [],
+                            'PhoneDevice': []
+                        }
+                    )
 
     def test_method_post(self):
         response = self.client.post(self._REST_ENDPOINT_PATH)
