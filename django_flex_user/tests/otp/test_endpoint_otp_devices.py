@@ -8,6 +8,22 @@ class TestOTPDevicesRetrieve(APITestCase):
     """
     _REST_ENDPOINT_PATH = '/account/otp-devices/'
 
+    _search_values_no_match = (
+        '',  # Empty string
+        'validUsername3',  # Non-existent username
+        'validEmail3@example.com',  # Non-existent email
+        '+12025550003',  # Non-existent phone
+        'validUsername',  # Partial match username
+        'validEmail1@'  # Partial match email
+        '+1202'  # Partial match phone
+    )
+
+    _search_values_match = (
+        'validUsername1',
+        'validEmail1@example.com',
+        '+12025550001'
+    )
+
     def setUp(self):
         from django_flex_user.models import FlexUser
 
@@ -25,18 +41,8 @@ class TestOTPDevicesRetrieve(APITestCase):
             }
         )
 
-    def test_method_get_no_matches(self):
-        search_values = (
-            '',                         # Empty string
-            'validUsername3',           # Non-existent username
-            'validEmail3@example.com',  # Non-existent email
-            '+12025550003',             # Non-existent phone
-            'validUsername',            # Partial match username
-            'validEmail1@'              # Partial match email
-            '+1202'                     # Partial match phone
-        )
-
-        for v in search_values:
+    def test_method_get_with_query_string(self):
+        for v in self._search_values_no_match:
             with self.subTest(search_value=v):
                 response = self.client.get(self._REST_ENDPOINT_PATH, {'search': v})
                 self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -48,14 +54,7 @@ class TestOTPDevicesRetrieve(APITestCase):
                     }
                 )
 
-    def test_method_get_match_found(self):
-        search_values = (
-            'validUsername1',
-            'validEmail1@example.com',
-            '+12025550001'
-        )
-
-        for v in search_values:
+        for v in self._search_values_match:
             with self.subTest(search_value=v):
                 response = self.client.get(self._REST_ENDPOINT_PATH, {'search': v})
                 self.assertEqual(response.status_code, status.HTTP_200_OK)
