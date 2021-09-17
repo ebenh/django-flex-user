@@ -19,7 +19,7 @@ class TestOTPDevicesRetrieve(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_method_get_no_matches(self):
-        query_values = (
+        search_values = (
             '',                         # Empty string
             'validUsername3',           # Non-existent username
             'validEmail3@example.com',  # Non-existent email
@@ -29,7 +29,7 @@ class TestOTPDevicesRetrieve(APITestCase):
             '+1202'                     # Partial match phone
         )
 
-        for v in query_values:
+        for v in search_values:
             with self.subTest(search_value=v):
                 response = self.client.get(self._REST_ENDPOINT_PATH, {'search': v})
                 self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -42,13 +42,13 @@ class TestOTPDevicesRetrieve(APITestCase):
                 )
 
     def test_method_get_match_found(self):
-        query_values = (
+        search_values = (
             'validUsername1',
             'validEmail1@example.com',
             '+12025550001'
         )
 
-        for v in query_values:
+        for v in search_values:
             with self.subTest(search_value=v):
                 response = self.client.get(self._REST_ENDPOINT_PATH, {'search': v})
                 self.assertEqual(response.status_code, status.HTTP_200_OK)
