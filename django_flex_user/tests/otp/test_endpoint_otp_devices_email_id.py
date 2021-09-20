@@ -36,6 +36,50 @@ class TestOTPDeviceRetrieve(APITestCase):
         self.assertIsNone(self.email_device1.verification_timeout)
         self.assertEqual(self.email_device1.verification_failure_count, 0)
 
+    def test_method_post_generate_challenge_verify_challenge_none(self):
+        from freezegun import freeze_time
+        from django.utils import timezone
+        from datetime import timedelta
+
+        # Generate challenge
+        response = self.client.get(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id))
+        self.email_device1.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # Verify challenge
+        with freeze_time():
+            response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id),
+                                        data={'challenge': None},
+                                        format='json')
+            self.email_device1.refresh_from_db()
+            self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+            self.assertIsNotNone(self.email_device1.challenge)
+            self.assertFalse(self.email_device1.confirmed)
+            self.assertEqual(self.email_device1.verification_timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.email_device1.verification_failure_count, 1)
+
+    def test_method_post_generate_challenge_verify_challenge_empty_string(self):
+        from freezegun import freeze_time
+        from django.utils import timezone
+        from datetime import timedelta
+
+        # Generate challenge
+        response = self.client.get(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id))
+        self.email_device1.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        # Verify challenge
+        with freeze_time():
+            response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id),
+                                        data={'challenge': ''},
+                                        format='json')
+            self.email_device1.refresh_from_db()
+            self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+            self.assertIsNotNone(self.email_device1.challenge)
+            self.assertFalse(self.email_device1.confirmed)
+            self.assertEqual(self.email_device1.verification_timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.email_device1.verification_failure_count, 1)
+
     def test_method_post_generate_challenge_verify_challenge_invalid_challenge(self):
         from freezegun import freeze_time
         from django.utils import timezone
