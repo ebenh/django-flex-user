@@ -100,7 +100,7 @@ class OOBDevice(Device):
 
     @Device.throttle
     def verify_challenge(self, challenge):
-        success = self.challenge == challenge
+        success = False if self.challenge is None else self.challenge == challenge
         if success:
             self.challenge = None
             self.confirmed = True
@@ -129,7 +129,7 @@ class EmailDevice(OOBDevice):
         flex_user_email_function = getattr(settings, 'FLEX_USER_EMAIL_FUNCTION',
                                            'django_flex_user.verification.email_otp')
         fun = get_module_member(flex_user_email_function)
-        fun(self.email,self.challenge)
+        fun(self.email, self.challenge)
 
 
 class PhoneDevice(OOBDevice):

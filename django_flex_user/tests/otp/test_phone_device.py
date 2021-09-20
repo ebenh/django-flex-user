@@ -145,6 +145,70 @@ class TestPhoneDevice(TestCase):
         self.assertIsNone(phone_device.verification_timeout)
         self.assertEqual(phone_device.verification_failure_count, 0)
 
+    def test_verify_challenge_none(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import PhoneDevice
+        from freezegun import freeze_time
+        from django.utils import timezone
+        from datetime import timedelta
+
+        user = FlexUser.objects.create_user(phone='+12025551234')
+        phone_device = PhoneDevice.objects.get(user_id=user.id)
+
+        with freeze_time():
+            self.assertFalse(phone_device.verify_challenge(None))
+            self.assertFalse(phone_device.confirmed)
+            self.assertEqual(phone_device.verification_timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(phone_device.verification_failure_count, 1)
+
+    def test_verify_challenge_empty_string(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import PhoneDevice
+        from freezegun import freeze_time
+        from django.utils import timezone
+        from datetime import timedelta
+
+        user = FlexUser.objects.create_user(phone='+12025551234')
+        phone_device = PhoneDevice.objects.get(user_id=user.id)
+
+        with freeze_time():
+            self.assertFalse(phone_device.verify_challenge(''))
+            self.assertFalse(phone_device.confirmed)
+            self.assertEqual(phone_device.verification_timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(phone_device.verification_failure_count, 1)
+
+    def test_verify_challenge_invalid_challenge(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import PhoneDevice
+        from freezegun import freeze_time
+        from django.utils import timezone
+        from datetime import timedelta
+
+        user = FlexUser.objects.create_user(phone='+12025551234')
+        phone_device = PhoneDevice.objects.get(user_id=user.id)
+
+        with freeze_time():
+            self.assertFalse(phone_device.verify_challenge('INVALID_CHALLENGE'))
+            self.assertFalse(phone_device.confirmed)
+            self.assertEqual(phone_device.verification_timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(phone_device.verification_failure_count, 1)
+
+    def test_verify_challenge_valid_challenge(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import PhoneDevice
+        from freezegun import freeze_time
+        from django.utils import timezone
+        from datetime import timedelta
+
+        user = FlexUser.objects.create_user(phone='+12025551234')
+        phone_device = PhoneDevice.objects.get(user_id=user.id)
+
+        with freeze_time():
+            self.assertFalse(phone_device.verify_challenge(phone_device.challenge))
+            self.assertFalse(phone_device.confirmed)
+            self.assertEqual(phone_device.verification_timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(phone_device.verification_failure_count, 1)
+
     def test_throttle(self):
         from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import PhoneDevice, VerificationTimeout
