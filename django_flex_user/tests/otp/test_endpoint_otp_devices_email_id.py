@@ -26,6 +26,16 @@ class TestOTPDeviceRetrieve(APITestCase):
         response = self.client.get(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
+        self.email_device1.refresh_from_db()
+        self.assertFalse(self.email_device1.confirmed)
+        self.assertIsNotNone(self.email_device1.challenge)
+        self.assertNotEqual(self.email_device1.challenge, '')
+        # note eben: Because escape characters are inserted into the challenge string, the challenge string's length may
+        # be greater than or equal to its configured length
+        self.assertGreaterEqual(len(self.email_device1.challenge), self.email_device1.challenge_length)
+        self.assertIsNone(self.email_device1.verification_timeout)
+        self.assertEqual(self.email_device1.verification_failure_count, 0)
+
     def test_method_post(self):
         response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id),
                                     data={'challenge': self.email_device1.challenge},
