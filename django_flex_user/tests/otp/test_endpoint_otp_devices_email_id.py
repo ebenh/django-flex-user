@@ -36,7 +36,7 @@ class TestOTPDeviceRetrieve(APITestCase):
         self.assertIsNone(self.email_device1.verification_timeout)
         self.assertEqual(self.email_device1.verification_failure_count, 0)
 
-    def test_method_post(self):
+    def test_method_post_generate_challenge_verify_challenge_valid_challenge(self):
         # Generate challenge
         response = self.client.get(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
