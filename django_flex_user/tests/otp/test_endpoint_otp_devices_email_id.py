@@ -39,14 +39,19 @@ class TestOTPDeviceRetrieve(APITestCase):
     def test_method_post_generate_challenge_verify_challenge_valid_challenge(self):
         # Generate challenge
         response = self.client.get(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id))
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.email_device1.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
         # Verify challenge
         response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id),
                                     data={'challenge': self.email_device1.challenge},
                                     format='json')
+        self.email_device1.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIsNone(self.email_device1.challenge)
+        self.assertTrue(self.email_device1.confirmed)
+        self.assertIsNone(self.email_device1.verification_timeout)
+        self.assertEqual(self.email_device1.verification_failure_count, 0)
 
     def test_method_put(self):
         response = self.client.put(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id))
