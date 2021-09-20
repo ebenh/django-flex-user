@@ -283,16 +283,6 @@ class AuthenticationSerializer(serializers.Serializer):
         return self.user
 
 
-class OTPSerializer(serializers.Serializer):
-    challenge = serializers.CharField(write_only=True)
-
-    def update(self, instance, validated_data):
-        raise NotImplementedError
-
-    def create(self, validated_data):
-        raise NotImplementedError
-
-
 class UserSocialAuthSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField('get_name')
     email = serializers.SerializerMethodField('get_email')
@@ -313,6 +303,16 @@ class UserSocialAuthSerializer(serializers.ModelSerializer):
             'uid': {'read_only': True},
             'provider': {'read_only': True}
         }
+
+
+class OTPSerializer(serializers.Serializer):
+    challenge = serializers.CharField(write_only=True)
+
+    def update(self, instance, validated_data):
+        raise NotImplementedError
+
+    def create(self, validated_data):
+        raise NotImplementedError
 
 
 class EmailDeviceSerializer(serializers.ModelSerializer):
