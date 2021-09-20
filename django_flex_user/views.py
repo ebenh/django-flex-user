@@ -20,7 +20,7 @@ from .models.otp import EmailDevice, PhoneDevice, VerificationTimeout
 from .validators import FlexUserUnicodeUsernameValidator
 
 from .serializers import FlexUserSerializer, AuthenticationSerializer, UserSocialAuthSerializer, \
-    EmailDeviceSerializer, PhoneDeviceSerializer
+    OTPSerializer, EmailDeviceSerializer, PhoneDeviceSerializer
 
 UserModel = get_user_model()
 
@@ -234,7 +234,7 @@ class OTPDevices(ObjectMultipleModelAPIView):
 
 class OTPEmailDevice(generics.GenericAPIView):
     queryset = EmailDevice.objects.all()
-    serializer_class = EmailDeviceSerializer
+    serializer_class = OTPSerializer
     authentication_classes = [SessionAuthentication]
     permission_classes = [AllowAny]
 
@@ -264,4 +264,4 @@ class OTPEmailDevice(generics.GenericAPIView):
 
 class OTPPhoneDevice(OTPEmailDevice):
     queryset = PhoneDevice.objects.all()
-    serializer_class = PhoneDeviceSerializer
+    serializer_class = OTPSerializer
