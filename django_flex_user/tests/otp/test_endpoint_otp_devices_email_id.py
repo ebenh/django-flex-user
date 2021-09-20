@@ -24,9 +24,9 @@ class TestOTPDeviceRetrieve(APITestCase):
 
     def test_method_get(self):
         response = self.client.get(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id))
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
         self.email_device1.refresh_from_db()
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(self.email_device1.confirmed)
         self.assertIsNotNone(self.email_device1.challenge)
         self.assertNotEqual(self.email_device1.challenge, '')
