@@ -284,7 +284,7 @@ class TestUserModel(TestCase):
         username = FlexUser.normalize_username(nfd)
         self.assertEqual(username, nfkc)
 
-    def test_serialize(self):
+    def test_serialization(self):
         """
         This purpose of this method is to test django_flex_user.models.FlexUser.natural_key and
         django_flex_user.models.FlexUserManager.get_by_natural_key.
