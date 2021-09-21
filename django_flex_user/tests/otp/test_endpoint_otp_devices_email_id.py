@@ -66,7 +66,8 @@ class TestOTPDeviceRetrieve(APITestCase):
                                             email='validEmail@example.com',
                                             phone='+12025551234')
         email_device = EmailDevice.objects.get(user=user)
-        email_device.challenge = 'validChallenge'
+        email_device.generate_challenge()
+        email_device.challenge = 'validChallenge'  # Overwrite challenge
         email_device.save()
 
         for data in self._ContentType.ApplicationJSON.challenge_values:
@@ -129,7 +130,8 @@ class TestOTPDeviceRetrieve(APITestCase):
                                             email='validEmail@example.com',
                                             phone='+12025551234')
         email_device = EmailDevice.objects.get(user=user)
-        email_device.challenge = 'validChallenge'
+        email_device.generate_challenge()
+        email_device.challenge = 'validChallenge'  # Overwrite challenge
         email_device.save()
 
         for data in self._ContentType.MultipartFormData.challenge_values:
