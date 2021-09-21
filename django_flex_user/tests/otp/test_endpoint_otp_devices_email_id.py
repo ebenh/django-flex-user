@@ -8,6 +8,24 @@ class TestOTPDeviceRetrieve(APITestCase):
     """
     _REST_ENDPOINT_PATH = '/account/otp-devices/email/{id}'
 
+    class _ContentType:
+        class ApplicationJSON:
+            challenge_values = (
+                {},
+                {'challenge': None},
+                {'challenge': ''},
+                {'challenge': 'validChallenge'},
+                {'challenge': 'invalidChallenge'}
+            )
+
+        class MultipartFormData:
+            challenge_values = (
+                {},
+                {'challenge': ''},
+                {'challenge': 'validChallenge'},
+                {'challenge': 'invalidChallenge'}
+            )
+
     def setUp(self):
         from django_flex_user.models import FlexUser
         from django_flex_user.models import EmailDevice
@@ -35,6 +53,46 @@ class TestOTPDeviceRetrieve(APITestCase):
         self.assertGreaterEqual(len(self.email_device1.challenge), self.email_device1.challenge_length)
         self.assertIsNone(self.email_device1.verification_timeout)
         self.assertEqual(self.email_device1.verification_failure_count, 0)
+
+    def test_method_post_format_application_json(self):
+        from django_flex_user.models import FlexUser
+        from django_flex_user.models import EmailDevice
+
+        user = FlexUser.objects.create_user(username='validUsername',
+                                            email='validEmail@example.com',
+                                            phone='+12025551234')
+        email_device = EmailDevice.objects.get(user=user)
+        email_device.challenge = 'validChallenge'
+        email_device.save()
+
+        for data in self._ContentType.ApplicationJSON.challenge_values:
+            with self.subTest(**data):
+                response = self.client.post(self._REST_ENDPOINT_PATH.format(id=email_device.id),
+                                            data=data,
+                                            format='json')
+                if not data.get('challenge'):
+                    """
+                    If the supplied challenge is either undefined, None or the empty string,
+                    django_flex_user.views.EmailDevice.post should return HTTP status code HTTP_400_BAD_REQUEST.
+                    """
+                    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+                elif data.get('challenge') == 'validChallenge':
+                    """
+                    If the supplied challenge is defined and valid, django_flex_user.views.EmailDevice.post should
+                    return HTTP status code HTTP_200_OK.
+                    """
+                    self.assertEqual(response.status_code, status.HTTP_200_OK)
+                elif data.get('challenge') == 'invalidChallenge':
+                    """
+                    If the supplied challenge is defined and invalid, django_flex_user.views.EmailDevice.post
+                    should return HTTP status code HTTP_401_UNAUTHORIZED.
+                    """
+                    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+                else:
+                    """
+                    If we reach here something is broken.
+                    """
+                    self.assertFalse(True)
 
     def test_method_post_generate_challenge_verify_challenge_none(self):
         # Generate challenge
