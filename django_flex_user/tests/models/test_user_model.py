@@ -322,7 +322,7 @@ class TestUserModel(TestCase):
 
     def test_post_save_signal_create_user_with_email(self):
         from django_flex_user.models.flex_user import FlexUser
-        from django_flex_user.models.otp import EmailDevice, PhoneDevice
+        from django_flex_user.models.otp import EmailDevice
 
         user = FlexUser(email='validEmail@example.com')
         user.set_unusable_password()
@@ -338,7 +338,7 @@ class TestUserModel(TestCase):
 
     def test_post_save_signal_create_user_with_phone(self):
         from django_flex_user.models.flex_user import FlexUser
-        from django_flex_user.models.otp import EmailDevice, PhoneDevice
+        from django_flex_user.models.otp import PhoneDevice
 
         user = FlexUser(phone='+12025551234')
         user.set_unusable_password()
@@ -354,7 +354,7 @@ class TestUserModel(TestCase):
 
     def test_post_save_signal_add_email(self):
         from django_flex_user.models.flex_user import FlexUser
-        from django_flex_user.models.otp import EmailDevice, PhoneDevice
+        from django_flex_user.models.otp import EmailDevice
 
         user = FlexUser(username='validUsername')
         user.set_unusable_password()
@@ -374,7 +374,7 @@ class TestUserModel(TestCase):
 
     def test_post_save_signal_add_phone(self):
         from django_flex_user.models.flex_user import FlexUser
-        from django_flex_user.models.otp import EmailDevice, PhoneDevice
+        from django_flex_user.models.otp import PhoneDevice
 
         user = FlexUser(username='validUsername')
         user.set_unusable_password()
