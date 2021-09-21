@@ -49,7 +49,7 @@ class TestOTPDeviceRetrieve(APITestCase):
         self.assertIsNone(self.email_device.verification_timeout)
         self.assertEqual(self.email_device.verification_failure_count, 0)
 
-    def test_method_post_format_application_json(self):
+    def test_method_post_format_application_json_generate_challenge_validate_challenge(self):
         from django.db import transaction
         from freezegun import freeze_time
         from django.utils import timezone
@@ -106,7 +106,7 @@ class TestOTPDeviceRetrieve(APITestCase):
 
                 transaction.set_rollback(True)
 
-    def test_method_post_format_multipart_form_data(self):
+    def test_method_post_format_multipart_form_data_generate_challenge_validate_challenge(self):
         from django.db import transaction
         from freezegun import freeze_time
         from django.utils import timezone
@@ -175,7 +175,7 @@ class TestOTPDeviceRetrieve(APITestCase):
 
                 transaction.set_rollback(True)
 
-    def test_method_post_format_application_json2(self):
+    def test_method_post_format_application_json_validate_challenge(self):
         from django.db import transaction
         from freezegun import freeze_time
         from django.utils import timezone
@@ -218,7 +218,7 @@ class TestOTPDeviceRetrieve(APITestCase):
 
                 transaction.set_rollback(True)
 
-    def test_method_post_format_multipart_form_data2(self):
+    def test_method_post_format_multipart_form_data_validate_challenge(self):
         from django.db import transaction
         from freezegun import freeze_time
         from django.utils import timezone
