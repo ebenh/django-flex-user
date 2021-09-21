@@ -114,7 +114,7 @@ class TestEmailDevice(TestCase):
             self.assertEqual(self.otp_device.verification_timeout, timezone.now() + timedelta(seconds=1))
             self.assertEqual(self.otp_device.verification_failure_count, 1)
 
-    def test_throttle(self):
+    def test_verify_challenge_throttling(self):
         from django_flex_user.models.otp import VerificationTimeout
         from freezegun import freeze_time
 
