@@ -276,3 +276,29 @@ class TestOTPDeviceRetrieve(APITestCase):
     def test_method_options(self):
         response = self.client.options(self._REST_ENDPOINT_PATH.format(id=self.email_device.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_throttle(self):
+        from freezegun import freeze_time
+
+        self.email_device.generate_challenge()
+
+        with freeze_time() as frozen_datetime:
+            for i in range(0, 10):
+                # Try to verify an invalid challenge. The method should return false and set the timeout to 2^i seconds
+                response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device.id),
+                                            data={'challenge': 'invalidChallenge'})
+                self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+                # Here we simulate the timeout period. For each second of the timeout period we attempt to verify again.
+                # The verification method should raise an exception each time.
+                for j in range(0, 2 ** i):
+                    # Try to verify again, the method should raise VerificationTimeout exception
+                    response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device.id),
+                                                data={'challenge': 'invalidChallenge'})
+                    self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
+                    # The verify method should raise VerificationTimeout even if we submit the correct challenge
+                    response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device.id),
+                                                data={'challenge': self.email_device.challenge})
+                    self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
+                    # Advance time by 1 second
+                    frozen_datetime.tick()
