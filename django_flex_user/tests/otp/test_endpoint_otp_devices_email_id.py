@@ -31,8 +31,8 @@ class TestOTPDeviceRetrieve(APITestCase):
         from django_flex_user.models import EmailDevice
 
         user = FlexUser.objects.create_user(username='validUsername',
-                                             email='validEmail@example.com',
-                                             phone='+12025551234')
+                                            email='validEmail@example.com',
+                                            phone='+12025551234')
         self.email_device = EmailDevice.objects.get(user=user)
 
     def test_method_get(self):
