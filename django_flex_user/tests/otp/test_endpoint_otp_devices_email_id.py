@@ -203,22 +203,10 @@ class TestOTPDeviceRetrieve(APITestCase):
                     self.assertFalse(self.email_device.confirmed)
                     self.assertIsNone(self.email_device.verification_timeout)
                     self.assertEqual(self.email_device.verification_failure_count, 0)
-                elif data.get('challenge') == 'invalidChallenge':
-                    """
-                    If the supplied challenge is defined and invalid, django_flex_user.views.EmailDevice.post
-                    should return HTTP status code HTTP_401_UNAUTHORIZED.
-                    """
-                    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-                    self.email_device.refresh_from_db()
-                    self.assertIsNone(self.email_device.challenge)
-                    self.assertFalse(self.email_device.confirmed)
-                    self.assertEqual(self.email_device.verification_timeout, timezone.now() + timedelta(seconds=1))
-                    self.assertEqual(self.email_device.verification_failure_count, 1)
                 else:
                     """
-                    If the supplied challenge is defined and valid, django_flex_user.views.EmailDevice.post should
-                    return HTTP status code HTTP_401_UNAUTHORIZED.
+                    If the supplied challenge is defined and invalid, or defined and valid,
+                    django_flex_user.views.EmailDevice.post should return HTTP status code HTTP_401_UNAUTHORIZED.
                     """
                     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -258,22 +246,10 @@ class TestOTPDeviceRetrieve(APITestCase):
                     self.assertFalse(self.email_device.confirmed)
                     self.assertIsNone(self.email_device.verification_timeout)
                     self.assertEqual(self.email_device.verification_failure_count, 0)
-                elif data.get('challenge') == 'invalidChallenge':
-                    """
-                    If the supplied challenge is defined and invalid, django_flex_user.views.EmailDevice.post
-                    should return HTTP status code HTTP_401_UNAUTHORIZED.
-                    """
-                    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-                    self.email_device.refresh_from_db()
-                    self.assertIsNone(self.email_device.challenge)
-                    self.assertFalse(self.email_device.confirmed)
-                    self.assertEqual(self.email_device.verification_timeout, timezone.now() + timedelta(seconds=1))
-                    self.assertEqual(self.email_device.verification_failure_count, 1)
                 else:
                     """
-                    If the supplied challenge is defined and valid, django_flex_user.views.EmailDevice.post should
-                    return HTTP status code HTTP_401_UNAUTHORIZED.
+                    If the supplied challenge is defined and invalid, or defined and valid,
+                    django_flex_user.views.EmailDevice.post should return HTTP status code HTTP_401_UNAUTHORIZED.
                     """
                     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
