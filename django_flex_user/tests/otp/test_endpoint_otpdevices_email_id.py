@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 
 
-class TestOTPDeviceRetrieve(APITestCase):
+class TestEmailDeviceUpdate(APITestCase):
     """
     This class is designed to test django_flex_user.views.OTPDevice
     """
@@ -35,7 +35,7 @@ class TestOTPDeviceRetrieve(APITestCase):
                                             phone='+12025551234')
         self.otp_device = EmailDevice.objects.get(user=user)
 
-        self._REST_ENDPOINT_PATH = TestOTPDeviceRetrieve._REST_ENDPOINT_PATH.format(type='email', id=self.otp_device.id)
+        self._REST_ENDPOINT_PATH = TestEmailDeviceUpdate._REST_ENDPOINT_PATH.format(type='email', id=self.otp_device.id)
 
     def test_method_get(self):
         response = self.client.get(self._REST_ENDPOINT_PATH)
