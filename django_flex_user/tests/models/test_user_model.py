@@ -320,18 +320,6 @@ class TestUserModel(TestCase):
         self.assertEqual(user2.email, 'validEmail@example.com')
         self.assertEqual(user2.phone, '+12025551234')
 
-    def test_post_save_signal_create_user_with_username(self):
-        from django_flex_user.models.flex_user import FlexUser
-        from django_flex_user.models.otp import EmailDevice, PhoneDevice
-
-        user = FlexUser(username='validUsername')
-        user.set_unusable_password()
-        user.full_clean()
-        user.save()
-
-        self.assertRaises(EmailDevice.DoesNotExist, EmailDevice.objects.get, user_id=user.id)
-        self.assertRaises(PhoneDevice.DoesNotExist, PhoneDevice.objects.get, user_id=user.id)
-
     def test_post_save_signal_create_user_with_email(self):
         from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import EmailDevice, PhoneDevice
@@ -341,7 +329,6 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        self.assertRaises(PhoneDevice.DoesNotExist, PhoneDevice.objects.get, user_id=user.id)
         email_device = EmailDevice.objects.get(user_id=user.id)
         self.assertEqual(email_device.email, user.email)
         self.assertFalse(email_device.confirmed)
@@ -358,7 +345,6 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        self.assertRaises(EmailDevice.DoesNotExist, EmailDevice.objects.get, user_id=user.id)
         phone_device = PhoneDevice.objects.get(user_id=user.id)
         self.assertEqual(phone_device.phone, user.phone)
         self.assertFalse(phone_device.confirmed)
@@ -379,7 +365,6 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        self.assertRaises(PhoneDevice.DoesNotExist, PhoneDevice.objects.get, user_id=user.id)
         email_device = EmailDevice.objects.get(user_id=user.id)
         self.assertEqual(email_device.email, user.email)
         self.assertFalse(email_device.confirmed)
@@ -400,7 +385,6 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        self.assertRaises(EmailDevice.DoesNotExist, EmailDevice.objects.get, user_id=user.id)
         phone_device = PhoneDevice.objects.get(user_id=user.id)
         self.assertEqual(phone_device.phone, user.phone)
         self.assertFalse(phone_device.confirmed)
