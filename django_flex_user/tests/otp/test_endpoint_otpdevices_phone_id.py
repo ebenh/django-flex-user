@@ -2,6 +2,10 @@ from .test_endpoint_otpdevices_email_id import TestEmailDeviceUpdate
 
 
 class TestPhoneDeviceUpdate(TestEmailDeviceUpdate):
+    """
+    This class is designed to test django_flex_user.views.OTPPhoneDevice
+    """
+
     def setUp(self):
         from django_flex_user.models import FlexUser
         from django_flex_user.models import PhoneDevice

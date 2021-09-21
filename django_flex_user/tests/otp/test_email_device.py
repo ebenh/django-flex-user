@@ -2,6 +2,10 @@ from django.test import TestCase
 
 
 class TestEmailDevice(TestCase):
+    """
+    This class is designed to test django_flex_user.models.EmailDevice
+    """
+
     def setUp(self):
         from django_flex_user.models import FlexUser
         from django_flex_user.models import EmailDevice

@@ -4,7 +4,7 @@ from rest_framework import status
 
 class TestEmailDeviceUpdate(APITestCase):
     """
-    This class is designed to test django_flex_user.views.OTPDevice
+    This class is designed to test django_flex_user.views.OTPEmailDevice
     """
     _REST_ENDPOINT_PATH = '/account/otp-devices/{type}/{id}'
 
