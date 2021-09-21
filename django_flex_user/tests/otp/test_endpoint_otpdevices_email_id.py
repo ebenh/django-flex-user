@@ -258,23 +258,7 @@ class TestEmailDeviceUpdate(APITestCase):
 
                 transaction.set_rollback(True)
 
-    def test_method_put(self):
-        response = self.client.put(self._REST_ENDPOINT_PATH)
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def test_method_patch(self):
-        response = self.client.patch(self._REST_ENDPOINT_PATH)
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def test_method_delete(self):
-        response = self.client.delete(self._REST_ENDPOINT_PATH)
-        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
-
-    def test_method_options(self):
-        response = self.client.options(self._REST_ENDPOINT_PATH)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_throttle(self):
+    def test_method_post_throttling(self):
         from freezegun import freeze_time
 
         self.otp_device.generate_challenge()
@@ -309,3 +293,19 @@ class TestEmailDeviceUpdate(APITestCase):
                     Advance time by one second.
                     """
                     frozen_datetime.tick()
+
+    def test_method_put(self):
+        response = self.client.put(self._REST_ENDPOINT_PATH)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_method_patch(self):
+        response = self.client.patch(self._REST_ENDPOINT_PATH)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_method_delete(self):
+        response = self.client.delete(self._REST_ENDPOINT_PATH)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_method_options(self):
+        response = self.client.options(self._REST_ENDPOINT_PATH)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
