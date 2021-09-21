@@ -298,14 +298,12 @@ class TestOTPDeviceRetrieve(APITestCase):
                     """
                     Try to verify an invalid challenge.
                     """
-                    response = self.client.post(self._REST_ENDPOINT_PATH,
-                                                data={'challenge': 'invalidChallenge'})
+                    response = self.client.post(self._REST_ENDPOINT_PATH, data={'challenge': 'invalidChallenge'})
                     self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
                     """
                     Try to verify a valid challenge.
                     """
-                    response = self.client.post(self._REST_ENDPOINT_PATH,
-                                                data={'challenge': self.otp_device.challenge})
+                    response = self.client.post(self._REST_ENDPOINT_PATH, data={'challenge': self.otp_device.challenge})
                     self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
                     """
                     Advance time by one second.
