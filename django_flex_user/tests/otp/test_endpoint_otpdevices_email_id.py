@@ -284,21 +284,34 @@ class TestOTPDeviceRetrieve(APITestCase):
 
         with freeze_time() as frozen_datetime:
             for i in range(0, 10):
-                # Try to verify an invalid challenge. The method should return false and set the timeout to 2^i seconds
+                """
+                Here we try to verify an invalid challenge. django_flex_user.views.EmailDevice.post should return HTTP
+                status code HTTP_401_UNAUTHORIZED and subsequent verification attempts should be timed out for the next
+                2^i seconds.
+                """
                 response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device.id),
                                             data={'challenge': 'invalidChallenge'})
                 self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-                # Here we simulate the timeout period. For each second of the timeout period we attempt to verify again.
-                # The verification method should raise an exception each time.
+                """
+                Here we simulate the verification timeout period. For each second of the timeout period we attempt to
+                verify again. django_flex_user.views.EmailDevice.post should return HTTP status code
+                HTTP_429_TOO_MANY_REQUESTS each time.
+                """
                 for j in range(0, 2 ** i):
-                    # Try to verify again, the method should raise VerificationTimeout exception
+                    """
+                    Try to verify an invalid challenge.
+                    """
                     response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device.id),
                                                 data={'challenge': 'invalidChallenge'})
                     self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
-                    # The verify method should raise VerificationTimeout even if we submit the correct challenge
+                    """
+                    Try to verify a valid challenge.
+                    """
                     response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device.id),
                                                 data={'challenge': self.email_device.challenge})
                     self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
-                    # Advance time by 1 second
+                    """
+                    Advance time by one second.
+                    """
                     frozen_datetime.tick()
