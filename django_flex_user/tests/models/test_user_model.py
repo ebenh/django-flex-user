@@ -324,7 +324,10 @@ class TestUserModel(TestCase):
         from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import EmailDevice, PhoneDevice
 
-        user = FlexUser.objects.create_user(username='validUsername')
+        user = FlexUser(username='validUsername')
+        user.set_unusable_password()
+        user.full_clean()
+        user.save()
 
         self.assertRaises(EmailDevice.DoesNotExist, EmailDevice.objects.get, user_id=user.id)
         self.assertRaises(PhoneDevice.DoesNotExist, PhoneDevice.objects.get, user_id=user.id)
@@ -333,7 +336,10 @@ class TestUserModel(TestCase):
         from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import EmailDevice, PhoneDevice
 
-        user = FlexUser.objects.create_user(email='validEmail@example.com')
+        user = FlexUser(email='validEmail@example.com')
+        user.set_unusable_password()
+        user.full_clean()
+        user.save()
 
         self.assertRaises(PhoneDevice.DoesNotExist, PhoneDevice.objects.get, user_id=user.id)
         email_device = EmailDevice.objects.get(user_id=user.id)
@@ -347,7 +353,10 @@ class TestUserModel(TestCase):
         from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import EmailDevice, PhoneDevice
 
-        user = FlexUser.objects.create_user(phone='+12025551234')
+        user = FlexUser(phone='+12025551234')
+        user.set_unusable_password()
+        user.full_clean()
+        user.save()
 
         self.assertRaises(EmailDevice.DoesNotExist, EmailDevice.objects.get, user_id=user.id)
         phone_device = PhoneDevice.objects.get(user_id=user.id)
@@ -361,8 +370,13 @@ class TestUserModel(TestCase):
         from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import EmailDevice, PhoneDevice
 
-        user = FlexUser.objects.create_user(username='validUsername')
+        user = FlexUser(username='validUsername')
+        user.set_unusable_password()
+        user.full_clean()
+        user.save()
+
         user.email = 'validEmail@example.com'
+        user.full_clean()
         user.save()
 
         self.assertRaises(PhoneDevice.DoesNotExist, PhoneDevice.objects.get, user_id=user.id)
@@ -377,8 +391,13 @@ class TestUserModel(TestCase):
         from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import EmailDevice, PhoneDevice
 
-        user = FlexUser.objects.create_user(username='validUsername')
+        user = FlexUser(username='validUsername')
+        user.set_unusable_password()
+        user.full_clean()
+        user.save()
+
         user.phone = '+12025551234'
+        user.full_clean()
         user.save()
 
         self.assertRaises(EmailDevice.DoesNotExist, EmailDevice.objects.get, user_id=user.id)
@@ -393,8 +412,13 @@ class TestUserModel(TestCase):
         from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import EmailDevice
 
-        user = FlexUser.objects.create_user(username='validUsername', email='validEmail@example.com')
+        user = FlexUser(username='validUsername', email='validEmail@example.com')
+        user.set_unusable_password()
+        user.full_clean()
+        user.save()
+
         user.email = None
+        user.full_clean()
         user.save()
 
         self.assertRaises(EmailDevice.DoesNotExist, EmailDevice.objects.get, user_id=user.id)
@@ -403,8 +427,13 @@ class TestUserModel(TestCase):
         from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import PhoneDevice
 
-        user = FlexUser.objects.create_user(username='validUsername', phone='+12025551234')
+        user = FlexUser(username='validUsername', phone='+12025551234')
+        user.set_unusable_password()
+        user.full_clean()
+        user.save()
+
         user.phone = None
+        user.full_clean()
         user.save()
 
         self.assertRaises(PhoneDevice.DoesNotExist, PhoneDevice.objects.get, user_id=user.id)
@@ -413,8 +442,13 @@ class TestUserModel(TestCase):
         from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import EmailDevice
 
-        user = FlexUser.objects.create_user(username='validUsername', email='validEmail@example.com')
+        user = FlexUser(username='validUsername', email='validEmail@example.com')
+        user.set_unusable_password()
+        user.full_clean()
+        user.save()
+
         user.email = 'validEmail2@example.com'
+        user.full_clean()
         user.save()
 
         email_device = EmailDevice.objects.get(user_id=user.id)
@@ -428,8 +462,13 @@ class TestUserModel(TestCase):
         from django_flex_user.models.flex_user import FlexUser
         from django_flex_user.models.otp import PhoneDevice
 
-        user = FlexUser.objects.create_user(username='validUsername', phone='+12025551234')
-        user.email = '+12025556789'
+        user = FlexUser(username='validUsername', phone='+12025551234')
+        user.set_unusable_password()
+        user.full_clean()
+        user.save()
+
+        user.phone = '+12025556789'
+        user.full_clean()
         user.save()
 
         phone_device = PhoneDevice.objects.get(user_id=user.id)
