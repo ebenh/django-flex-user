@@ -49,6 +49,14 @@ class TestEmailDevice(TestCase):
             self.assertEqual(self.otp_device.verification_timeout, timezone.now() + timedelta(seconds=1))
             self.assertEqual(self.otp_device.verification_failure_count, 1)
 
+    def test_generate_challenge_verify_challenge_valid_challenge(self):
+        self.otp_device.generate_challenge()
+
+        self.assertTrue(self.otp_device.verify_challenge(self.otp_device.challenge))
+        self.assertTrue(self.otp_device.confirmed)
+        self.assertIsNone(self.otp_device.verification_timeout)
+        self.assertEqual(self.otp_device.verification_failure_count, 0)
+
     def test_generate_challenge_verify_challenge_invalid_challenge(self):
         from freezegun import freeze_time
         from django.utils import timezone
@@ -61,14 +69,6 @@ class TestEmailDevice(TestCase):
             self.assertFalse(self.otp_device.confirmed)
             self.assertEqual(self.otp_device.verification_timeout, timezone.now() + timedelta(seconds=1))
             self.assertEqual(self.otp_device.verification_failure_count, 1)
-
-    def test_generate_challenge_verify_challenge_valid_challenge(self):
-        self.otp_device.generate_challenge()
-
-        self.assertTrue(self.otp_device.verify_challenge(self.otp_device.challenge))
-        self.assertTrue(self.otp_device.confirmed)
-        self.assertIsNone(self.otp_device.verification_timeout)
-        self.assertEqual(self.otp_device.verification_failure_count, 0)
 
     def test_verify_challenge_none(self):
         from freezegun import freeze_time
@@ -92,17 +92,6 @@ class TestEmailDevice(TestCase):
             self.assertEqual(self.otp_device.verification_timeout, timezone.now() + timedelta(seconds=1))
             self.assertEqual(self.otp_device.verification_failure_count, 1)
 
-    def test_verify_challenge_invalid_challenge(self):
-        from freezegun import freeze_time
-        from django.utils import timezone
-        from datetime import timedelta
-
-        with freeze_time():
-            self.assertFalse(self.otp_device.verify_challenge('INVALID_CHALLENGE'))
-            self.assertFalse(self.otp_device.confirmed)
-            self.assertEqual(self.otp_device.verification_timeout, timezone.now() + timedelta(seconds=1))
-            self.assertEqual(self.otp_device.verification_failure_count, 1)
-
     def test_verify_challenge_valid_challenge(self):
         from freezegun import freeze_time
         from django.utils import timezone
@@ -110,6 +99,17 @@ class TestEmailDevice(TestCase):
 
         with freeze_time():
             self.assertFalse(self.otp_device.verify_challenge(self.otp_device.challenge))
+            self.assertFalse(self.otp_device.confirmed)
+            self.assertEqual(self.otp_device.verification_timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.otp_device.verification_failure_count, 1)
+
+    def test_verify_challenge_invalid_challenge(self):
+        from freezegun import freeze_time
+        from django.utils import timezone
+        from datetime import timedelta
+
+        with freeze_time():
+            self.assertFalse(self.otp_device.verify_challenge('INVALID_CHALLENGE'))
             self.assertFalse(self.otp_device.confirmed)
             self.assertEqual(self.otp_device.verification_timeout, timezone.now() + timedelta(seconds=1))
             self.assertEqual(self.otp_device.verification_failure_count, 1)
