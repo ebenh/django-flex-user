@@ -30,49 +30,38 @@ class TestOTPDeviceRetrieve(APITestCase):
         from django_flex_user.models import FlexUser
         from django_flex_user.models import EmailDevice
 
-        user1 = FlexUser.objects.create_user(username='validUsername1',
-                                             email='validEmail1@example.com',
-                                             phone='+12025550001')
-        user2 = FlexUser.objects.create_user(username='validUsername2',
-                                             email='validEmail2@example.com',
-                                             phone='+12025550002')
-
-        self.email_device1 = EmailDevice.objects.get(user=user1)
-        self.email_device2 = EmailDevice.objects.get(user=user2)
+        user = FlexUser.objects.create_user(username='validUsername',
+                                             email='validEmail@example.com',
+                                             phone='+12025551234')
+        self.email_device = EmailDevice.objects.get(user=user)
 
     def test_method_get(self):
-        response = self.client.get(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id))
-        self.email_device1.refresh_from_db()
+        response = self.client.get(self._REST_ENDPOINT_PATH.format(id=self.email_device.id))
+        self.email_device.refresh_from_db()
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(self.email_device1.confirmed)
-        self.assertIsNotNone(self.email_device1.challenge)
-        self.assertNotEqual(self.email_device1.challenge, '')
+        self.assertFalse(self.email_device.confirmed)
+        self.assertIsNotNone(self.email_device.challenge)
+        self.assertNotEqual(self.email_device.challenge, '')
         # note eben: Because escape characters are inserted into the challenge string, the challenge string's length may
         # be greater than or equal to its configured length
-        self.assertGreaterEqual(len(self.email_device1.challenge), self.email_device1.challenge_length)
-        self.assertIsNone(self.email_device1.verification_timeout)
-        self.assertEqual(self.email_device1.verification_failure_count, 0)
+        self.assertGreaterEqual(len(self.email_device.challenge), self.email_device.challenge_length)
+        self.assertIsNone(self.email_device.verification_timeout)
+        self.assertEqual(self.email_device.verification_failure_count, 0)
 
     def test_method_post_format_application_json(self):
-        from django_flex_user.models import FlexUser
-        from django_flex_user.models import EmailDevice
         from django.db import transaction
         from freezegun import freeze_time
         from django.utils import timezone
         from datetime import timedelta
 
-        user = FlexUser.objects.create_user(username='validUsername',
-                                            email='validEmail@example.com',
-                                            phone='+12025551234')
-        email_device = EmailDevice.objects.get(user=user)
-        email_device.generate_challenge()
-        email_device.challenge = 'validChallenge'  # Overwrite challenge
-        email_device.save()
+        self.email_device.generate_challenge()
+        self.email_device.challenge = 'validChallenge'  # Overwrite challenge
+        self.email_device.save()
 
         for data in self._ContentType.ApplicationJSON.challenge_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
-                response = self.client.post(self._REST_ENDPOINT_PATH.format(id=email_device.id),
+                response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device.id),
                                             data=data,
                                             format='json')
                 if not data.get('challenge'):
@@ -82,10 +71,10 @@ class TestOTPDeviceRetrieve(APITestCase):
                     """
                     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-                    self.assertIsNotNone(email_device.challenge)
-                    self.assertFalse(email_device.confirmed)
-                    self.assertIsNone(email_device.verification_timeout)
-                    self.assertEqual(email_device.verification_failure_count, 0)
+                    self.assertIsNotNone(self.email_device.challenge)
+                    self.assertFalse(self.email_device.confirmed)
+                    self.assertIsNone(self.email_device.verification_timeout)
+                    self.assertEqual(self.email_device.verification_failure_count, 0)
                 elif data.get('challenge') == 'validChallenge':
                     """
                     If the supplied challenge is defined and valid, django_flex_user.views.EmailDevice.post should
@@ -93,11 +82,11 @@ class TestOTPDeviceRetrieve(APITestCase):
                     """
                     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-                    email_device.refresh_from_db()
-                    self.assertIsNone(email_device.challenge)
-                    self.assertTrue(email_device.confirmed)
-                    self.assertIsNone(email_device.verification_timeout)
-                    self.assertEqual(email_device.verification_failure_count, 0)
+                    self.email_device.refresh_from_db()
+                    self.assertIsNone(self.email_device.challenge)
+                    self.assertTrue(self.email_device.confirmed)
+                    self.assertIsNone(self.email_device.verification_timeout)
+                    self.assertEqual(self.email_device.verification_failure_count, 0)
                 elif data.get('challenge') == 'invalidChallenge':
                     """
                     If the supplied challenge is defined and invalid, django_flex_user.views.EmailDevice.post
@@ -105,11 +94,11 @@ class TestOTPDeviceRetrieve(APITestCase):
                     """
                     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-                    email_device.refresh_from_db()
-                    self.assertIsNotNone(email_device.challenge)
-                    self.assertFalse(email_device.confirmed)
-                    self.assertEqual(email_device.verification_timeout, timezone.now() + timedelta(seconds=1))
-                    self.assertEqual(email_device.verification_failure_count, 1)
+                    self.email_device.refresh_from_db()
+                    self.assertIsNotNone(self.email_device.challenge)
+                    self.assertFalse(self.email_device.confirmed)
+                    self.assertEqual(self.email_device.verification_timeout, timezone.now() + timedelta(seconds=1))
+                    self.assertEqual(self.email_device.verification_failure_count, 1)
                 else:
                     """
                     If we reach here something is broken.
@@ -119,24 +108,18 @@ class TestOTPDeviceRetrieve(APITestCase):
                 transaction.set_rollback(True)
 
     def test_method_post_format_multipart_form_data(self):
-        from django_flex_user.models import FlexUser
-        from django_flex_user.models import EmailDevice
         from django.db import transaction
         from freezegun import freeze_time
         from django.utils import timezone
         from datetime import timedelta
 
-        user = FlexUser.objects.create_user(username='validUsername',
-                                            email='validEmail@example.com',
-                                            phone='+12025551234')
-        email_device = EmailDevice.objects.get(user=user)
-        email_device.generate_challenge()
-        email_device.challenge = 'validChallenge'  # Overwrite challenge
-        email_device.save()
+        self.email_device.generate_challenge()
+        self.email_device.challenge = 'validChallenge'  # Overwrite challenge
+        self.email_device.save()
 
         for data in self._ContentType.MultipartFormData.challenge_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
-                response = self.client.post(self._REST_ENDPOINT_PATH.format(id=email_device.id),
+                response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device.id),
                                             data=data,
                                             format='multipart')
                 if not data.get('challenge'):
@@ -146,10 +129,10 @@ class TestOTPDeviceRetrieve(APITestCase):
                     """
                     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-                    self.assertIsNotNone(email_device.challenge)
-                    self.assertFalse(email_device.confirmed)
-                    self.assertIsNone(email_device.verification_timeout)
-                    self.assertEqual(email_device.verification_failure_count, 0)
+                    self.assertIsNotNone(self.email_device.challenge)
+                    self.assertFalse(self.email_device.confirmed)
+                    self.assertIsNone(self.email_device.verification_timeout)
+                    self.assertEqual(self.email_device.verification_failure_count, 0)
                 elif data.get('challenge') == 'validChallenge':
                     """
                     If the supplied challenge is defined and valid, django_flex_user.views.EmailDevice.post should
@@ -157,11 +140,11 @@ class TestOTPDeviceRetrieve(APITestCase):
                     """
                     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-                    email_device.refresh_from_db()
-                    self.assertIsNone(email_device.challenge)
-                    self.assertTrue(email_device.confirmed)
-                    self.assertIsNone(email_device.verification_timeout)
-                    self.assertEqual(email_device.verification_failure_count, 0)
+                    self.email_device.refresh_from_db()
+                    self.assertIsNone(self.email_device.challenge)
+                    self.assertTrue(self.email_device.confirmed)
+                    self.assertIsNone(self.email_device.verification_timeout)
+                    self.assertEqual(self.email_device.verification_failure_count, 0)
                 elif data.get('challenge') == 'invalidChallenge':
                     """
                     If the supplied challenge is defined and invalid, django_flex_user.views.EmailDevice.post
@@ -169,11 +152,11 @@ class TestOTPDeviceRetrieve(APITestCase):
                     """
                     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-                    email_device.refresh_from_db()
-                    self.assertIsNotNone(email_device.challenge)
-                    self.assertFalse(email_device.confirmed)
-                    self.assertEqual(email_device.verification_timeout, timezone.now() + timedelta(seconds=1))
-                    self.assertEqual(email_device.verification_failure_count, 1)
+                    self.email_device.refresh_from_db()
+                    self.assertIsNotNone(self.email_device.challenge)
+                    self.assertFalse(self.email_device.confirmed)
+                    self.assertEqual(self.email_device.verification_timeout, timezone.now() + timedelta(seconds=1))
+                    self.assertEqual(self.email_device.verification_failure_count, 1)
                 else:
                     """
                     If we reach here something is broken.
@@ -184,27 +167,27 @@ class TestOTPDeviceRetrieve(APITestCase):
 
     def test_method_post_verify_challenge_none(self):
         # Verify challenge
-        response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id),
+        response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device.id),
                                     data={'challenge': None},
                                     format='json')
-        self.email_device1.refresh_from_db()
+        self.email_device.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIsNone(self.email_device1.challenge)
-        self.assertFalse(self.email_device1.confirmed)
-        self.assertIsNone(self.email_device1.verification_timeout)
-        self.assertEqual(self.email_device1.verification_failure_count, 0)
+        self.assertIsNone(self.email_device.challenge)
+        self.assertFalse(self.email_device.confirmed)
+        self.assertIsNone(self.email_device.verification_timeout)
+        self.assertEqual(self.email_device.verification_failure_count, 0)
 
     def test_method_post_verify_challenge_empty_string(self):
         # Verify challenge
-        response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id),
+        response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device.id),
                                     data={'challenge': ''},
                                     format='json')
-        self.email_device1.refresh_from_db()
+        self.email_device.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIsNone(self.email_device1.challenge)
-        self.assertFalse(self.email_device1.confirmed)
-        self.assertIsNone(self.email_device1.verification_timeout)
-        self.assertEqual(self.email_device1.verification_failure_count, 0)
+        self.assertIsNone(self.email_device.challenge)
+        self.assertFalse(self.email_device.confirmed)
+        self.assertIsNone(self.email_device.verification_timeout)
+        self.assertEqual(self.email_device.verification_failure_count, 0)
 
     def test_method_post_verify_challenge_invalid_challenge(self):
         from freezegun import freeze_time
@@ -213,40 +196,40 @@ class TestOTPDeviceRetrieve(APITestCase):
 
         # Verify challenge
         with freeze_time():
-            response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id),
+            response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device.id),
                                         data={'challenge': 'INVALID_CHALLENGE'},
                                         format='json')
-            self.email_device1.refresh_from_db()
+            self.email_device.refresh_from_db()
             self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-            self.assertIsNone(self.email_device1.challenge)
-            self.assertFalse(self.email_device1.confirmed)
-            self.assertEqual(self.email_device1.verification_timeout, timezone.now() + timedelta(seconds=1))
-            self.assertEqual(self.email_device1.verification_failure_count, 1)
+            self.assertIsNone(self.email_device.challenge)
+            self.assertFalse(self.email_device.confirmed)
+            self.assertEqual(self.email_device.verification_timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.email_device.verification_failure_count, 1)
 
     def test_method_post_verify_challenge_valid_challenge(self):
         # Verify challenge
-        response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id),
-                                    data={'challenge': self.email_device1.challenge},
+        response = self.client.post(self._REST_ENDPOINT_PATH.format(id=self.email_device.id),
+                                    data={'challenge': self.email_device.challenge},
                                     format='json')
-        self.email_device1.refresh_from_db()
+        self.email_device.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIsNone(self.email_device1.challenge)
-        self.assertFalse(self.email_device1.confirmed)
-        self.assertIsNone(self.email_device1.verification_timeout)
-        self.assertEqual(self.email_device1.verification_failure_count, 0)
+        self.assertIsNone(self.email_device.challenge)
+        self.assertFalse(self.email_device.confirmed)
+        self.assertIsNone(self.email_device.verification_timeout)
+        self.assertEqual(self.email_device.verification_failure_count, 0)
 
     def test_method_put(self):
-        response = self.client.put(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id))
+        response = self.client.put(self._REST_ENDPOINT_PATH.format(id=self.email_device.id))
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_method_patch(self):
-        response = self.client.patch(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id))
+        response = self.client.patch(self._REST_ENDPOINT_PATH.format(id=self.email_device.id))
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_method_delete(self):
-        response = self.client.delete(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id))
+        response = self.client.delete(self._REST_ENDPOINT_PATH.format(id=self.email_device.id))
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_method_options(self):
-        response = self.client.options(self._REST_ENDPOINT_PATH.format(id=self.email_device1.id))
+        response = self.client.options(self._REST_ENDPOINT_PATH.format(id=self.email_device.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
