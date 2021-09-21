@@ -319,3 +319,122 @@ class TestUserModel(TestCase):
         self.assertEqual(user2.username, 'validUsername')
         self.assertEqual(user2.email, 'validEmail@example.com')
         self.assertEqual(user2.phone, '+12025551234')
+
+    def test_post_save_signal_create_user_with_username(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import EmailDevice, PhoneDevice
+
+        user = FlexUser.objects.create_user(username='validUsername')
+
+        self.assertRaises(EmailDevice.DoesNotExist, EmailDevice.objects.get, user_id=user.id)
+        self.assertRaises(PhoneDevice.DoesNotExist, PhoneDevice.objects.get, user_id=user.id)
+
+    def test_post_save_signal_create_user_with_email(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import EmailDevice, PhoneDevice
+
+        user = FlexUser.objects.create_user(email='validEmail@example.com')
+
+        self.assertRaises(PhoneDevice.DoesNotExist, PhoneDevice.objects.get, user_id=user.id)
+        email_device = EmailDevice.objects.get(user_id=user.id)
+        self.assertEqual(email_device.email, user.email)
+        self.assertFalse(email_device.confirmed)
+        self.assertIsNone(email_device.challenge)
+        self.assertIsNone(email_device.verification_timeout)
+        self.assertEqual(email_device.verification_failure_count, 0)
+
+    def test_post_save_signal_create_user_with_phone(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import EmailDevice, PhoneDevice
+
+        user = FlexUser.objects.create_user(phone='+12025551234')
+
+        self.assertRaises(EmailDevice.DoesNotExist, EmailDevice.objects.get, user_id=user.id)
+        phone_device = PhoneDevice.objects.get(user_id=user.id)
+        self.assertEqual(phone_device.phone, user.phone)
+        self.assertFalse(phone_device.confirmed)
+        self.assertIsNone(phone_device.challenge)
+        self.assertIsNone(phone_device.verification_timeout)
+        self.assertEqual(phone_device.verification_failure_count, 0)
+
+    def test_post_save_signal_add_email(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import EmailDevice, PhoneDevice
+
+        user = FlexUser.objects.create_user(username='validUsername')
+        user.email = 'validEmail@example.com'
+        user.save()
+
+        self.assertRaises(PhoneDevice.DoesNotExist, PhoneDevice.objects.get, user_id=user.id)
+        email_device = EmailDevice.objects.get(user_id=user.id)
+        self.assertEqual(email_device.email, user.email)
+        self.assertFalse(email_device.confirmed)
+        self.assertIsNone(email_device.challenge)
+        self.assertIsNone(email_device.verification_timeout)
+        self.assertEqual(email_device.verification_failure_count, 0)
+
+    def test_post_save_signal_add_phone(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import EmailDevice, PhoneDevice
+
+        user = FlexUser.objects.create_user(username='validUsername')
+        user.phone = '+12025551234'
+        user.save()
+
+        self.assertRaises(EmailDevice.DoesNotExist, EmailDevice.objects.get, user_id=user.id)
+        phone_device = PhoneDevice.objects.get(user_id=user.id)
+        self.assertEqual(phone_device.phone, user.phone)
+        self.assertFalse(phone_device.confirmed)
+        self.assertIsNone(phone_device.challenge)
+        self.assertIsNone(phone_device.verification_timeout)
+        self.assertEqual(phone_device.verification_failure_count, 0)
+
+    def test_post_save_signal_remove_email(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import EmailDevice
+
+        user = FlexUser.objects.create_user(username='validUsername', email='validEmail@example.com')
+        user.email = None
+        user.save()
+
+        self.assertRaises(EmailDevice.DoesNotExist, EmailDevice.objects.get, user_id=user.id)
+
+    def test_post_save_signal_remove_phone(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import PhoneDevice
+
+        user = FlexUser.objects.create_user(username='validUsername', phone='+12025551234')
+        user.phone = None
+        user.save()
+
+        self.assertRaises(PhoneDevice.DoesNotExist, PhoneDevice.objects.get, user_id=user.id)
+
+    def test_post_save_signal_update_email(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import EmailDevice
+
+        user = FlexUser.objects.create_user(username='validUsername', email='validEmail@example.com')
+        user.email = 'validEmail2@example.com'
+        user.save()
+
+        email_device = EmailDevice.objects.get(user_id=user.id)
+        self.assertEqual(email_device.email, user.email)
+        self.assertFalse(email_device.confirmed)
+        self.assertIsNone(email_device.challenge)
+        self.assertIsNone(email_device.verification_timeout)
+        self.assertEqual(email_device.verification_failure_count, 0)
+
+    def test_test_post_save_signal_update_phone(self):
+        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.otp import PhoneDevice
+
+        user = FlexUser.objects.create_user(username='validUsername', phone='+12025551234')
+        user.email = '+12025556789'
+        user.save()
+
+        phone_device = PhoneDevice.objects.get(user_id=user.id)
+        self.assertEqual(phone_device.phone, user.phone)
+        self.assertFalse(phone_device.confirmed)
+        self.assertIsNone(phone_device.challenge)
+        self.assertIsNone(phone_device.verification_timeout)
+        self.assertEqual(phone_device.verification_failure_count, 0)
