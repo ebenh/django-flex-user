@@ -62,11 +62,9 @@ class TestEmailDeviceUpdate(APITestCase):
         for data in self._ContentType.ApplicationJSON.challenge_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
 
-                # Replace the challenge string with the actual challenge
-                if data.get('challenge') == 'validChallenge':
-                    data['challenge'] = self.otp_device.challenge
+                d = {'challenge': self.otp_device.challenge} if data.get('challenge') == 'validChallenge' else data
 
-                response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='json')
+                response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='json')
 
                 if not data.get('challenge'):
                     """
@@ -80,7 +78,19 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertIsNone(self.otp_device.verification_timeout)
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
-                elif data.get('challenge') == 'invalidChallenge':
+                elif data['challenge'] == 'validChallenge':
+                    """
+                    If the supplied challenge is defined and valid, django_flex_user.views.EmailDevice.post should
+                    return HTTP status code HTTP_200_OK.
+                    """
+                    self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+                    self.otp_device.refresh_from_db()
+                    self.assertIsNone(self.otp_device.challenge)
+                    self.assertTrue(self.otp_device.confirmed)
+                    self.assertIsNone(self.otp_device.verification_timeout)
+                    self.assertEqual(self.otp_device.verification_failure_count, 0)
+                elif data['challenge'] == 'invalidChallenge':
                     """
                     If the supplied challenge is defined and invalid, django_flex_user.views.EmailDevice.post
                     should return HTTP status code HTTP_401_UNAUTHORIZED.
@@ -93,17 +103,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertEqual(self.otp_device.verification_timeout, timezone.now() + timedelta(seconds=1))
                     self.assertEqual(self.otp_device.verification_failure_count, 1)
                 else:
-                    """
-                    If the supplied challenge is defined and valid, django_flex_user.views.EmailDevice.post should
-                    return HTTP status code HTTP_200_OK.
-                    """
-                    self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-                    self.otp_device.refresh_from_db()
-                    self.assertIsNone(self.otp_device.challenge)
-                    self.assertTrue(self.otp_device.confirmed)
-                    self.assertIsNone(self.otp_device.verification_timeout)
-                    self.assertEqual(self.otp_device.verification_failure_count, 0)
+                    self.assertFalse(True)
 
                 transaction.set_rollback(True)
 
@@ -118,11 +118,9 @@ class TestEmailDeviceUpdate(APITestCase):
         for data in self._ContentType.MultipartFormData.challenge_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
 
-                # Replace the challenge string with the actual challenge
-                if data.get('challenge') == 'validChallenge':
-                    data['challenge'] = self.otp_device.challenge
+                d = {'challenge': self.otp_device.challenge} if data.get('challenge') == 'validChallenge' else data
 
-                response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='multipart')
+                response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='multipart')
 
                 if not data.get('challenge'):
                     """
@@ -136,7 +134,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertIsNone(self.otp_device.verification_timeout)
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
-                elif data.get('challenge') == 'validChallenge':
+                elif data['challenge'] == 'validChallenge':
                     """
                     If the supplied challenge is defined and valid, django_flex_user.views.EmailDevice.post should
                     return HTTP status code HTTP_200_OK.
@@ -148,7 +146,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertTrue(self.otp_device.confirmed)
                     self.assertIsNone(self.otp_device.verification_timeout)
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
-                elif data.get('challenge') == 'invalidChallenge':
+                elif data['challenge'] == 'invalidChallenge':
                     """
                     If the supplied challenge is defined and invalid, django_flex_user.views.EmailDevice.post
                     should return HTTP status code HTTP_401_UNAUTHORIZED.
@@ -161,17 +159,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertEqual(self.otp_device.verification_timeout, timezone.now() + timedelta(seconds=1))
                     self.assertEqual(self.otp_device.verification_failure_count, 1)
                 else:
-                    """
-                    If the supplied challenge is defined and valid, django_flex_user.views.EmailDevice.post should
-                    return HTTP status code HTTP_200_OK.
-                    """
-                    self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-                    self.otp_device.refresh_from_db()
-                    self.assertIsNone(self.otp_device.challenge)
-                    self.assertTrue(self.otp_device.confirmed)
-                    self.assertIsNone(self.otp_device.verification_timeout)
-                    self.assertEqual(self.otp_device.verification_failure_count, 0)
+                    self.assertFalse(True)
 
                 transaction.set_rollback(True)
 
@@ -184,11 +172,9 @@ class TestEmailDeviceUpdate(APITestCase):
         for data in self._ContentType.ApplicationJSON.challenge_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
 
-                # Replace the challenge string with the actual challenge
-                if data.get('challenge') == 'validChallenge':
-                    data['challenge'] = self.otp_device.challenge
+                d = {'challenge': self.otp_device.challenge} if data.get('challenge') == 'validChallenge' else data
 
-                response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='json')
+                response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='json')
 
                 if not data.get('challenge'):
                     """
@@ -202,7 +188,20 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertIsNone(self.otp_device.verification_timeout)
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
-                else:
+                elif data['challenge'] == 'validChallenge':
+                    # note eben: rework this:
+                    """
+                    If the supplied challenge is defined and valid, django_flex_user.views.EmailDevice.post should
+                    return HTTP status code HTTP_400_BAD_REQUEST.
+                    """
+                    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+                    self.otp_device.refresh_from_db()
+                    self.assertIsNone(self.otp_device.challenge)
+                    self.assertFalse(self.otp_device.confirmed)
+                    self.assertIsNone(self.otp_device.verification_timeout)
+                    self.assertEqual(self.otp_device.verification_failure_count, 0)
+                elif data['challenge'] == 'invalidChallenge':
                     """
                     If the supplied challenge is defined and invalid, or defined and valid,
                     django_flex_user.views.EmailDevice.post should return HTTP status code HTTP_401_UNAUTHORIZED.
@@ -214,6 +213,8 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertEqual(self.otp_device.verification_timeout, timezone.now() + timedelta(seconds=1))
                     self.assertEqual(self.otp_device.verification_failure_count, 1)
+                else:
+                    self.assertFalse(True)
 
                 transaction.set_rollback(True)
 
@@ -226,11 +227,9 @@ class TestEmailDeviceUpdate(APITestCase):
         for data in self._ContentType.MultipartFormData.challenge_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
 
-                # Replace the challenge string with the actual challenge
-                if data.get('challenge') == 'validChallenge':
-                    data['challenge'] = self.otp_device.challenge
+                d = {'challenge': ''} if data.get('challenge') == 'validChallenge' else data
 
-                response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='multipart')
+                response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='multipart')
                 if not data.get('challenge'):
                     """
                     If the supplied challenge is either undefined or the empty string,
@@ -243,7 +242,20 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertIsNone(self.otp_device.verification_timeout)
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
-                else:
+                elif data['challenge'] == 'validChallenge':
+                    # note eben: rework this:
+                    """
+                    If the supplied challenge is defined and valid, django_flex_user.views.EmailDevice.post should
+                    return HTTP status code HTTP_400_BAD_REQUEST.
+                    """
+                    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+                    self.otp_device.refresh_from_db()
+                    self.assertIsNone(self.otp_device.challenge)
+                    self.assertFalse(self.otp_device.confirmed)
+                    self.assertIsNone(self.otp_device.verification_timeout)
+                    self.assertEqual(self.otp_device.verification_failure_count, 0)
+                elif data['challenge'] == 'invalidChallenge':
                     """
                     If the supplied challenge is defined and invalid, or defined and valid,
                     django_flex_user.views.EmailDevice.post should return HTTP status code HTTP_401_UNAUTHORIZED.
@@ -255,6 +267,8 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertEqual(self.otp_device.verification_timeout, timezone.now() + timedelta(seconds=1))
                     self.assertEqual(self.otp_device.verification_failure_count, 1)
+                else:
+                    self.assertFalse(True)
 
                 transaction.set_rollback(True)
 
