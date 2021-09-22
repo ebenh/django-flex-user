@@ -62,6 +62,10 @@ class TestEmailDeviceUpdate(APITestCase):
         for data in self._ContentType.ApplicationJSON.challenge_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
 
+                """
+                When the value for "challenge" is "validChallenge" we replace it with the actual challenge string stored
+                in self.otp_device.challenge before passing it to the POST method.
+                """
                 d = {'challenge': self.otp_device.challenge} if data.get('challenge') == 'validChallenge' else data
 
                 response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='json')
@@ -118,6 +122,10 @@ class TestEmailDeviceUpdate(APITestCase):
         for data in self._ContentType.MultipartFormData.challenge_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
 
+                """
+                When the value for "challenge" is "validChallenge" we replace it with the actual challenge string stored
+                in self.otp_device.challenge before passing it to the POST method.
+                """
                 d = {'challenge': self.otp_device.challenge} if data.get('challenge') == 'validChallenge' else data
 
                 response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='multipart')
@@ -172,6 +180,10 @@ class TestEmailDeviceUpdate(APITestCase):
         for data in self._ContentType.ApplicationJSON.challenge_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
 
+                """
+                When the value for "challenge" is "validChallenge" we replace it with the actual challenge string stored
+                in self.otp_device.challenge before passing it to the POST method.
+                """
                 d = {'challenge': self.otp_device.challenge} if data.get('challenge') == 'validChallenge' else data
 
                 response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='json')
@@ -215,6 +227,13 @@ class TestEmailDeviceUpdate(APITestCase):
         for data in self._ContentType.MultipartFormData.challenge_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
 
+                """
+                When the value for "challenge" is "validChallenge" we replace it with the actual challenge string stored
+                in self.otp_device.challenge before passing it to the POST method.
+                
+                Also, because mutli-part form data cannot accept None values, we perform an extra step to coerce
+                challenge values which are None to the empty string.
+                """
                 d = {'challenge': self.otp_device.challenge or ''} if data.get('challenge') == 'validChallenge' else data
 
                 response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='multipart')
