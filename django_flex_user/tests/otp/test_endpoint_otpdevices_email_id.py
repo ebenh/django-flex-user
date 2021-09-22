@@ -30,11 +30,8 @@ class TestEmailDeviceUpdate(APITestCase):
         from django_flex_user.models import FlexUser
         from django_flex_user.models import EmailDevice
 
-        user = FlexUser.objects.create_user(username='validUsername',
-                                            email='validEmail@example.com',
-                                            phone='+12025551234')
+        user = FlexUser.objects.create_user(email='validEmail@example.com')
         self.otp_device = EmailDevice.objects.get(user=user)
-
         self._REST_ENDPOINT_PATH = TestEmailDeviceUpdate._REST_ENDPOINT_PATH.format(type='email', id=self.otp_device.id)
 
     def test_method_get(self):
