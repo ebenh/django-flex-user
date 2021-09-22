@@ -215,7 +215,7 @@ class TestEmailDeviceUpdate(APITestCase):
         for data in self._ContentType.MultipartFormData.challenge_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
 
-                d = {'challenge': ''} if data.get('challenge') == 'validChallenge' else data
+                d = {'challenge': self.otp_device.challenge or ''} if data.get('challenge') == 'validChallenge' else data
 
                 response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='multipart')
 
