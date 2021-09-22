@@ -8,43 +8,20 @@ class TestEmailDeviceSerializer(TestCase):
 
     def setUp(self):
         from django_flex_user.models import FlexUser
+        from django_flex_user.models import EmailDevice
 
-        self.user1 = FlexUser.objects.create_user(username='validUsername1',
-                                                  email='validEmail1@example.com',
-                                                  phone='+12025550001')
-        self.user2 = FlexUser.objects.create_user(username='validUsername2',
-                                                  email='validEmail2@example.com',
-                                                  phone='+12025550002')
+        user = FlexUser.objects.create_user(email='validEmail1@example.com')
+        self.email_device = EmailDevice.objects.get(user=user)
 
     def test_serialize(self):
-        from django_flex_user.models.otp import EmailDevice
         from django_flex_user.serializers import EmailDeviceSerializer
 
-        email_device = EmailDevice.objects.get(user=self.user1)
-
         # Make sure the serializer only exposes the data we want it to
-        serializer = EmailDeviceSerializer(email_device)
+        serializer = EmailDeviceSerializer(self.email_device)
         self.assertEqual(
             serializer.data,
             {
                 'id': 1,
                 'name': 'va*********@ex*****.***'
             }
-        )
-
-    def test_serialize_many(self):
-        from collections import OrderedDict
-        from django_flex_user.models.otp import EmailDevice
-        from django_flex_user.serializers import EmailDeviceSerializer
-
-        email_devices = EmailDevice.objects.all()
-
-        # Make sure the serializer only exposes the data we want it to
-        serializer = EmailDeviceSerializer(email_devices, many=True)
-        self.assertEqual(
-            serializer.data,
-            [
-                OrderedDict([('id', 1), ('name', 'va*********@ex*****.***')]),
-                OrderedDict([('id', 2), ('name', 'va*********@ex*****.***')])
-            ]
         )
