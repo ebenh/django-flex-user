@@ -248,7 +248,6 @@ class TestUserModel(TestCase):
 
     def test_full_clean_and_save_normalize_email(self):
         from django_flex_user.models import FlexUser
-        from django.core.exceptions import ValidationError
 
         user = FlexUser(email='validEmail@bücher.example')
         user.set_unusable_password()
