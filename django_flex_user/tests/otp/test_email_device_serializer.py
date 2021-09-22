@@ -41,7 +41,6 @@ class TestEmailDeviceSerializer(TestCase):
 
         # Make sure the serializer only exposes the data we want it to
         serializer = EmailDeviceSerializer(email_devices, many=True)
-        print(serializer.data)
         self.assertEqual(
             serializer.data,
             [
