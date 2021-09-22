@@ -10,9 +10,7 @@ class TestEmailDevice(TestCase):
         from django_flex_user.models import FlexUser
         from django_flex_user.models import EmailDevice
 
-        user = FlexUser.objects.create_user(username='validUsername',
-                                            email='validEmail@example.com',
-                                            phone='+12025551234')
+        user = FlexUser.objects.create_user(email='validEmail@example.com')
         self.otp_device = EmailDevice.objects.get(user=user)
 
     def test_generate_challenge(self):
