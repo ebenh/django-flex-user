@@ -176,23 +176,11 @@ class TestEmailDeviceUpdate(APITestCase):
 
                 response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='json')
 
-                if not data.get('challenge'):
+                if not data.get('challenge') or data['challenge'] == 'validChallenge':
                     """
-                    If the supplied challenge is either undefined, None or the empty string,
-                    django_flex_user.views.EmailDevice.post should return HTTP status code HTTP_400_BAD_REQUEST.
-                    """
-                    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-                    self.otp_device.refresh_from_db()
-                    self.assertIsNone(self.otp_device.challenge)
-                    self.assertFalse(self.otp_device.confirmed)
-                    self.assertIsNone(self.otp_device.verification_timeout)
-                    self.assertEqual(self.otp_device.verification_failure_count, 0)
-                elif data['challenge'] == 'validChallenge':
-                    # note eben: rework this:
-                    """
-                    If the supplied challenge is defined and valid, django_flex_user.views.EmailDevice.post should
-                    return HTTP status code HTTP_400_BAD_REQUEST.
+                    If the supplied challenge is either undefined, None or the empty string OR if the supplied challenge
+                    is defined and valid the django_flex_user.views.EmailDevice.post should return HTTP status code
+                    HTTP_400_BAD_REQUEST.
                     """
                     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -230,23 +218,12 @@ class TestEmailDeviceUpdate(APITestCase):
                 d = {'challenge': ''} if data.get('challenge') == 'validChallenge' else data
 
                 response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='multipart')
-                if not data.get('challenge'):
-                    """
-                    If the supplied challenge is either undefined or the empty string,
-                    django_flex_user.views.EmailDevice.post should return HTTP status code HTTP_400_BAD_REQUEST.
-                    """
-                    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-                    self.otp_device.refresh_from_db()
-                    self.assertIsNone(self.otp_device.challenge)
-                    self.assertFalse(self.otp_device.confirmed)
-                    self.assertIsNone(self.otp_device.verification_timeout)
-                    self.assertEqual(self.otp_device.verification_failure_count, 0)
-                elif data['challenge'] == 'validChallenge':
-                    # note eben: rework this:
+                if not data.get('challenge') or data['challenge'] == 'validChallenge':
                     """
-                    If the supplied challenge is defined and valid, django_flex_user.views.EmailDevice.post should
-                    return HTTP status code HTTP_400_BAD_REQUEST.
+                    If the supplied challenge is either undefined, None or the empty string OR if the supplied challenge
+                    is defined and valid the django_flex_user.views.EmailDevice.post should return HTTP status code
+                    HTTP_400_BAD_REQUEST.
                     """
                     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
