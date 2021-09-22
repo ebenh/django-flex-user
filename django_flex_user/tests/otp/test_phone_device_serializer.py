@@ -18,12 +18,12 @@ class TestPhoneDeviceSerializer(TestCase):
 
     def test_serialize(self):
         from django_flex_user.models.otp import PhoneDevice
-        from django_flex_user.serializers import EmailDeviceSerializer
+        from django_flex_user.serializers import PhoneDeviceSerializer
 
-        email_device = PhoneDevice.objects.get(user=self.user1)
+        phone_device = PhoneDevice.objects.get(user=self.user1)
 
         # Make sure the serializer only exposes the data we want it to
-        serializer = EmailDeviceSerializer(email_device)
+        serializer = PhoneDeviceSerializer(phone_device)
         self.assertEqual(
             serializer.data,
             {
@@ -37,10 +37,10 @@ class TestPhoneDeviceSerializer(TestCase):
         from django_flex_user.models.otp import PhoneDevice
         from django_flex_user.serializers import PhoneDeviceSerializer
 
-        email_devices = PhoneDevice.objects.all()
+        phone_devices = PhoneDevice.objects.all()
 
         # Make sure the serializer only exposes the data we want it to
-        serializer = PhoneDeviceSerializer(email_devices, many=True)
+        serializer = PhoneDeviceSerializer(phone_devices, many=True)
         self.assertEqual(
             serializer.data,
             [
