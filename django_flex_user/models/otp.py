@@ -112,8 +112,8 @@ class OOBDevice(Device):
 
 
 class EmailDevice(OOBDevice):
-    challenge_length = 128
-    challenge_alphabet = string.printable
+    challenge_length = getattr(settings, 'FLEX_USER_EMAIL_CHALLENGE_LENGTH', 128)
+    challenge_alphabet = getattr(settings, 'FLEX_USER_EMAIL_CHALLENGE_ALPHABET', string.printable)
 
     email = models.EmailField(_('email address'))
 
@@ -131,8 +131,8 @@ class EmailDevice(OOBDevice):
 
 
 class PhoneDevice(OOBDevice):
-    challenge_length = 6
-    challenge_alphabet = string.digits
+    challenge_length = getattr(settings, 'FLEX_USER_PHONE_CHALLENGE_LENGTH', 6)
+    challenge_alphabet = getattr(settings, 'FLEX_USER_PHONE_CHALLENGE_ALPHABET', string.digits)
 
     phone = PhoneNumberField(_('phone number'), )
 
