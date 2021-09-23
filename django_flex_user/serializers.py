@@ -25,14 +25,11 @@ class FlexUserSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_email_verified(obj):
-        try:
-            return EmailDevice.objects.get(user=obj.id, email=None).confirmed
-        except EmailDevice.DoesNotExist:
-            return False  # todo: remove this try/catch after resetting database
+        return EmailDevice.objects.get(user=obj.id).confirmed
 
     @staticmethod
     def get_phone_verified(obj):
-        return False
+        return PhoneDevice.objects.get(user=obj.id).confirmed
 
     def validate_username(self, value):
         """
@@ -198,11 +195,11 @@ class AuthenticationSerializer(serializers.Serializer):
 
     @staticmethod
     def get_email_verified(obj):
-        return EmailDevice.objects.get(user=obj.id, email=None).confirmed
+        return EmailDevice.objects.get(user=obj.id).confirmed
 
     @staticmethod
     def get_phone_verified(obj):
-        return False
+        return PhoneDevice.objects.get(user=obj.id).confirmed
 
     @staticmethod
     def _english_join(items):
