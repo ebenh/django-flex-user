@@ -1,9 +1,13 @@
 from django.core.mail import send_mail
+from smtplib import SMTPException
 import requests
 
 
 def email_otp(recipient, challenge):
-    send_mail('Verify your account', f'Your one-time password:\n\n{challenge}', 'eben@derso.org', (recipient,))
+    try:
+        send_mail('Verify your account', f'Your one-time password:\n\n{challenge}', 'eben@derso.org', (recipient,))
+    except SMTPException:
+        raise
 
 
 def sms_otp(recipient, challenge):
