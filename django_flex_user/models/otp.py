@@ -89,8 +89,6 @@ class Device(models.Model):
 
 class OOBDevice(Device):
     challenge = models.CharField(_('challenge'), blank=True, null=True, max_length=256)
-    challenge_length = 6
-    challenge_alphabet = string.digits
 
     @Device.throttle_reset
     def generate_challenge(self):
@@ -133,6 +131,9 @@ class EmailDevice(OOBDevice):
 
 
 class PhoneDevice(OOBDevice):
+    challenge_length = 6
+    challenge_alphabet = string.digits
+
     phone = PhoneNumberField(_('phone number'), )
 
     def get_name(self):
