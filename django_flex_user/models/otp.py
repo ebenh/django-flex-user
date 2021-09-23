@@ -22,6 +22,9 @@ class VerificationTimeout(Exception):
     def __init__(self, verification_timeout, verification_failure_count, message):
         self.verification_timeout = verification_timeout
         self.verification_failure_count = verification_failure_count
+        self.message = message
+        super().__init__(self.message)
+
 
         super().__init__(message)
 
