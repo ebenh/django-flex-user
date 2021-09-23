@@ -150,9 +150,6 @@ class PhoneDevice(OOBDevice):
     def get_obscured_name(self):
         return obscure_phone(str(self.phone))
 
-    def _send_challenge(self):
-        pass
-
     def send_challenge(self):
         flex_user_sms_function = getattr(settings, 'FLEX_USER_SMS_FUNCTION',
                                          'django_flex_user.verification.sms_otp')
