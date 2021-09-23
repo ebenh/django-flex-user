@@ -90,6 +90,14 @@ class Device(models.Model):
 class OOBDevice(Device):
     challenge = models.CharField(_('challenge'), blank=True, null=True, max_length=256)
 
+    @property
+    def challenge_length(self):
+        raise NotImplementedError
+
+    @property
+    def challenge_alphabet(self):
+        raise NotImplementedError
+
     @Device.throttle_reset
     def generate_challenge(self):
         challenge = ''.join(
