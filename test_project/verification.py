@@ -9,14 +9,14 @@ from smtplib import SMTPException
 # noinspection PyPackageRequirements
 import requests
 
-from django_flex_user.models.otp import OTPTransmissionError
+from django_flex_user.models.otp import TransmissionError
 
 
 def email_otp(recipient, challenge):
     try:
         send_mail('Verify your account', f'Your one-time password:\n\n{challenge}', 'eben@derso.org', (recipient,))
     except (SMTPException, ValueError) as e:
-        raise OTPTransmissionError from e
+        raise TransmissionError from e
 
 
 def sms_otp(recipient, challenge):
@@ -29,7 +29,7 @@ def sms_otp(recipient, challenge):
     try:
         j = resp.json()
     except (json.JSONDecodeError, ValueError) as e:
-        raise OTPTransmissionError from e
+        raise TransmissionError from e
     else:
         if not j.get('success'):
-            raise OTPTransmissionError(j.get('error'))
+            raise TransmissionError(j.get('error'))

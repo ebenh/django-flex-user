@@ -26,7 +26,7 @@ class TimeoutError(Exception):
         super().__init__(self.message)
 
 
-class OTPTransmissionError(Exception):
+class TransmissionError(Exception):
     pass
 
 

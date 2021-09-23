@@ -16,7 +16,7 @@ from drf_multiple_model.views import ObjectMultipleModelAPIView
 
 from social_django.models import UserSocialAuth
 
-from .models.otp import EmailDevice, PhoneDevice, OTPTransmissionError, TimeoutError
+from .models.otp import EmailDevice, PhoneDevice, TransmissionError, TimeoutError
 from .validators import FlexUserUnicodeUsernameValidator
 
 from .serializers import FlexUserSerializer, AuthenticationSerializer, UserSocialAuthSerializer, \
@@ -151,7 +151,7 @@ class OTPEmailDevice(generics.GenericAPIView):
         email_device.generate_challenge()
         try:
             email_device.send_challenge()
-        except OTPTransmissionError:
+        except TransmissionError:
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             return Response(status=status.HTTP_204_NO_CONTENT)
