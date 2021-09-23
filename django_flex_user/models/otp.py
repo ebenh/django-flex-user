@@ -26,7 +26,16 @@ class VerificationTimeout(Exception):
         super().__init__(self.message)
 
 
-        super().__init__(message)
+class TransmissionError(Exception):
+    pass
+
+
+class EmailTransmissionError(TransmissionError):
+    pass
+
+
+class PhoneTransmissionError(TransmissionError):
+    pass
 
 
 class Device(models.Model):
