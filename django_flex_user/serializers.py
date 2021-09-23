@@ -305,14 +305,9 @@ class UserSocialAuthSerializer(serializers.ModelSerializer):
         }
 
 
+# noinspection PyAbstractClass
 class OTPSerializer(serializers.Serializer):
     challenge = serializers.CharField(write_only=True)
-
-    def update(self, instance, validated_data):
-        raise NotImplementedError
-
-    def create(self, validated_data):
-        raise NotImplementedError
 
 
 class EmailDeviceSerializer(serializers.ModelSerializer):
