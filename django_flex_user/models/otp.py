@@ -33,17 +33,13 @@ class Device(models.Model):
     verification_timeout = models.DateTimeField(_('verification timeout'), null=True, blank=True)
     verification_failure_count = models.PositiveIntegerField(_('verification failure count'), default=0)
 
-    def _set_timeout(self, save=False):
+    def _set_timeout(self):
         self.verification_timeout = timezone.now() + timedelta(seconds=2 ** self.verification_failure_count)
         self.verification_failure_count += 1
-        if save:
-            self.save(update_fields=['verification_timeout', 'verification_failure_count'])
 
-    def _reset_timeout(self, save=False):
+    def _reset_timeout(self):
         self.verification_timeout = None
         self.verification_failure_count = 0
-        if save:
-            self.save(update_fields=['verification_timeout', 'verification_failure_count'])
 
     def _is_timed_out(self):
         if self.verification_timeout and timezone.now() < self.verification_timeout:
