@@ -25,11 +25,21 @@ class FlexUserSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_email_verified(obj):
-        return EmailDevice.objects.get(user=obj.id).confirmed
+        confirmed = None
+        try:
+            confirmed = EmailDevice.objects.get(user=obj.id).confirmed
+        except EmailDevice.DoesNotExist:
+            pass
+        return confirmed
 
     @staticmethod
     def get_phone_verified(obj):
-        return PhoneDevice.objects.get(user=obj.id).confirmed
+        confirmed = None
+        try:
+            confirmed = PhoneDevice.objects.get(user=obj.id).confirmed
+        except PhoneDevice.DoesNotExist:
+            pass
+        return confirmed
 
     def validate_username(self, value):
         """
@@ -195,11 +205,21 @@ class AuthenticationSerializer(serializers.Serializer):
 
     @staticmethod
     def get_email_verified(obj):
-        return EmailDevice.objects.get(user=obj.id).confirmed
+        confirmed = None
+        try:
+            confirmed = EmailDevice.objects.get(user=obj.id).confirmed
+        except EmailDevice.DoesNotExist:
+            pass
+        return confirmed
 
     @staticmethod
     def get_phone_verified(obj):
-        return PhoneDevice.objects.get(user=obj.id).confirmed
+        confirmed = None
+        try:
+            confirmed = PhoneDevice.objects.get(user=obj.id).confirmed
+        except PhoneDevice.DoesNotExist:
+            pass
+        return confirmed
 
     @staticmethod
     def _english_join(items):
