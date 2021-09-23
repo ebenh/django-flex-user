@@ -79,11 +79,3 @@ def mail_validation(backend, details, is_new=False, *args, **kwargs):
             return backend.strategy.redirect(
                 backend.strategy.setting('EMAIL_VALIDATION_URL') + f"?v={details['email']}"
             )
-
-
-def email_otp(recipient, challenge):
-    pass
-
-
-def sms_otp(recipient, challenge):
-    pass

@@ -151,7 +151,7 @@ class OTPEmailDevice(generics.GenericAPIView):
         email_device.generate_challenge()
         try:
             email_device.send_challenge()
-        except TransmissionError:
+        except (TransmissionError, NotImplementedError):
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             return Response(status=status.HTTP_204_NO_CONTENT)
