@@ -17,4 +17,6 @@ def sms_otp(recipient, challenge):
         'message': f'Your one-time password:\n\n{challenge}',
         'key': 'textbelt',
     })
-    print(resp.json())
+    json = resp.json()
+    if not json.get('success'):
+        print(json.get('error'))
