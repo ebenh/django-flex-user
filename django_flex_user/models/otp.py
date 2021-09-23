@@ -26,15 +26,7 @@ class VerificationTimeout(Exception):
         super().__init__(self.message)
 
 
-class TransmissionError(Exception):
-    pass
-
-
-class EmailTransmissionError(TransmissionError):
-    pass
-
-
-class PhoneTransmissionError(TransmissionError):
+class OTPTransmissionError(Exception):
     pass
 
 

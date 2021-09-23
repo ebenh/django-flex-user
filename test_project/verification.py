@@ -1,13 +1,22 @@
+try:
+    # noinspection PyUnresolvedReferences,PyPackageRequirements
+    import simplejson as json
+except ModuleNotFoundError:
+    import json
+
 from django.core.mail import send_mail
 from smtplib import SMTPException
+# noinspection PyPackageRequirements
 import requests
+
+from django_flex_user.models.otp import OTPTransmissionError
 
 
 def email_otp(recipient, challenge):
     try:
         send_mail('Verify your account', f'Your one-time password:\n\n{challenge}', 'eben@derso.org', (recipient,))
-    except SMTPException:
-        raise
+    except (SMTPException, ValueError) as e:
+        raise OTPTransmissionError from e
 
 
 def sms_otp(recipient, challenge):
@@ -17,6 +26,10 @@ def sms_otp(recipient, challenge):
         'message': f'Your one-time password:\n\n{challenge}',
         'key': 'textbelt',
     })
-    json = resp.json()
-    if not json.get('success'):
-        print(json.get('error'))
+    try:
+        j = resp.json()
+    except (json.JSONDecodeError, ValueError) as e:
+        raise OTPTransmissionError from e
+    else:
+        if not j.get('success'):
+            raise OTPTransmissionError(j.get('error'))
