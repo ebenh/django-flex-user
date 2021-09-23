@@ -117,7 +117,7 @@ class TestEmailDevice(TestCase):
             self.assertEqual(self.otp_device.verification_failure_count, 1)
 
     def test_verify_challenge_throttling(self):
-        from django_flex_user.models.otp import VerificationTimeout
+        from django_flex_user.models.otp import TimeoutError
         from freezegun import freeze_time
 
         self.otp_device.generate_challenge()
@@ -131,9 +131,9 @@ class TestEmailDevice(TestCase):
                 # Here we simulate the timeout period. For each second of the timeout period we attempt to verify again.
                 # The verification method should raise an exception each time.
                 for j in range(0, 2 ** i):
-                    # Try to verify again, the method should raise VerificationTimeout exception
-                    self.assertRaises(VerificationTimeout, self.otp_device.verify_challenge, 'INVALID_CHALLENGE')
-                    # The verify method should raise VerificationTimeout even if we submit the correct challenge
-                    self.assertRaises(VerificationTimeout, self.otp_device.verify_challenge, self.otp_device.challenge)
+                    # Try to verify again, the method should raise TimeoutError exception
+                    self.assertRaises(TimeoutError, self.otp_device.verify_challenge, 'INVALID_CHALLENGE')
+                    # The verify method should raise TimeoutError even if we submit the correct challenge
+                    self.assertRaises(TimeoutError, self.otp_device.verify_challenge, self.otp_device.challenge)
                     # Advance time by 1 second
                     frozen_datetime.tick()

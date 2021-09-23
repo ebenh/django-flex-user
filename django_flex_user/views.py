@@ -16,7 +16,7 @@ from drf_multiple_model.views import ObjectMultipleModelAPIView
 
 from social_django.models import UserSocialAuth
 
-from .models.otp import EmailDevice, PhoneDevice, OTPTransmissionError, VerificationTimeout
+from .models.otp import EmailDevice, PhoneDevice, OTPTransmissionError, TimeoutError
 from .validators import FlexUserUnicodeUsernameValidator
 
 from .serializers import FlexUserSerializer, AuthenticationSerializer, UserSocialAuthSerializer, \
@@ -162,7 +162,7 @@ class OTPEmailDevice(generics.GenericAPIView):
         if serializer.is_valid():
             try:
                 success = email_device.verify_challenge(serializer.validated_data['challenge'])
-            except VerificationTimeout:
+            except TimeoutError:
                 return Response(status=status.HTTP_429_TOO_MANY_REQUESTS)
             else:
                 if success:

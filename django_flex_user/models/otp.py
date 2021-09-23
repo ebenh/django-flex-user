@@ -18,7 +18,7 @@ def get_module_member(name):
     return member
 
 
-class VerificationTimeout(Exception):
+class TimeoutError(Exception):
     def __init__(self, verification_timeout, verification_failure_count, message):
         self.verification_timeout = verification_timeout
         self.verification_failure_count = verification_failure_count
@@ -47,7 +47,7 @@ class Device(models.Model):
 
     def _is_timed_out(self):
         if self.verification_timeout and timezone.now() < self.verification_timeout:
-            raise VerificationTimeout(self.verification_timeout, self.verification_failure_count,
+            raise TimeoutError(self.verification_timeout, self.verification_failure_count,
                                       "Too many failed verification attempts. Please try again later.")
 
     def throttle_reset(fun):
