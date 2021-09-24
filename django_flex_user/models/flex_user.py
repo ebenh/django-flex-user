@@ -269,15 +269,15 @@ def my_post_save_handler(sender, **kwargs):
             if user.email is None:
                 EmailToken.objects.get(user_id=user.id).delete()
             else:
-                email_device, created = EmailToken.objects.get_or_create(user=user)
-                email_device.email = user.email
-                email_device.verified = False
-                email_device.save(update_fields=['email', 'verified'])
+                email_token, created = EmailToken.objects.get_or_create(user=user)
+                email_token.email = user.email
+                email_token.verified = False
+                email_token.save(update_fields=['email', 'verified'])
         if 'phone' in user.get_dirty_fields():
             if user.phone is None:
                 PhoneToken.objects.get(user_id=user.id).delete()
             else:
-                phone_device, created = PhoneToken.objects.get_or_create(user=user)
-                phone_device.phone = user.phone
-                phone_device.verified = False
-                phone_device.save(update_fields=['phone', 'verified'])
+                phone_token, created = PhoneToken.objects.get_or_create(user=user)
+                phone_token.phone = user.phone
+                phone_token.verified = False
+                phone_token.save(update_fields=['phone', 'verified'])
