@@ -264,19 +264,19 @@ def my_post_save_handler(sender, **kwargs):
             PhoneToken.objects.create(user_id=kwargs['instance'].id, phone=kwargs['instance'].phone)
     if 'email' in kwargs['instance'].get_dirty_fields():
         email = kwargs['instance'].email
-        if email:
+        if email is None:
+            EmailToken.objects.get(user_id=kwargs['instance'].id).delete()
+        else:
             email_device, created = EmailToken.objects.get_or_create(user=kwargs['instance'])
             email_device.email = email
             email_device.verified = False
             email_device.save(update_fields=['email', 'verified'])
-        else:
-            EmailToken.objects.get(user_id=kwargs['instance'].id).delete()
     if 'phone' in kwargs['instance'].get_dirty_fields():
         phone = kwargs['instance'].phone
-        if phone:
+        if phone is None:
+            PhoneToken.objects.get(user_id=kwargs['instance'].id).delete()
+        else:
             phone_device, created = PhoneToken.objects.get_or_create(user=kwargs['instance'])
             phone_device.phone = phone
             phone_device.verified = False
             phone_device.save(update_fields=['phone', 'verified'])
-        else:
-            PhoneToken.objects.get(user_id=kwargs['instance'].id).delete()
