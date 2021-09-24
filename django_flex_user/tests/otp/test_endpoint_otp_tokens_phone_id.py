@@ -1,4 +1,4 @@
-from .test_endpoint_otpdevices_email_id import TestEmailTokenUpdate
+from .test_endpoint_otp_tokens_email_id import TestEmailTokenUpdate
 
 
 class TestPhoneTokenUpdate(TestEmailTokenUpdate):

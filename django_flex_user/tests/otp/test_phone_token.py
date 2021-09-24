@@ -1,4 +1,4 @@
-from .test_email_device import TestEmailToken
+from .test_email_token import TestEmailToken
 
 
 class TestPhoneToken(TestEmailToken):
