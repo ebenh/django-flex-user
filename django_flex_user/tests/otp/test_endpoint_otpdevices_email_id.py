@@ -10,20 +10,20 @@ class TestEmailDeviceUpdate(APITestCase):
 
     class _ContentType:
         class ApplicationJSON:
-            challenge_values = (
+            password_values = (
                 {},
-                {'challenge': None},
-                {'challenge': ''},
-                {'challenge': 'validChallenge'},
-                {'challenge': 'invalidChallenge'}
+                {'password': None},
+                {'password': ''},
+                {'password': 'validPassword'},
+                {'password': 'invalidPassword'}
             )
 
         class MultipartFormData:
-            challenge_values = (
+            password_values = (
                 {},
-                {'challenge': ''},
-                {'challenge': 'validChallenge'},
-                {'challenge': 'invalidChallenge'}
+                {'password': ''},
+                {'password': 'validPassword'},
+                {'password': 'invalidPassword'}
             )
 
     def setUp(self):
@@ -42,13 +42,13 @@ class TestEmailDeviceUpdate(APITestCase):
         self.assertFalse(self.otp_device.confirmed)
         self.assertIsNotNone(self.otp_device.password)
         self.assertNotEqual(self.otp_device.password, '')
-        # note eben: Because escape characters are inserted into the challenge string, the challenge string's length may
+        # note eben: Because escape characters are inserted into the password string, the password string's length may
         # be greater than or equal to its configured length
         self.assertGreaterEqual(len(self.otp_device.password), self.otp_device.password_length)
         self.assertIsNone(self.otp_device.verification_timeout)
         self.assertEqual(self.otp_device.verification_failure_count, 0)
 
-    def test_method_post_format_application_json_generate_challenge_validate_challenge(self):
+    def test_method_post_format_application_json_generate_password_validate_password(self):
         from django.db import transaction
         from freezegun import freeze_time
         from django.utils import timezone
@@ -56,20 +56,20 @@ class TestEmailDeviceUpdate(APITestCase):
 
         self.otp_device.generate_password()
 
-        for data in self._ContentType.ApplicationJSON.challenge_values:
+        for data in self._ContentType.ApplicationJSON.password_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
 
                 """
-                When the value for "challenge" is "validChallenge" we replace it with the actual challenge stored in
-                self.otp_device.challenge before passing it to the POST method.
+                When the value for "password" is "validPassword" we replace it with the actual password stored in
+                self.otp_device.password before passing it to the POST method.
                 """
-                d = {'challenge': self.otp_device.password} if data.get('challenge') == 'validChallenge' else data
+                d = {'password': self.otp_device.password} if data.get('password') == 'validPassword' else data
 
                 response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='json')
 
-                if not data.get('challenge'):
+                if not data.get('password'):
                     """
-                    If the supplied challenge is either undefined, None or the empty string,
+                    If the supplied password is either undefined, None or the empty string,
                     django_flex_user.views.EmailDevice.post should return HTTP status code HTTP_400_BAD_REQUEST.
                     """
                     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -79,9 +79,9 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertIsNone(self.otp_device.verification_timeout)
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
-                elif data['challenge'] == 'validChallenge':
+                elif data['password'] == 'validPassword':
                     """
-                    If the supplied challenge is defined and valid, django_flex_user.views.EmailDevice.post should
+                    If the supplied password is defined and valid, django_flex_user.views.EmailDevice.post should
                     return HTTP status code HTTP_200_OK.
                     """
                     self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -91,9 +91,9 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertTrue(self.otp_device.confirmed)
                     self.assertIsNone(self.otp_device.verification_timeout)
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
-                elif data['challenge'] == 'invalidChallenge':
+                elif data['password'] == 'invalidPassword':
                     """
-                    If the supplied challenge is defined and invalid, django_flex_user.views.EmailDevice.post
+                    If the supplied password is defined and invalid, django_flex_user.views.EmailDevice.post
                     should return HTTP status code HTTP_401_UNAUTHORIZED.
                     """
                     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -108,7 +108,7 @@ class TestEmailDeviceUpdate(APITestCase):
 
                 transaction.set_rollback(True)
 
-    def test_method_post_format_multipart_form_data_generate_challenge_validate_challenge(self):
+    def test_method_post_format_multipart_form_data_generate_password_validate_password(self):
         from django.db import transaction
         from freezegun import freeze_time
         from django.utils import timezone
@@ -116,20 +116,20 @@ class TestEmailDeviceUpdate(APITestCase):
 
         self.otp_device.generate_password()
 
-        for data in self._ContentType.MultipartFormData.challenge_values:
+        for data in self._ContentType.MultipartFormData.password_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
 
                 """
-                When the value for "challenge" is "validChallenge" we replace it with the actual challenge stored in
-                self.otp_device.challenge before passing it to the POST method.
+                When the value for "password" is "validPassword" we replace it with the actual password stored in
+                self.otp_device.password before passing it to the POST method.
                 """
-                d = {'challenge': self.otp_device.password} if data.get('challenge') == 'validChallenge' else data
+                d = {'password': self.otp_device.password} if data.get('password') == 'validPassword' else data
 
                 response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='multipart')
 
-                if not data.get('challenge'):
+                if not data.get('password'):
                     """
-                    If the supplied challenge is either undefined or the empty string,
+                    If the supplied password is either undefined or the empty string,
                     django_flex_user.views.EmailDevice.post should return HTTP status code HTTP_400_BAD_REQUEST.
                     """
                     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -139,9 +139,9 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertIsNone(self.otp_device.verification_timeout)
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
-                elif data['challenge'] == 'validChallenge':
+                elif data['password'] == 'validPassword':
                     """
-                    If the supplied challenge is defined and valid, django_flex_user.views.EmailDevice.post should
+                    If the supplied password is defined and valid, django_flex_user.views.EmailDevice.post should
                     return HTTP status code HTTP_200_OK.
                     """
                     self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -151,9 +151,9 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertTrue(self.otp_device.confirmed)
                     self.assertIsNone(self.otp_device.verification_timeout)
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
-                elif data['challenge'] == 'invalidChallenge':
+                elif data['password'] == 'invalidPassword':
                     """
-                    If the supplied challenge is defined and invalid, django_flex_user.views.EmailDevice.post
+                    If the supplied password is defined and invalid, django_flex_user.views.EmailDevice.post
                     should return HTTP status code HTTP_401_UNAUTHORIZED.
                     """
                     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -168,26 +168,26 @@ class TestEmailDeviceUpdate(APITestCase):
 
                 transaction.set_rollback(True)
 
-    def test_method_post_format_application_json_validate_challenge(self):
+    def test_method_post_format_application_json_validate_password(self):
         from django.db import transaction
         from freezegun import freeze_time
         from django.utils import timezone
         from datetime import timedelta
 
-        for data in self._ContentType.ApplicationJSON.challenge_values:
+        for data in self._ContentType.ApplicationJSON.password_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
 
                 """
-                When the value for "challenge" is "validChallenge" we replace it with the actual challenge stored in
-                self.otp_device.challenge before passing it to the POST method.
+                When the value for "password" is "validPassword" we replace it with the actual password stored in
+                self.otp_device.password before passing it to the POST method.
                 """
-                d = {'challenge': self.otp_device.password} if data.get('challenge') == 'validChallenge' else data
+                d = {'password': self.otp_device.password} if data.get('password') == 'validPassword' else data
 
                 response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='json')
 
-                if not data.get('challenge') or data['challenge'] == 'validChallenge':
+                if not data.get('password') or data['password'] == 'validPassword':
                     """
-                    If the supplied challenge is either undefined, None or the empty string OR if the supplied challenge
+                    If the supplied password is either undefined, None or the empty string OR if the supplied password
                     is defined and valid the django_flex_user.views.EmailDevice.post should return HTTP status code
                     HTTP_400_BAD_REQUEST.
                     """
@@ -198,9 +198,9 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertIsNone(self.otp_device.verification_timeout)
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
-                elif data['challenge'] == 'invalidChallenge':
+                elif data['password'] == 'invalidPassword':
                     """
-                    If the supplied challenge is defined and invalid, or defined and valid,
+                    If the supplied password is defined and invalid, or defined and valid,
                     django_flex_user.views.EmailDevice.post should return HTTP status code HTTP_401_UNAUTHORIZED.
                     """
                     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -215,29 +215,29 @@ class TestEmailDeviceUpdate(APITestCase):
 
                 transaction.set_rollback(True)
 
-    def test_method_post_format_multipart_form_data_validate_challenge(self):
+    def test_method_post_format_multipart_form_data_validate_password(self):
         from django.db import transaction
         from freezegun import freeze_time
         from django.utils import timezone
         from datetime import timedelta
 
-        for data in self._ContentType.MultipartFormData.challenge_values:
+        for data in self._ContentType.MultipartFormData.password_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
 
                 """
-                When the value for "challenge" is "validChallenge" we replace it with the actual challenge stored in
-                self.otp_device.challenge before passing it to the POST method.
+                When the value for "password" is "validPassword" we replace it with the actual password stored in
+                self.otp_device.password before passing it to the POST method.
                 
                 Also, because mutlipart/form-data cannot accept None values, we perform an extra step to coerce
-                challenge values which are None to the empty string.
+                password values which are None to the empty string.
                 """
-                d = {'challenge': self.otp_device.password or ''} if data.get('challenge') == 'validChallenge' else data
+                d = {'password': self.otp_device.password or ''} if data.get('password') == 'validPassword' else data
 
                 response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='multipart')
 
-                if not data.get('challenge') or data['challenge'] == 'validChallenge':
+                if not data.get('password') or data['password'] == 'validPassword':
                     """
-                    If the supplied challenge is either undefined, None or the empty string OR if the supplied challenge
+                    If the supplied password is either undefined, None or the empty string OR if the supplied password
                     is defined and valid the django_flex_user.views.EmailDevice.post should return HTTP status code
                     HTTP_400_BAD_REQUEST.
                     """
@@ -248,9 +248,9 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertIsNone(self.otp_device.verification_timeout)
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
-                elif data['challenge'] == 'invalidChallenge':
+                elif data['password'] == 'invalidPassword':
                     """
-                    If the supplied challenge is defined and invalid, or defined and valid,
+                    If the supplied password is defined and invalid, or defined and valid,
                     django_flex_user.views.EmailDevice.post should return HTTP status code HTTP_401_UNAUTHORIZED.
                     """
                     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -273,11 +273,11 @@ class TestEmailDeviceUpdate(APITestCase):
         with freeze_time() as frozen_datetime:
             for i in range(0, 10):
                 """
-                Here we try to verify an invalid challenge. django_flex_user.views.EmailDevice.post should return HTTP
+                Here we try to verify an invalid password. django_flex_user.views.EmailDevice.post should return HTTP
                 status code HTTP_401_UNAUTHORIZED and subsequent verification attempts should be timed out for the next
                 2^i seconds.
                 """
-                response = self.client.post(self._REST_ENDPOINT_PATH, data={'challenge': 'invalidChallenge'})
+                response = self.client.post(self._REST_ENDPOINT_PATH, data={'password': 'invalidPassword'})
                 self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
                 """
@@ -287,14 +287,14 @@ class TestEmailDeviceUpdate(APITestCase):
                 """
                 for j in range(0, 2 ** i):
                     """
-                    Try to verify an invalid challenge.
+                    Try to verify an invalid password.
                     """
-                    response = self.client.post(self._REST_ENDPOINT_PATH, data={'challenge': 'invalidChallenge'})
+                    response = self.client.post(self._REST_ENDPOINT_PATH, data={'password': 'invalidPassword'})
                     self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
                     """
-                    Try to verify a valid challenge.
+                    Try to verify a valid password.
                     """
-                    response = self.client.post(self._REST_ENDPOINT_PATH, data={'challenge': self.otp_device.password})
+                    response = self.client.post(self._REST_ENDPOINT_PATH, data={'password': self.otp_device.password})
                     self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
                     """
                     Advance time by one second.

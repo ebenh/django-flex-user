@@ -324,7 +324,7 @@ class UserSocialAuthSerializer(serializers.ModelSerializer):
 
 # noinspection PyAbstractClass
 class OTPSerializer(serializers.Serializer):
-    challenge = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True)
 
 
 class EmailDeviceSerializer(serializers.ModelSerializer):
