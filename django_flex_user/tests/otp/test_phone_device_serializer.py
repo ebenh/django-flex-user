@@ -1,9 +1,9 @@
 from django.test import TestCase
 
 
-class TestPhoneDeviceSerializer(TestCase):
+class TestPhoneTokenSerializer(TestCase):
     """
-    This class is designed to test django_flex_user.serializers.PhoneDeviceSerializer
+    This class is designed to test django_flex_user.serializers.PhoneTokenSerializer
     """
 
     def setUp(self):
@@ -14,10 +14,10 @@ class TestPhoneDeviceSerializer(TestCase):
         self.phone_device = PhoneToken.objects.get(user=user)
 
     def test_serialize(self):
-        from django_flex_user.serializers import PhoneDeviceSerializer
+        from django_flex_user.serializers import PhoneTokenSerializer
 
         # Make sure the serializer only exposes the data we want it to
-        serializer = PhoneDeviceSerializer(self.phone_device)
+        serializer = PhoneTokenSerializer(self.phone_device)
         self.assertEqual(
             serializer.data,
             {

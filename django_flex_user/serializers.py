@@ -339,7 +339,7 @@ class EmailTokenSerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 
-class PhoneDeviceSerializer(serializers.ModelSerializer):
+class PhoneTokenSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField('get_name')
 
     @staticmethod

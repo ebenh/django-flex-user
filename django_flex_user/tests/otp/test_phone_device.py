@@ -1,9 +1,9 @@
 from .test_email_device import TestEmailToken
 
 
-class TestPhoneDevice(TestEmailToken):
+class TestPhoneToken(TestEmailToken):
     """
-    This class is designed to test django_flex_user.models.PhoneDevice
+    This class is designed to test django_flex_user.models.PhoneToken
     """
 
     def setUp(self):

@@ -117,7 +117,7 @@ class EmailTokenAdmin(admin.ModelAdmin):
         return False
 
 
-class PhoneDeviceAdmin(admin.ModelAdmin):
+class PhoneTokenAdmin(admin.ModelAdmin):
     readonly_fields = ['user', 'phone', 'confirmed', 'password', 'verification_timeout', 'verification_failure_count']
 
     def has_add_permission(self, request):
@@ -131,4 +131,4 @@ class PhoneDeviceAdmin(admin.ModelAdmin):
 
 
 admin.site.register(EmailToken, EmailTokenAdmin)
-admin.site.register(PhoneToken, PhoneDeviceAdmin)
+admin.site.register(PhoneToken, PhoneTokenAdmin)

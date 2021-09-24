@@ -1,9 +1,9 @@
 from .test_endpoint_otpdevices_email_id import TestEmailTokenUpdate
 
 
-class TestPhoneDeviceUpdate(TestEmailTokenUpdate):
+class TestPhoneTokenUpdate(TestEmailTokenUpdate):
     """
-    This class is designed to test django_flex_user.views.OTPPhoneDevice
+    This class is designed to test django_flex_user.views.PhoneToken
     """
 
     def setUp(self):

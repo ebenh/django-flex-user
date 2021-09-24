@@ -20,7 +20,7 @@ from .models.otp import EmailToken, PhoneToken, TransmissionError, TimeoutError
 from .validators import FlexUserUnicodeUsernameValidator
 
 from .serializers import FlexUserSerializer, AuthenticationSerializer, UserSocialAuthSerializer, \
-    OTPSerializer, EmailTokenSerializer, PhoneDeviceSerializer
+    OTPSerializer, EmailTokenSerializer, PhoneTokenSerializer
 
 UserModel = get_user_model()
 
@@ -136,7 +136,7 @@ class OTPTokens(ObjectMultipleModelAPIView):
 
     querylist = (
         {'queryset': EmailToken.objects.all(), 'serializer_class': EmailTokenSerializer, 'filter_fn': my_filter},
-        {'queryset': PhoneToken.objects.all(), 'serializer_class': PhoneDeviceSerializer, 'filter_fn': my_filter},
+        {'queryset': PhoneToken.objects.all(), 'serializer_class': PhoneTokenSerializer, 'filter_fn': my_filter},
     )
 
 
@@ -174,6 +174,6 @@ class EmailToken(generics.GenericAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class OTPPhoneDevice(EmailToken):
+class PhoneToken(EmailToken):
     queryset = PhoneToken.objects.all()
     serializer_class = OTPSerializer
