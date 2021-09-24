@@ -103,9 +103,9 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
             {
                 'username': 'validUsername',
                 'email': None,
-                'email_verified': False,
+                'email_verified': None,
                 'phone': None,
-                'phone_verified': False
+                'phone_verified': None
             }
         )
 
