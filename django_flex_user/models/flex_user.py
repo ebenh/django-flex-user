@@ -270,7 +270,7 @@ def my_post_save_handler(sender, **kwargs):
             email_device.verified = False
             email_device.save(update_fields=['email', 'verified'])
         else:
-            EmailToken.objects.filter(user_id=kwargs['instance'].id).delete()
+            EmailToken.objects.get(user_id=kwargs['instance'].id).delete()
     if 'phone' in kwargs['instance'].get_dirty_fields():
         phone = kwargs['instance'].phone
         if phone:
@@ -279,4 +279,4 @@ def my_post_save_handler(sender, **kwargs):
             phone_device.verified = False
             phone_device.save(update_fields=['phone', 'verified'])
         else:
-            PhoneToken.objects.filter(user_id=kwargs['instance'].id).delete()
+            PhoneToken.objects.get(user_id=kwargs['instance'].id).delete()
