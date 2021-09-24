@@ -257,26 +257,26 @@ def my_pre__save_handler(sender, **kwargs):
 
 @receiver(post_save, sender=FlexUser)
 def my_post_save_handler(sender, **kwargs):
+    user = kwargs['instance']
+
     if kwargs['created']:
-        if kwargs['instance'].email is not None:
-            EmailToken.objects.create(user_id=kwargs['instance'].id, email=kwargs['instance'].email)
-        if kwargs['instance'].phone is not None:
-            PhoneToken.objects.create(user_id=kwargs['instance'].id, phone=kwargs['instance'].phone)
-    if 'email' in kwargs['instance'].get_dirty_fields():
-        email = kwargs['instance'].email
-        if email is None:
-            EmailToken.objects.get(user_id=kwargs['instance'].id).delete()
+        if user.email is not None:
+            EmailToken.objects.create(user_id=user.id, email=user.email)
+        if user.phone is not None:
+            PhoneToken.objects.create(user_id=user.id, phone=user.phone)
+    if 'email' in user.get_dirty_fields():
+        if user.email is None:
+            EmailToken.objects.get(user_id=user.id).delete()
         else:
-            email_device, created = EmailToken.objects.get_or_create(user=kwargs['instance'])
-            email_device.email = email
+            email_device, created = EmailToken.objects.get_or_create(user=user)
+            email_device.email = user.email
             email_device.verified = False
             email_device.save(update_fields=['email', 'verified'])
-    if 'phone' in kwargs['instance'].get_dirty_fields():
-        phone = kwargs['instance'].phone
-        if phone is None:
-            PhoneToken.objects.get(user_id=kwargs['instance'].id).delete()
+    if 'phone' in user.get_dirty_fields():
+        if user.phone is None:
+            PhoneToken.objects.get(user_id=user.id).delete()
         else:
-            phone_device, created = PhoneToken.objects.get_or_create(user=kwargs['instance'])
-            phone_device.phone = phone
+            phone_device, created = PhoneToken.objects.get_or_create(user=user)
+            phone_device.phone = user.phone
             phone_device.verified = False
             phone_device.save(update_fields=['phone', 'verified'])
