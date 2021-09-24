@@ -11,9 +11,9 @@ urlpatterns = [
     path('users/user/oauth-providers/', views.OAuthProviders.as_view()),
     path('sessions/', views.Sessions.as_view()),
 
-    path('otp-devices/', views.OTPDevices.as_view()),
-    path('otp-devices/email/<str:pk>', views.EmailToken.as_view()),
-    path('otp-devices/phone/<str:pk>', views.OTPPhoneDevice.as_view()),
+    path('otp-tokens/', views.OTPTokens.as_view()),
+    path('otp-tokens/email/<str:pk>', views.EmailToken.as_view()),
+    path('otp-tokens/phone/<str:pk>', views.OTPPhoneDevice.as_view()),
 
     path('', include('social_django.urls', namespace='social')),
     # Password Reset

@@ -130,7 +130,7 @@ def my_filter(queryset, request, *args, **kwargs):
     return queryset.filter(**s)
 
 
-class OTPDevices(ObjectMultipleModelAPIView):
+class OTPTokens(ObjectMultipleModelAPIView):
     authentication_classes = [SessionAuthentication]
     permission_classes = [AllowAny]
 

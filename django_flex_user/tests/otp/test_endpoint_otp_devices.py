@@ -2,11 +2,11 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 
 
-class TestOTPDevicesRetrieve(APITestCase):
+class TestOTPTokensRetrieve(APITestCase):
     """
-    This class is designed to test django_flex_user.views.OTPDevices
+    This class is designed to test django_flex_user.views.OTPTokens
     """
-    _REST_ENDPOINT_PATH = '/account/otp-devices/'
+    _REST_ENDPOINT_PATH = '/account/otp-tokens/'
 
     _search_values = (
         ('', False),  # Empty string

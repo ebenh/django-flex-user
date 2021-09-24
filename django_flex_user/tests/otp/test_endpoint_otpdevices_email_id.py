@@ -6,7 +6,7 @@ class TestEmailTokenUpdate(APITestCase):
     """
     This class is designed to test django_flex_user.views.EmailToken
     """
-    _REST_ENDPOINT_PATH = '/account/otp-devices/{type}/{id}'
+    _REST_ENDPOINT_PATH = '/account/otp-tokens/{type}/{id}'
 
     class _ContentType:
         class ApplicationJSON:
