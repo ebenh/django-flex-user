@@ -11,4 +11,4 @@ class TestPhoneToken(TestEmailToken):
         from django_flex_user.models import PhoneToken
 
         user = FlexUser.objects.create_user(phone='+12025551234')
-        self.otp_device = PhoneToken.objects.get(user=user)
+        self.otp_token = PhoneToken.objects.get(user=user)
