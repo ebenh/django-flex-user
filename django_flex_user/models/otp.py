@@ -48,7 +48,7 @@ class OTPToken(models.Model):
     def _is_timed_out(self):
         if self.timeout and timezone.now() < self.timeout:
             raise TimeoutError(self.timeout, self.failure_count,
-                                      "Too many failed verification attempts. Please try again later.")
+                               "Too many failed verification attempts. Please try again later.")
 
     def throttle_reset(fun):
         def inner(self):
