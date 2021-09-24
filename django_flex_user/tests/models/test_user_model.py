@@ -328,12 +328,12 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        email_device = EmailToken.objects.get(user_id=user.id)
-        self.assertEqual(email_device.email, user.email)
-        self.assertFalse(email_device.verified)
-        self.assertIsNone(email_device.password)
-        self.assertIsNone(email_device.timeout)
-        self.assertEqual(email_device.failure_count, 0)
+        email_token = EmailToken.objects.get(user_id=user.id)
+        self.assertEqual(email_token.email, user.email)
+        self.assertFalse(email_token.verified)
+        self.assertIsNone(email_token.password)
+        self.assertIsNone(email_token.timeout)
+        self.assertEqual(email_token.failure_count, 0)
 
     def test_post_save_signal_create_user_with_phone(self):
         from django_flex_user.models.flex_user import FlexUser
@@ -344,12 +344,12 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        phone_device = PhoneToken.objects.get(user_id=user.id)
-        self.assertEqual(phone_device.phone, user.phone)
-        self.assertFalse(phone_device.verified)
-        self.assertIsNone(phone_device.password)
-        self.assertIsNone(phone_device.timeout)
-        self.assertEqual(phone_device.failure_count, 0)
+        phone_token = PhoneToken.objects.get(user_id=user.id)
+        self.assertEqual(phone_token.phone, user.phone)
+        self.assertFalse(phone_token.verified)
+        self.assertIsNone(phone_token.password)
+        self.assertIsNone(phone_token.timeout)
+        self.assertEqual(phone_token.failure_count, 0)
 
     def test_post_save_signal_add_email(self):
         from django_flex_user.models.flex_user import FlexUser
@@ -364,12 +364,12 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        email_device = EmailToken.objects.get(user_id=user.id)
-        self.assertEqual(email_device.email, user.email)
-        self.assertFalse(email_device.verified)
-        self.assertIsNone(email_device.password)
-        self.assertIsNone(email_device.timeout)
-        self.assertEqual(email_device.failure_count, 0)
+        email_token = EmailToken.objects.get(user_id=user.id)
+        self.assertEqual(email_token.email, user.email)
+        self.assertFalse(email_token.verified)
+        self.assertIsNone(email_token.password)
+        self.assertIsNone(email_token.timeout)
+        self.assertEqual(email_token.failure_count, 0)
 
     def test_post_save_signal_add_phone(self):
         from django_flex_user.models.flex_user import FlexUser
@@ -384,12 +384,12 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        phone_device = PhoneToken.objects.get(user_id=user.id)
-        self.assertEqual(phone_device.phone, user.phone)
-        self.assertFalse(phone_device.verified)
-        self.assertIsNone(phone_device.password)
-        self.assertIsNone(phone_device.timeout)
-        self.assertEqual(phone_device.failure_count, 0)
+        phone_token = PhoneToken.objects.get(user_id=user.id)
+        self.assertEqual(phone_token.phone, user.phone)
+        self.assertFalse(phone_token.verified)
+        self.assertIsNone(phone_token.password)
+        self.assertIsNone(phone_token.timeout)
+        self.assertEqual(phone_token.failure_count, 0)
 
     def test_post_save_signal_remove_email(self):
         from django_flex_user.models.flex_user import FlexUser
@@ -434,12 +434,12 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        email_device = EmailToken.objects.get(user_id=user.id)
-        self.assertEqual(email_device.email, user.email)
-        self.assertFalse(email_device.verified)
-        self.assertIsNone(email_device.password)
-        self.assertIsNone(email_device.timeout)
-        self.assertEqual(email_device.failure_count, 0)
+        email_token = EmailToken.objects.get(user_id=user.id)
+        self.assertEqual(email_token.email, user.email)
+        self.assertFalse(email_token.verified)
+        self.assertIsNone(email_token.password)
+        self.assertIsNone(email_token.timeout)
+        self.assertEqual(email_token.failure_count, 0)
 
     def test_test_post_save_signal_update_phone(self):
         from django_flex_user.models.flex_user import FlexUser
@@ -454,9 +454,9 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        phone_device = PhoneToken.objects.get(user_id=user.id)
-        self.assertEqual(phone_device.phone, user.phone)
-        self.assertFalse(phone_device.verified)
-        self.assertIsNone(phone_device.password)
-        self.assertIsNone(phone_device.timeout)
-        self.assertEqual(phone_device.failure_count, 0)
+        phone_token = PhoneToken.objects.get(user_id=user.id)
+        self.assertEqual(phone_token.phone, user.phone)
+        self.assertFalse(phone_token.verified)
+        self.assertIsNone(phone_token.password)
+        self.assertIsNone(phone_token.timeout)
+        self.assertEqual(phone_token.failure_count, 0)

@@ -491,9 +491,9 @@ class TestUserSerializer(TestCase):
         self.assertIsNone(serializer.data['phone_verified'])
 
         # Verify email address
-        email_device = EmailToken.objects.get(user=user)
-        email_device.generate_password()
-        email_device.check_password(email_device.password)
+        email_token = EmailToken.objects.get(user=user)
+        email_token.generate_password()
+        email_token.check_password(email_token.password)
 
         # Reload data from db
         user.refresh_from_db()
@@ -517,9 +517,9 @@ class TestUserSerializer(TestCase):
         self.assertIsNone(serializer.data['email_verified'])
 
         # Verify phone number
-        phone_device = PhoneToken.objects.get(user=user)
-        phone_device.generate_password()
-        phone_device.check_password(phone_device.password)
+        phone_token = PhoneToken.objects.get(user=user)
+        phone_token.generate_password()
+        phone_token.check_password(phone_token.password)
 
         # Reload data from db
         user.refresh_from_db()

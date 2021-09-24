@@ -147,26 +147,26 @@ class EmailToken(generics.GenericAPIView):
     permission_classes = [AllowAny]
 
     def get(self, request, pk):
-        email_device = self.get_object()
-        email_device.generate_password()
+        email_token = self.get_object()
+        email_token.generate_password()
         try:
-            email_device.send_password()
+            email_token.send_password()
         except (TransmissionError, NotImplementedError):
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             return Response(status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request, pk):
-        email_device = self.get_object()
+        email_token = self.get_object()
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             try:
-                success = email_device.check_password(serializer.validated_data['password'])
+                success = email_token.check_password(serializer.validated_data['password'])
             except TimeoutError:
                 return Response(status=status.HTTP_429_TOO_MANY_REQUESTS)
             else:
                 if success:
-                    jwt = RefreshToken.for_user(email_device.user)
+                    jwt = RefreshToken.for_user(email_token.user)
                     return Response({'refresh': str(jwt), 'access': str(jwt.access_token)}, status=status.HTTP_200_OK)
                 else:
                     return Response(status=status.HTTP_401_UNAUTHORIZED)
