@@ -16,22 +16,22 @@ class TestEmailToken(TestCase):
     def test_generate_password(self):
         self.otp_token.generate_password()
 
-        self.assertFalse(self.otp_token.confirmed)
+        self.assertFalse(self.otp_token.verified)
         self.assertIsNotNone(self.otp_token.password)
         self.assertNotEqual(self.otp_token.password, '')
         # note eben: Because escape characters are inserted into the password string, the password string's length may
         # be greater than or equal to its configured length
         self.assertGreaterEqual(len(self.otp_token.password), self.otp_token.password_length)
-        self.assertIsNone(self.otp_token.verification_timeout)
-        self.assertEqual(self.otp_token.verification_failure_count, 0)
+        self.assertIsNone(self.otp_token.timeout)
+        self.assertEqual(self.otp_token.failure_count, 0)
 
     def test_generate_password_verify_password_undefined(self):
         self.otp_token.generate_password()
 
-        self.assertRaises(TypeError, self.otp_token.verify_password)
-        self.assertFalse(self.otp_token.confirmed)
-        self.assertIsNone(self.otp_token.verification_timeout)
-        self.assertEqual(self.otp_token.verification_failure_count, 0)
+        self.assertRaises(TypeError, self.otp_token.check_password)
+        self.assertFalse(self.otp_token.verified)
+        self.assertIsNone(self.otp_token.timeout)
+        self.assertEqual(self.otp_token.failure_count, 0)
 
     def test_generate_password_verify_password_none(self):
         from freezegun import freeze_time
@@ -41,10 +41,10 @@ class TestEmailToken(TestCase):
         self.otp_token.generate_password()
 
         with freeze_time():
-            self.assertFalse(self.otp_token.verify_password(None))
-            self.assertFalse(self.otp_token.confirmed)
-            self.assertEqual(self.otp_token.verification_timeout, timezone.now() + timedelta(seconds=1))
-            self.assertEqual(self.otp_token.verification_failure_count, 1)
+            self.assertFalse(self.otp_token.check_password(None))
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.otp_token.failure_count, 1)
 
     def test_generate_password_verify_password_empty_string(self):
         from freezegun import freeze_time
@@ -54,18 +54,18 @@ class TestEmailToken(TestCase):
         self.otp_token.generate_password()
 
         with freeze_time():
-            self.assertFalse(self.otp_token.verify_password(''))
-            self.assertFalse(self.otp_token.confirmed)
-            self.assertEqual(self.otp_token.verification_timeout, timezone.now() + timedelta(seconds=1))
-            self.assertEqual(self.otp_token.verification_failure_count, 1)
+            self.assertFalse(self.otp_token.check_password(''))
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.otp_token.failure_count, 1)
 
     def test_generate_password_verify_password_valid_password(self):
         self.otp_token.generate_password()
 
-        self.assertTrue(self.otp_token.verify_password(self.otp_token.password))
-        self.assertTrue(self.otp_token.confirmed)
-        self.assertIsNone(self.otp_token.verification_timeout)
-        self.assertEqual(self.otp_token.verification_failure_count, 0)
+        self.assertTrue(self.otp_token.check_password(self.otp_token.password))
+        self.assertTrue(self.otp_token.verified)
+        self.assertIsNone(self.otp_token.timeout)
+        self.assertEqual(self.otp_token.failure_count, 0)
 
     def test_generate_password_verify_password_invalid_password(self):
         from freezegun import freeze_time
@@ -75,16 +75,16 @@ class TestEmailToken(TestCase):
         self.otp_token.generate_password()
 
         with freeze_time():
-            self.assertFalse(self.otp_token.verify_password('invalidPassword'))
-            self.assertFalse(self.otp_token.confirmed)
-            self.assertEqual(self.otp_token.verification_timeout, timezone.now() + timedelta(seconds=1))
-            self.assertEqual(self.otp_token.verification_failure_count, 1)
+            self.assertFalse(self.otp_token.check_password('invalidPassword'))
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.otp_token.failure_count, 1)
 
     def test_verify_password_undefined(self):
-        self.assertRaises(TypeError, self.otp_token.verify_password)
-        self.assertFalse(self.otp_token.confirmed)
-        self.assertIsNone(self.otp_token.verification_timeout)
-        self.assertEqual(self.otp_token.verification_failure_count, 0)
+        self.assertRaises(TypeError, self.otp_token.check_password)
+        self.assertFalse(self.otp_token.verified)
+        self.assertIsNone(self.otp_token.timeout)
+        self.assertEqual(self.otp_token.failure_count, 0)
 
     def test_verify_password_none(self):
         from freezegun import freeze_time
@@ -92,10 +92,10 @@ class TestEmailToken(TestCase):
         from datetime import timedelta
 
         with freeze_time():
-            self.assertFalse(self.otp_token.verify_password(None))
-            self.assertFalse(self.otp_token.confirmed)
-            self.assertEqual(self.otp_token.verification_timeout, timezone.now() + timedelta(seconds=1))
-            self.assertEqual(self.otp_token.verification_failure_count, 1)
+            self.assertFalse(self.otp_token.check_password(None))
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.otp_token.failure_count, 1)
 
     def test_verify_password_empty_string(self):
         from freezegun import freeze_time
@@ -103,10 +103,10 @@ class TestEmailToken(TestCase):
         from datetime import timedelta
 
         with freeze_time():
-            self.assertFalse(self.otp_token.verify_password(''))
-            self.assertFalse(self.otp_token.confirmed)
-            self.assertEqual(self.otp_token.verification_timeout, timezone.now() + timedelta(seconds=1))
-            self.assertEqual(self.otp_token.verification_failure_count, 1)
+            self.assertFalse(self.otp_token.check_password(''))
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.otp_token.failure_count, 1)
 
     def test_verify_password_valid_password(self):
         from freezegun import freeze_time
@@ -114,10 +114,10 @@ class TestEmailToken(TestCase):
         from datetime import timedelta
 
         with freeze_time():
-            self.assertFalse(self.otp_token.verify_password(self.otp_token.password))
-            self.assertFalse(self.otp_token.confirmed)
-            self.assertEqual(self.otp_token.verification_timeout, timezone.now() + timedelta(seconds=1))
-            self.assertEqual(self.otp_token.verification_failure_count, 1)
+            self.assertFalse(self.otp_token.check_password(self.otp_token.password))
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.otp_token.failure_count, 1)
 
     def test_verify_password_invalid_password(self):
         from freezegun import freeze_time
@@ -125,10 +125,10 @@ class TestEmailToken(TestCase):
         from datetime import timedelta
 
         with freeze_time():
-            self.assertFalse(self.otp_token.verify_password('invalidPassword'))
-            self.assertFalse(self.otp_token.confirmed)
-            self.assertEqual(self.otp_token.verification_timeout, timezone.now() + timedelta(seconds=1))
-            self.assertEqual(self.otp_token.verification_failure_count, 1)
+            self.assertFalse(self.otp_token.check_password('invalidPassword'))
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.otp_token.failure_count, 1)
 
     def test_verify_password_throttling(self):
         from django_flex_user.models.otp import TimeoutError
@@ -139,15 +139,15 @@ class TestEmailToken(TestCase):
         with freeze_time() as frozen_datetime:
             for i in range(0, 10):
                 # Try to verify an invalid password. The method should return false and set the timeout to 2^i seconds
-                success = self.otp_token.verify_password('invalidPassword')
+                success = self.otp_token.check_password('invalidPassword')
                 self.assertFalse(success)
 
                 # Here we simulate the timeout period. For each second of the timeout period we attempt to verify again.
                 # The verification method should raise an exception each time.
                 for j in range(0, 2 ** i):
                     # Try to verify again, the method should raise TimeoutError exception
-                    self.assertRaises(TimeoutError, self.otp_token.verify_password, 'invalidPassword')
+                    self.assertRaises(TimeoutError, self.otp_token.check_password, 'invalidPassword')
                     # The verify method should raise TimeoutError even if we submit the correct password
-                    self.assertRaises(TimeoutError, self.otp_token.verify_password, self.otp_token.password)
+                    self.assertRaises(TimeoutError, self.otp_token.check_password, self.otp_token.password)
                     # Advance time by 1 second
                     frozen_datetime.tick()

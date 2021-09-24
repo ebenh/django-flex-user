@@ -51,14 +51,14 @@ class TestEmailTokenUpdate(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
         self.otp_token.refresh_from_db()
-        self.assertFalse(self.otp_token.confirmed)
+        self.assertFalse(self.otp_token.verified)
         self.assertIsNotNone(self.otp_token.password)
         self.assertNotEqual(self.otp_token.password, '')
         # note eben: Because escape characters are inserted into the password string, the password string's length may
         # be greater than or equal to its configured length
         self.assertGreaterEqual(len(self.otp_token.password), self.otp_token.password_length)
-        self.assertIsNone(self.otp_token.verification_timeout)
-        self.assertEqual(self.otp_token.verification_failure_count, 0)
+        self.assertIsNone(self.otp_token.timeout)
+        self.assertEqual(self.otp_token.failure_count, 0)
 
     def test_method_post_format_application_json_generate_password_validate_password(self):
         from django.db import transaction
@@ -88,9 +88,9 @@ class TestEmailTokenUpdate(APITestCase):
 
                     self.otp_token.refresh_from_db()
                     self.assertIsNotNone(self.otp_token.password)
-                    self.assertFalse(self.otp_token.confirmed)
-                    self.assertIsNone(self.otp_token.verification_timeout)
-                    self.assertEqual(self.otp_token.verification_failure_count, 0)
+                    self.assertFalse(self.otp_token.verified)
+                    self.assertIsNone(self.otp_token.timeout)
+                    self.assertEqual(self.otp_token.failure_count, 0)
                 elif data['password'] == 'validPassword':
                     """
                     If the supplied password is defined and valid, django_flex_user.views.EmailToken.post should
@@ -100,9 +100,9 @@ class TestEmailTokenUpdate(APITestCase):
 
                     self.otp_token.refresh_from_db()
                     self.assertIsNone(self.otp_token.password)
-                    self.assertTrue(self.otp_token.confirmed)
-                    self.assertIsNone(self.otp_token.verification_timeout)
-                    self.assertEqual(self.otp_token.verification_failure_count, 0)
+                    self.assertTrue(self.otp_token.verified)
+                    self.assertIsNone(self.otp_token.timeout)
+                    self.assertEqual(self.otp_token.failure_count, 0)
                 elif data['password'] == 'invalidPassword':
                     """
                     If the supplied password is defined and invalid, django_flex_user.views.EmailToken.post
@@ -112,9 +112,9 @@ class TestEmailTokenUpdate(APITestCase):
 
                     self.otp_token.refresh_from_db()
                     self.assertIsNotNone(self.otp_token.password)
-                    self.assertFalse(self.otp_token.confirmed)
-                    self.assertEqual(self.otp_token.verification_timeout, timezone.now() + timedelta(seconds=1))
-                    self.assertEqual(self.otp_token.verification_failure_count, 1)
+                    self.assertFalse(self.otp_token.verified)
+                    self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+                    self.assertEqual(self.otp_token.failure_count, 1)
                 else:
                     self.assertFalse(True)
 
@@ -148,9 +148,9 @@ class TestEmailTokenUpdate(APITestCase):
 
                     self.otp_token.refresh_from_db()
                     self.assertIsNotNone(self.otp_token.password)
-                    self.assertFalse(self.otp_token.confirmed)
-                    self.assertIsNone(self.otp_token.verification_timeout)
-                    self.assertEqual(self.otp_token.verification_failure_count, 0)
+                    self.assertFalse(self.otp_token.verified)
+                    self.assertIsNone(self.otp_token.timeout)
+                    self.assertEqual(self.otp_token.failure_count, 0)
                 elif data['password'] == 'validPassword':
                     """
                     If the supplied password is defined and valid, django_flex_user.views.EmailToken.post should
@@ -160,9 +160,9 @@ class TestEmailTokenUpdate(APITestCase):
 
                     self.otp_token.refresh_from_db()
                     self.assertIsNone(self.otp_token.password)
-                    self.assertTrue(self.otp_token.confirmed)
-                    self.assertIsNone(self.otp_token.verification_timeout)
-                    self.assertEqual(self.otp_token.verification_failure_count, 0)
+                    self.assertTrue(self.otp_token.verified)
+                    self.assertIsNone(self.otp_token.timeout)
+                    self.assertEqual(self.otp_token.failure_count, 0)
                 elif data['password'] == 'invalidPassword':
                     """
                     If the supplied password is defined and invalid, django_flex_user.views.EmailToken.post
@@ -172,9 +172,9 @@ class TestEmailTokenUpdate(APITestCase):
 
                     self.otp_token.refresh_from_db()
                     self.assertIsNotNone(self.otp_token.password)
-                    self.assertFalse(self.otp_token.confirmed)
-                    self.assertEqual(self.otp_token.verification_timeout, timezone.now() + timedelta(seconds=1))
-                    self.assertEqual(self.otp_token.verification_failure_count, 1)
+                    self.assertFalse(self.otp_token.verified)
+                    self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+                    self.assertEqual(self.otp_token.failure_count, 1)
                 else:
                     self.assertFalse(True)
 
@@ -207,9 +207,9 @@ class TestEmailTokenUpdate(APITestCase):
 
                     self.otp_token.refresh_from_db()
                     self.assertIsNone(self.otp_token.password)
-                    self.assertFalse(self.otp_token.confirmed)
-                    self.assertIsNone(self.otp_token.verification_timeout)
-                    self.assertEqual(self.otp_token.verification_failure_count, 0)
+                    self.assertFalse(self.otp_token.verified)
+                    self.assertIsNone(self.otp_token.timeout)
+                    self.assertEqual(self.otp_token.failure_count, 0)
                 elif data['password'] == 'invalidPassword':
                     """
                     If the supplied password is defined and invalid, or defined and valid,
@@ -219,9 +219,9 @@ class TestEmailTokenUpdate(APITestCase):
 
                     self.otp_token.refresh_from_db()
                     self.assertIsNone(self.otp_token.password)
-                    self.assertFalse(self.otp_token.confirmed)
-                    self.assertEqual(self.otp_token.verification_timeout, timezone.now() + timedelta(seconds=1))
-                    self.assertEqual(self.otp_token.verification_failure_count, 1)
+                    self.assertFalse(self.otp_token.verified)
+                    self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+                    self.assertEqual(self.otp_token.failure_count, 1)
                 else:
                     self.assertFalse(True)
 
@@ -257,9 +257,9 @@ class TestEmailTokenUpdate(APITestCase):
 
                     self.otp_token.refresh_from_db()
                     self.assertIsNone(self.otp_token.password)
-                    self.assertFalse(self.otp_token.confirmed)
-                    self.assertIsNone(self.otp_token.verification_timeout)
-                    self.assertEqual(self.otp_token.verification_failure_count, 0)
+                    self.assertFalse(self.otp_token.verified)
+                    self.assertIsNone(self.otp_token.timeout)
+                    self.assertEqual(self.otp_token.failure_count, 0)
                 elif data['password'] == 'invalidPassword':
                     """
                     If the supplied password is defined and invalid, or defined and valid,
@@ -269,9 +269,9 @@ class TestEmailTokenUpdate(APITestCase):
 
                     self.otp_token.refresh_from_db()
                     self.assertIsNone(self.otp_token.password)
-                    self.assertFalse(self.otp_token.confirmed)
-                    self.assertEqual(self.otp_token.verification_timeout, timezone.now() + timedelta(seconds=1))
-                    self.assertEqual(self.otp_token.verification_failure_count, 1)
+                    self.assertFalse(self.otp_token.verified)
+                    self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+                    self.assertEqual(self.otp_token.failure_count, 1)
                 else:
                     self.assertFalse(True)
 

@@ -32,22 +32,22 @@ class TransmissionError(Exception):
 
 class OTPToken(models.Model):
     user = models.ForeignKey('FlexUser', on_delete=models.CASCADE)
-    confirmed = models.BooleanField(_('confirmed'), default=False)
+    verified = models.BooleanField(_('token ownership verified'), default=False)
 
-    verification_timeout = models.DateTimeField(_('verification timeout'), null=True, blank=True)
-    verification_failure_count = models.PositiveIntegerField(_('verification failure count'), default=0)
+    timeout = models.DateTimeField(_('verification timeout'), null=True, blank=True)
+    failure_count = models.PositiveIntegerField(_('verification failure count'), default=0)
 
     def _set_timeout(self):
-        self.verification_timeout = timezone.now() + timedelta(seconds=2 ** self.verification_failure_count)
-        self.verification_failure_count += 1
+        self.timeout = timezone.now() + timedelta(seconds=2 ** self.failure_count)
+        self.failure_count += 1
 
     def _reset_timeout(self):
-        self.verification_timeout = None
-        self.verification_failure_count = 0
+        self.timeout = None
+        self.failure_count = 0
 
     def _is_timed_out(self):
-        if self.verification_timeout and timezone.now() < self.verification_timeout:
-            raise TimeoutError(self.verification_timeout, self.verification_failure_count,
+        if self.timeout and timezone.now() < self.timeout:
+            raise TimeoutError(self.timeout, self.failure_count,
                                       "Too many failed verification attempts. Please try again later.")
 
     def throttle_reset(fun):
@@ -71,7 +71,7 @@ class OTPToken(models.Model):
 
         return inner
 
-    def verify_password(self, password):
+    def check_password(self, password):
         raise NotImplementedError
 
     def get_name(self):
@@ -105,11 +105,11 @@ class SideChannelToken(OTPToken):
         self.password = password.encode('unicode_escape').decode('utf-8')
 
     @OTPToken.throttle
-    def verify_password(self, password):
+    def check_password(self, password):
         success = False if self.password is None else self.password == password
         if success:
             self.password = None
-            self.confirmed = True
+            self.verified = True
         return success
 
     def send_password(self):

@@ -161,7 +161,7 @@ class EmailToken(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             try:
-                success = email_device.verify_password(serializer.validated_data['password'])
+                success = email_device.check_password(serializer.validated_data['password'])
             except TimeoutError:
                 return Response(status=status.HTTP_429_TOO_MANY_REQUESTS)
             else:

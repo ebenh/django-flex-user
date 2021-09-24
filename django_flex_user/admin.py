@@ -105,7 +105,7 @@ admin.site.login_form = FlexUserAuthenticationForm
 
 
 class EmailTokenAdmin(admin.ModelAdmin):
-    readonly_fields = ['user', 'email', 'confirmed', 'password', 'verification_timeout', 'verification_failure_count']
+    readonly_fields = ['user', 'email', 'verified', 'password', 'timeout', 'failure_count']
 
     def has_add_permission(self, request):
         return False
@@ -118,7 +118,7 @@ class EmailTokenAdmin(admin.ModelAdmin):
 
 
 class PhoneTokenAdmin(admin.ModelAdmin):
-    readonly_fields = ['user', 'phone', 'confirmed', 'password', 'verification_timeout', 'verification_failure_count']
+    readonly_fields = ['user', 'phone', 'verified', 'password', 'timeout', 'failure_count']
 
     def has_add_permission(self, request):
         return False

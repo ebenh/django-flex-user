@@ -493,7 +493,7 @@ class TestUserSerializer(TestCase):
         # Verify email address
         email_device = EmailToken.objects.get(user=user)
         email_device.generate_password()
-        email_device.verify_password(email_device.password)
+        email_device.check_password(email_device.password)
 
         # Reload data from db
         user.refresh_from_db()
@@ -519,7 +519,7 @@ class TestUserSerializer(TestCase):
         # Verify phone number
         phone_device = PhoneToken.objects.get(user=user)
         phone_device.generate_password()
-        phone_device.verify_password(phone_device.password)
+        phone_device.check_password(phone_device.password)
 
         # Reload data from db
         user.refresh_from_db()
