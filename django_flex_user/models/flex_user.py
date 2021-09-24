@@ -265,19 +265,31 @@ def my_post_save_handler(sender, **kwargs):
         if user.phone is not None:
             PhoneToken.objects.create(user_id=user.id, phone=user.phone)
     else:
-        if 'email' in user.get_dirty_fields():
-            if user.email is None:
+        dirty_fields = user.get_dirty_fields(verbose=True)
+
+        if 'email' in dirty_fields:
+            if dirty_fields['email']['current'] is None:
+                # If the new value for email is None, delete the token
                 EmailToken.objects.get(user_id=user.id).delete()
+            elif dirty_fields['email']['saved'] is None:
+                # If the old value for email is None, create a new token
+                EmailToken.objects.create(user=user, email=dirty_fields['email']['current'])
             else:
-                email_token, created = EmailToken.objects.get_or_create(user=user)
+                # Otherwise, update the existing token
+                email_token = EmailToken.objects.get(user=user)
                 email_token.email = user.email
                 email_token.verified = False
                 email_token.save(update_fields=['email', 'verified'])
-        if 'phone' in user.get_dirty_fields():
-            if user.phone is None:
+        if 'phone' in dirty_fields:
+            if dirty_fields['phone']['current'] is None:
+                # If the new value for phone is None, delete the token
                 PhoneToken.objects.get(user_id=user.id).delete()
+            elif dirty_fields['phone']['saved'] is None:
+                # If the old value for phone is None, create a new token
+                PhoneToken.objects.create(user=user, phone=dirty_fields['phone']['current'])
             else:
-                phone_token, created = PhoneToken.objects.get_or_create(user=user)
+                # Otherwise, update the existing token
+                phone_token = PhoneToken.objects.get(user=user)
                 phone_token.phone = user.phone
                 phone_token.verified = False
                 phone_token.save(update_fields=['phone', 'verified'])
