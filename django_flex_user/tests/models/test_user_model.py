@@ -321,39 +321,39 @@ class TestUserModel(TestCase):
 
     def test_post_save_signal_create_user_with_email(self):
         from django_flex_user.models.flex_user import FlexUser
-        from django_flex_user.models.otp import EmailDevice
+        from django_flex_user.models.otp import EmailToken
 
         user = FlexUser(email='validEmail@example.com')
         user.set_unusable_password()
         user.full_clean()
         user.save()
 
-        email_device = EmailDevice.objects.get(user_id=user.id)
+        email_device = EmailToken.objects.get(user_id=user.id)
         self.assertEqual(email_device.email, user.email)
         self.assertFalse(email_device.confirmed)
-        self.assertIsNone(email_device.challenge)
+        self.assertIsNone(email_device.password)
         self.assertIsNone(email_device.verification_timeout)
         self.assertEqual(email_device.verification_failure_count, 0)
 
     def test_post_save_signal_create_user_with_phone(self):
         from django_flex_user.models.flex_user import FlexUser
-        from django_flex_user.models.otp import PhoneDevice
+        from django_flex_user.models.otp import PhoneToken
 
         user = FlexUser(phone='+12025551234')
         user.set_unusable_password()
         user.full_clean()
         user.save()
 
-        phone_device = PhoneDevice.objects.get(user_id=user.id)
+        phone_device = PhoneToken.objects.get(user_id=user.id)
         self.assertEqual(phone_device.phone, user.phone)
         self.assertFalse(phone_device.confirmed)
-        self.assertIsNone(phone_device.challenge)
+        self.assertIsNone(phone_device.password)
         self.assertIsNone(phone_device.verification_timeout)
         self.assertEqual(phone_device.verification_failure_count, 0)
 
     def test_post_save_signal_add_email(self):
         from django_flex_user.models.flex_user import FlexUser
-        from django_flex_user.models.otp import EmailDevice
+        from django_flex_user.models.otp import EmailToken
 
         user = FlexUser(username='validUsername')
         user.set_unusable_password()
@@ -364,16 +364,16 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        email_device = EmailDevice.objects.get(user_id=user.id)
+        email_device = EmailToken.objects.get(user_id=user.id)
         self.assertEqual(email_device.email, user.email)
         self.assertFalse(email_device.confirmed)
-        self.assertIsNone(email_device.challenge)
+        self.assertIsNone(email_device.password)
         self.assertIsNone(email_device.verification_timeout)
         self.assertEqual(email_device.verification_failure_count, 0)
 
     def test_post_save_signal_add_phone(self):
         from django_flex_user.models.flex_user import FlexUser
-        from django_flex_user.models.otp import PhoneDevice
+        from django_flex_user.models.otp import PhoneToken
 
         user = FlexUser(username='validUsername')
         user.set_unusable_password()
@@ -384,16 +384,16 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        phone_device = PhoneDevice.objects.get(user_id=user.id)
+        phone_device = PhoneToken.objects.get(user_id=user.id)
         self.assertEqual(phone_device.phone, user.phone)
         self.assertFalse(phone_device.confirmed)
-        self.assertIsNone(phone_device.challenge)
+        self.assertIsNone(phone_device.password)
         self.assertIsNone(phone_device.verification_timeout)
         self.assertEqual(phone_device.verification_failure_count, 0)
 
     def test_post_save_signal_remove_email(self):
         from django_flex_user.models.flex_user import FlexUser
-        from django_flex_user.models.otp import EmailDevice
+        from django_flex_user.models.otp import EmailToken
 
         user = FlexUser(username='validUsername', email='validEmail@example.com')
         user.set_unusable_password()
@@ -404,11 +404,11 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        self.assertRaises(EmailDevice.DoesNotExist, EmailDevice.objects.get, user_id=user.id)
+        self.assertRaises(EmailToken.DoesNotExist, EmailToken.objects.get, user_id=user.id)
 
     def test_post_save_signal_remove_phone(self):
         from django_flex_user.models.flex_user import FlexUser
-        from django_flex_user.models.otp import PhoneDevice
+        from django_flex_user.models.otp import PhoneToken
 
         user = FlexUser(username='validUsername', phone='+12025551234')
         user.set_unusable_password()
@@ -419,11 +419,11 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        self.assertRaises(PhoneDevice.DoesNotExist, PhoneDevice.objects.get, user_id=user.id)
+        self.assertRaises(PhoneToken.DoesNotExist, PhoneToken.objects.get, user_id=user.id)
 
     def test_post_save_signal_update_email(self):
         from django_flex_user.models.flex_user import FlexUser
-        from django_flex_user.models.otp import EmailDevice
+        from django_flex_user.models.otp import EmailToken
 
         user = FlexUser(username='validUsername', email='validEmail@example.com')
         user.set_unusable_password()
@@ -434,16 +434,16 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        email_device = EmailDevice.objects.get(user_id=user.id)
+        email_device = EmailToken.objects.get(user_id=user.id)
         self.assertEqual(email_device.email, user.email)
         self.assertFalse(email_device.confirmed)
-        self.assertIsNone(email_device.challenge)
+        self.assertIsNone(email_device.password)
         self.assertIsNone(email_device.verification_timeout)
         self.assertEqual(email_device.verification_failure_count, 0)
 
     def test_test_post_save_signal_update_phone(self):
         from django_flex_user.models.flex_user import FlexUser
-        from django_flex_user.models.otp import PhoneDevice
+        from django_flex_user.models.otp import PhoneToken
 
         user = FlexUser(username='validUsername', phone='+12025551234')
         user.set_unusable_password()
@@ -454,9 +454,9 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        phone_device = PhoneDevice.objects.get(user_id=user.id)
+        phone_device = PhoneToken.objects.get(user_id=user.id)
         self.assertEqual(phone_device.phone, user.phone)
         self.assertFalse(phone_device.confirmed)
-        self.assertIsNone(phone_device.challenge)
+        self.assertIsNone(phone_device.password)
         self.assertIsNone(phone_device.verification_timeout)
         self.assertEqual(phone_device.verification_failure_count, 0)

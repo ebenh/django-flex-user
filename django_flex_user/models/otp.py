@@ -30,7 +30,7 @@ class TransmissionError(Exception):
     pass
 
 
-class Device(models.Model):
+class OTPToken(models.Model):
     user = models.ForeignKey('FlexUser', on_delete=models.CASCADE)
     confirmed = models.BooleanField(_('confirmed'), default=False)
 
@@ -58,10 +58,10 @@ class Device(models.Model):
 
         return inner
 
-    def throttle(verify_challenge_fun):
-        def inner(self, challenge):
+    def throttle(fun):
+        def inner(self, password):
             self._is_timed_out()
-            success = verify_challenge_fun(self, challenge)
+            success = fun(self, password)
             if success:
                 self._reset_timeout()
             else:
@@ -71,7 +71,7 @@ class Device(models.Model):
 
         return inner
 
-    def verify_challenge(self, challenge):
+    def verify_password(self, password):
         raise NotImplementedError
 
     def get_name(self):
@@ -87,41 +87,41 @@ class Device(models.Model):
         abstract = True
 
 
-class OOBDevice(Device):
-    challenge = models.CharField(_('challenge'), blank=True, null=True, max_length=256)
+class SideChannelToken(OTPToken):
+    password = models.CharField(_('password'), blank=True, null=True, max_length=256)
 
     @property
-    def challenge_length(self):
+    def password_length(self):
         raise NotImplementedError
 
     @property
-    def challenge_alphabet(self):
+    def password_alphabet(self):
         raise NotImplementedError
 
-    @Device.throttle_reset
-    def generate_challenge(self):
-        challenge = ''.join(
-            random.SystemRandom().choice(self.challenge_alphabet) for _ in range(self.challenge_length))
-        self.challenge = challenge.encode('unicode_escape').decode('utf-8')
+    @OTPToken.throttle_reset
+    def generate_password(self):
+        password = ''.join(
+            random.SystemRandom().choice(self.password_alphabet) for _ in range(self.password_length))
+        self.password = password.encode('unicode_escape').decode('utf-8')
 
-    @Device.throttle
-    def verify_challenge(self, challenge):
-        success = False if self.challenge is None else self.challenge == challenge
+    @OTPToken.throttle
+    def verify_password(self, password):
+        success = False if self.password is None else self.password == password
         if success:
-            self.challenge = None
+            self.password = None
             self.confirmed = True
         return success
 
-    def send_challenge(self):
+    def send_password(self):
         raise NotImplementedError
 
     class Meta:
         abstract = True
 
 
-class EmailDevice(OOBDevice):
-    challenge_length = getattr(settings, 'FLEX_USER_EMAIL_CHALLENGE_LENGTH', 128)
-    challenge_alphabet = getattr(settings, 'FLEX_USER_EMAIL_CHALLENGE_ALPHABET', string.printable)
+class EmailToken(SideChannelToken):
+    password_length = getattr(settings, 'FLEX_USER_OTP_LENGTH_FOR_EMAIL_TOKEN', 128)
+    password_alphabet = getattr(settings, 'FLEX_USER_OTP_ALPHABET_FOR_EMAIL_TOKEN', string.printable)
 
     email = models.EmailField(_('email address'))
 
@@ -131,18 +131,18 @@ class EmailDevice(OOBDevice):
     def get_obscured_name(self):
         return obscure_email(self.email)
 
-    def send_challenge(self):
-        flex_user_email_function = getattr(settings, 'FLEX_USER_EMAIL_FUNCTION', None)
+    def send_password(self):
+        flex_user_email_function = getattr(settings, 'FLEX_USER_OTP_EMAIL_FUNCTION', None)
         if flex_user_email_function is None:
             raise NotImplementedError
 
         fun = get_module_member(flex_user_email_function)
-        fun(self.email, self.challenge)
+        fun(self.email, self.password)
 
 
-class PhoneDevice(OOBDevice):
-    challenge_length = getattr(settings, 'FLEX_USER_PHONE_CHALLENGE_LENGTH', 6)
-    challenge_alphabet = getattr(settings, 'FLEX_USER_PHONE_CHALLENGE_ALPHABET', string.digits)
+class PhoneToken(SideChannelToken):
+    password_length = getattr(settings, 'FLEX_USER_OTP_LENGTH_FOR_PHONE_TOKEN', 6)
+    password_alphabet = getattr(settings, 'FLEX_USER_OTP_ALPHABET_FOR_PHONE_TOKEN', string.digits)
 
     phone = PhoneNumberField(_('phone number'), )
 
@@ -152,10 +152,10 @@ class PhoneDevice(OOBDevice):
     def get_obscured_name(self):
         return obscure_phone(str(self.phone))
 
-    def send_challenge(self):
-        flex_user_sms_function = getattr(settings, 'FLEX_USER_SMS_FUNCTION', None)
+    def send_password(self):
+        flex_user_sms_function = getattr(settings, 'FLEX_USER_OTP_SMS_FUNCTION', None)
         if flex_user_sms_function is None:
             raise NotImplementedError
 
         fun = get_module_member(flex_user_sms_function)
-        fun(self.phone, self.challenge)
+        fun(self.phone, self.password)

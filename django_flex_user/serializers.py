@@ -11,7 +11,7 @@ from phonenumber_field.validators import validate_international_phonenumber
 from social_django.models import UserSocialAuth
 
 from .models import FlexUserUnicodeUsernameValidator
-from .models.otp import EmailDevice, PhoneDevice
+from .models.otp import EmailToken, PhoneToken
 
 UserModel = get_user_model()
 
@@ -27,8 +27,8 @@ class FlexUserSerializer(serializers.ModelSerializer):
     def get_email_verified(obj):
         confirmed = None
         try:
-            confirmed = EmailDevice.objects.get(user=obj.id).confirmed
-        except EmailDevice.DoesNotExist:
+            confirmed = EmailToken.objects.get(user=obj.id).confirmed
+        except EmailToken.DoesNotExist:
             pass
         return confirmed
 
@@ -36,8 +36,8 @@ class FlexUserSerializer(serializers.ModelSerializer):
     def get_phone_verified(obj):
         confirmed = None
         try:
-            confirmed = PhoneDevice.objects.get(user=obj.id).confirmed
-        except PhoneDevice.DoesNotExist:
+            confirmed = PhoneToken.objects.get(user=obj.id).confirmed
+        except PhoneToken.DoesNotExist:
             pass
         return confirmed
 
@@ -207,8 +207,8 @@ class AuthenticationSerializer(serializers.Serializer):
     def get_email_verified(obj):
         confirmed = None
         try:
-            confirmed = EmailDevice.objects.get(user=obj.id).confirmed
-        except EmailDevice.DoesNotExist:
+            confirmed = EmailToken.objects.get(user=obj.id).confirmed
+        except EmailToken.DoesNotExist:
             pass
         return confirmed
 
@@ -216,8 +216,8 @@ class AuthenticationSerializer(serializers.Serializer):
     def get_phone_verified(obj):
         confirmed = None
         try:
-            confirmed = PhoneDevice.objects.get(user=obj.id).confirmed
-        except PhoneDevice.DoesNotExist:
+            confirmed = PhoneToken.objects.get(user=obj.id).confirmed
+        except PhoneToken.DoesNotExist:
             pass
         return confirmed
 
@@ -335,7 +335,7 @@ class EmailDeviceSerializer(serializers.ModelSerializer):
         return obj.get_obscured_name()
 
     class Meta:
-        model = EmailDevice
+        model = EmailToken
         fields = ['id', 'name']
 
 
@@ -347,5 +347,5 @@ class PhoneDeviceSerializer(serializers.ModelSerializer):
         return obj.get_obscured_name()
 
     class Meta:
-        model = PhoneDevice
+        model = PhoneToken
         fields = ['id', 'name']

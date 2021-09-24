@@ -33,8 +33,8 @@ class TestOTPDevicesRetrieve(APITestCase):
         self.assertEqual(
             response.data,
             {
-                'EmailDevice': [],
-                'PhoneDevice': []
+                'EmailToken': [],
+                'PhoneToken': []
             }
         )
 
@@ -47,13 +47,13 @@ class TestOTPDevicesRetrieve(APITestCase):
                     self.assertEqual(
                         response.data,
                         {
-                            'EmailDevice': [
+                            'EmailToken': [
                                 {
                                     'id': 1,
                                     'name': 'va*********@ex*****.***'
                                 }
                             ],
-                            'PhoneDevice': [
+                            'PhoneToken': [
                                 {
                                     'id': 1,
                                     'name': '+*********01'
@@ -65,8 +65,8 @@ class TestOTPDevicesRetrieve(APITestCase):
                     self.assertEqual(
                         response.data,
                         {
-                            'EmailDevice': [],
-                            'PhoneDevice': []
+                            'EmailToken': [],
+                            'PhoneToken': []
                         }
                     )
 

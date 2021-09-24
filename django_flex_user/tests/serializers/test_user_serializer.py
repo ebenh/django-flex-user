@@ -478,7 +478,7 @@ class TestUserSerializer(TestCase):
         self.assertEqual(user.email, 'validEmail@xn--bcher-kva.example')
 
     def test_email_verified(self):
-        from django_flex_user.models import FlexUser, EmailDevice
+        from django_flex_user.models import FlexUser, EmailToken
         from django_flex_user.serializers import FlexUserSerializer
 
         # Create user
@@ -491,9 +491,9 @@ class TestUserSerializer(TestCase):
         self.assertIsNone(serializer.data['phone_verified'])
 
         # Verify email address
-        email_device = EmailDevice.objects.get(user=user)
-        email_device.generate_challenge()
-        email_device.verify_challenge(email_device.challenge)
+        email_device = EmailToken.objects.get(user=user)
+        email_device.generate_password()
+        email_device.verify_password(email_device.password)
 
         # Reload data from db
         user.refresh_from_db()
@@ -504,7 +504,7 @@ class TestUserSerializer(TestCase):
         self.assertIsNone(serializer.data['phone_verified'])
 
     def test_phone_verified(self):
-        from django_flex_user.models import FlexUser, PhoneDevice
+        from django_flex_user.models import FlexUser, PhoneToken
         from django_flex_user.serializers import FlexUserSerializer
 
         # Create user
@@ -517,9 +517,9 @@ class TestUserSerializer(TestCase):
         self.assertIsNone(serializer.data['email_verified'])
 
         # Verify phone number
-        phone_device = PhoneDevice.objects.get(user=user)
-        phone_device.generate_challenge()
-        phone_device.verify_challenge(phone_device.challenge)
+        phone_device = PhoneToken.objects.get(user=user)
+        phone_device.generate_password()
+        phone_device.verify_password(phone_device.password)
 
         # Reload data from db
         user.refresh_from_db()

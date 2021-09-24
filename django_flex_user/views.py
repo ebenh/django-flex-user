@@ -16,7 +16,7 @@ from drf_multiple_model.views import ObjectMultipleModelAPIView
 
 from social_django.models import UserSocialAuth
 
-from .models.otp import EmailDevice, PhoneDevice, TransmissionError, TimeoutError
+from .models.otp import EmailToken, PhoneToken, TransmissionError, TimeoutError
 from .validators import FlexUserUnicodeUsernameValidator
 
 from .serializers import FlexUserSerializer, AuthenticationSerializer, UserSocialAuthSerializer, \
@@ -135,22 +135,22 @@ class OTPDevices(ObjectMultipleModelAPIView):
     permission_classes = [AllowAny]
 
     querylist = (
-        {'queryset': EmailDevice.objects.all(), 'serializer_class': EmailDeviceSerializer, 'filter_fn': my_filter},
-        {'queryset': PhoneDevice.objects.all(), 'serializer_class': PhoneDeviceSerializer, 'filter_fn': my_filter},
+        {'queryset': EmailToken.objects.all(), 'serializer_class': EmailDeviceSerializer, 'filter_fn': my_filter},
+        {'queryset': PhoneToken.objects.all(), 'serializer_class': PhoneDeviceSerializer, 'filter_fn': my_filter},
     )
 
 
 class OTPEmailDevice(generics.GenericAPIView):
-    queryset = EmailDevice.objects.all()
+    queryset = EmailToken.objects.all()
     serializer_class = OTPSerializer
     authentication_classes = [SessionAuthentication]
     permission_classes = [AllowAny]
 
     def get(self, request, pk):
         email_device = self.get_object()
-        email_device.generate_challenge()
+        email_device.generate_password()
         try:
-            email_device.send_challenge()
+            email_device.send_password()
         except (TransmissionError, NotImplementedError):
             return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
@@ -161,7 +161,7 @@ class OTPEmailDevice(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             try:
-                success = email_device.verify_challenge(serializer.validated_data['challenge'])
+                success = email_device.verify_password(serializer.validated_data['challenge'])
             except TimeoutError:
                 return Response(status=status.HTTP_429_TOO_MANY_REQUESTS)
             else:
@@ -175,5 +175,5 @@ class OTPEmailDevice(generics.GenericAPIView):
 
 
 class OTPPhoneDevice(OTPEmailDevice):
-    queryset = PhoneDevice.objects.all()
+    queryset = PhoneToken.objects.all()
     serializer_class = OTPSerializer

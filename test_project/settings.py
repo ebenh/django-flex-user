@@ -269,8 +269,8 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 # Configure django-flex-user
 #
 
-FLEX_USER_EMAIL_FUNCTION = 'test_project.verification.email_otp'
-FLEX_USER_SMS_FUNCTION = 'test_project.verification.sms_otp'
+FLEX_USER_OTP_EMAIL_FUNCTION = 'test_project.verification.email_otp'
+FLEX_USER_OTP_SMS_FUNCTION = 'test_project.verification.sms_otp'
 
 #
 # Configure SendGrid

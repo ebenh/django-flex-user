@@ -8,10 +8,10 @@ class TestPhoneDeviceSerializer(TestCase):
 
     def setUp(self):
         from django_flex_user.models import FlexUser
-        from django_flex_user.models import PhoneDevice
+        from django_flex_user.models import PhoneToken
 
         user = FlexUser.objects.create_user(phone='+12025550001')
-        self.phone_device = PhoneDevice.objects.get(user=user)
+        self.phone_device = PhoneToken.objects.get(user=user)
 
     def test_serialize(self):
         from django_flex_user.serializers import PhoneDeviceSerializer

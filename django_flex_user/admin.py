@@ -7,7 +7,7 @@ from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.utils.translation import gettext_lazy as _
 
 from .forms import FlexUserAuthenticationForm
-from .models.otp import EmailDevice, PhoneDevice
+from .models.otp import EmailToken, PhoneToken
 
 # Reference: https://docs.djangoproject.com/en/3.0/topics/auth/customizing/
 
@@ -105,7 +105,7 @@ admin.site.login_form = FlexUserAuthenticationForm
 
 
 class EmailDeviceAdmin(admin.ModelAdmin):
-    readonly_fields = ['user', 'email', 'confirmed', 'challenge', 'verification_timeout', 'verification_failure_count']
+    readonly_fields = ['user', 'email', 'confirmed', 'password', 'verification_timeout', 'verification_failure_count']
 
     def has_add_permission(self, request):
         return False
@@ -118,7 +118,7 @@ class EmailDeviceAdmin(admin.ModelAdmin):
 
 
 class PhoneDeviceAdmin(admin.ModelAdmin):
-    readonly_fields = ['user', 'phone', 'confirmed', 'challenge', 'verification_timeout', 'verification_failure_count']
+    readonly_fields = ['user', 'phone', 'confirmed', 'password', 'verification_timeout', 'verification_failure_count']
 
     def has_add_permission(self, request):
         return False
@@ -130,5 +130,5 @@ class PhoneDeviceAdmin(admin.ModelAdmin):
         return False
 
 
-admin.site.register(EmailDevice, EmailDeviceAdmin)
-admin.site.register(PhoneDevice, PhoneDeviceAdmin)
+admin.site.register(EmailToken, EmailDeviceAdmin)
+admin.site.register(PhoneToken, PhoneDeviceAdmin)

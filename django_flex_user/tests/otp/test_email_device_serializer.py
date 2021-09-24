@@ -8,10 +8,10 @@ class TestEmailDeviceSerializer(TestCase):
 
     def setUp(self):
         from django_flex_user.models import FlexUser
-        from django_flex_user.models import EmailDevice
+        from django_flex_user.models import EmailToken
 
         user = FlexUser.objects.create_user(email='validEmail1@example.com')
-        self.email_device = EmailDevice.objects.get(user=user)
+        self.email_device = EmailToken.objects.get(user=user)
 
     def test_serialize(self):
         from django_flex_user.serializers import EmailDeviceSerializer

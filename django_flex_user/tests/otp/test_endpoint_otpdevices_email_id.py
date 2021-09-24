@@ -28,10 +28,10 @@ class TestEmailDeviceUpdate(APITestCase):
 
     def setUp(self):
         from django_flex_user.models import FlexUser
-        from django_flex_user.models import EmailDevice
+        from django_flex_user.models import EmailToken
 
         user = FlexUser.objects.create_user(email='validEmail@example.com')
-        self.otp_device = EmailDevice.objects.get(user=user)
+        self.otp_device = EmailToken.objects.get(user=user)
         self._REST_ENDPOINT_PATH = TestEmailDeviceUpdate._REST_ENDPOINT_PATH.format(type='email', id=self.otp_device.id)
 
     def test_method_get(self):
@@ -40,11 +40,11 @@ class TestEmailDeviceUpdate(APITestCase):
 
         self.otp_device.refresh_from_db()
         self.assertFalse(self.otp_device.confirmed)
-        self.assertIsNotNone(self.otp_device.challenge)
-        self.assertNotEqual(self.otp_device.challenge, '')
+        self.assertIsNotNone(self.otp_device.password)
+        self.assertNotEqual(self.otp_device.password, '')
         # note eben: Because escape characters are inserted into the challenge string, the challenge string's length may
         # be greater than or equal to its configured length
-        self.assertGreaterEqual(len(self.otp_device.challenge), self.otp_device.challenge_length)
+        self.assertGreaterEqual(len(self.otp_device.password), self.otp_device.password_length)
         self.assertIsNone(self.otp_device.verification_timeout)
         self.assertEqual(self.otp_device.verification_failure_count, 0)
 
@@ -54,7 +54,7 @@ class TestEmailDeviceUpdate(APITestCase):
         from django.utils import timezone
         from datetime import timedelta
 
-        self.otp_device.generate_challenge()
+        self.otp_device.generate_password()
 
         for data in self._ContentType.ApplicationJSON.challenge_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
@@ -63,7 +63,7 @@ class TestEmailDeviceUpdate(APITestCase):
                 When the value for "challenge" is "validChallenge" we replace it with the actual challenge stored in
                 self.otp_device.challenge before passing it to the POST method.
                 """
-                d = {'challenge': self.otp_device.challenge} if data.get('challenge') == 'validChallenge' else data
+                d = {'challenge': self.otp_device.password} if data.get('challenge') == 'validChallenge' else data
 
                 response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='json')
 
@@ -75,7 +75,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
                     self.otp_device.refresh_from_db()
-                    self.assertIsNotNone(self.otp_device.challenge)
+                    self.assertIsNotNone(self.otp_device.password)
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertIsNone(self.otp_device.verification_timeout)
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
@@ -87,7 +87,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
                     self.otp_device.refresh_from_db()
-                    self.assertIsNone(self.otp_device.challenge)
+                    self.assertIsNone(self.otp_device.password)
                     self.assertTrue(self.otp_device.confirmed)
                     self.assertIsNone(self.otp_device.verification_timeout)
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
@@ -99,7 +99,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
                     self.otp_device.refresh_from_db()
-                    self.assertIsNotNone(self.otp_device.challenge)
+                    self.assertIsNotNone(self.otp_device.password)
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertEqual(self.otp_device.verification_timeout, timezone.now() + timedelta(seconds=1))
                     self.assertEqual(self.otp_device.verification_failure_count, 1)
@@ -114,7 +114,7 @@ class TestEmailDeviceUpdate(APITestCase):
         from django.utils import timezone
         from datetime import timedelta
 
-        self.otp_device.generate_challenge()
+        self.otp_device.generate_password()
 
         for data in self._ContentType.MultipartFormData.challenge_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
@@ -123,7 +123,7 @@ class TestEmailDeviceUpdate(APITestCase):
                 When the value for "challenge" is "validChallenge" we replace it with the actual challenge stored in
                 self.otp_device.challenge before passing it to the POST method.
                 """
-                d = {'challenge': self.otp_device.challenge} if data.get('challenge') == 'validChallenge' else data
+                d = {'challenge': self.otp_device.password} if data.get('challenge') == 'validChallenge' else data
 
                 response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='multipart')
 
@@ -135,7 +135,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
                     self.otp_device.refresh_from_db()
-                    self.assertIsNotNone(self.otp_device.challenge)
+                    self.assertIsNotNone(self.otp_device.password)
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertIsNone(self.otp_device.verification_timeout)
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
@@ -147,7 +147,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
                     self.otp_device.refresh_from_db()
-                    self.assertIsNone(self.otp_device.challenge)
+                    self.assertIsNone(self.otp_device.password)
                     self.assertTrue(self.otp_device.confirmed)
                     self.assertIsNone(self.otp_device.verification_timeout)
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
@@ -159,7 +159,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
                     self.otp_device.refresh_from_db()
-                    self.assertIsNotNone(self.otp_device.challenge)
+                    self.assertIsNotNone(self.otp_device.password)
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertEqual(self.otp_device.verification_timeout, timezone.now() + timedelta(seconds=1))
                     self.assertEqual(self.otp_device.verification_failure_count, 1)
@@ -181,7 +181,7 @@ class TestEmailDeviceUpdate(APITestCase):
                 When the value for "challenge" is "validChallenge" we replace it with the actual challenge stored in
                 self.otp_device.challenge before passing it to the POST method.
                 """
-                d = {'challenge': self.otp_device.challenge} if data.get('challenge') == 'validChallenge' else data
+                d = {'challenge': self.otp_device.password} if data.get('challenge') == 'validChallenge' else data
 
                 response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='json')
 
@@ -194,7 +194,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
                     self.otp_device.refresh_from_db()
-                    self.assertIsNone(self.otp_device.challenge)
+                    self.assertIsNone(self.otp_device.password)
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertIsNone(self.otp_device.verification_timeout)
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
@@ -206,7 +206,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
                     self.otp_device.refresh_from_db()
-                    self.assertIsNone(self.otp_device.challenge)
+                    self.assertIsNone(self.otp_device.password)
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertEqual(self.otp_device.verification_timeout, timezone.now() + timedelta(seconds=1))
                     self.assertEqual(self.otp_device.verification_failure_count, 1)
@@ -231,7 +231,7 @@ class TestEmailDeviceUpdate(APITestCase):
                 Also, because mutlipart/form-data cannot accept None values, we perform an extra step to coerce
                 challenge values which are None to the empty string.
                 """
-                d = {'challenge': self.otp_device.challenge or ''} if data.get('challenge') == 'validChallenge' else data
+                d = {'challenge': self.otp_device.password or ''} if data.get('challenge') == 'validChallenge' else data
 
                 response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='multipart')
 
@@ -244,7 +244,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
                     self.otp_device.refresh_from_db()
-                    self.assertIsNone(self.otp_device.challenge)
+                    self.assertIsNone(self.otp_device.password)
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertIsNone(self.otp_device.verification_timeout)
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
@@ -256,7 +256,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
                     self.otp_device.refresh_from_db()
-                    self.assertIsNone(self.otp_device.challenge)
+                    self.assertIsNone(self.otp_device.password)
                     self.assertFalse(self.otp_device.confirmed)
                     self.assertEqual(self.otp_device.verification_timeout, timezone.now() + timedelta(seconds=1))
                     self.assertEqual(self.otp_device.verification_failure_count, 1)
@@ -268,7 +268,7 @@ class TestEmailDeviceUpdate(APITestCase):
     def test_method_post_throttling(self):
         from freezegun import freeze_time
 
-        self.otp_device.generate_challenge()
+        self.otp_device.generate_password()
 
         with freeze_time() as frozen_datetime:
             for i in range(0, 10):
@@ -294,7 +294,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     """
                     Try to verify a valid challenge.
                     """
-                    response = self.client.post(self._REST_ENDPOINT_PATH, data={'challenge': self.otp_device.challenge})
+                    response = self.client.post(self._REST_ENDPOINT_PATH, data={'challenge': self.otp_device.password})
                     self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
                     """
                     Advance time by one second.
