@@ -273,6 +273,7 @@ def my_post_save_handler(sender, **kwargs):
                 EmailToken.objects.get(user_id=user.id).delete()
             elif dirty_fields['email']['saved'] is None:
                 # If the old value for email is None, create a new token
+                # todo: construct this instance manually?
                 EmailToken.objects.create(user=user, email=dirty_fields['email']['current'])
             else:
                 # Otherwise, update the existing token
@@ -286,6 +287,7 @@ def my_post_save_handler(sender, **kwargs):
                 PhoneToken.objects.get(user_id=user.id).delete()
             elif dirty_fields['phone']['saved'] is None:
                 # If the old value for phone is None, create a new token
+                # todo: construct this instance manually?
                 PhoneToken.objects.create(user=user, phone=dirty_fields['phone']['current'])
             else:
                 # Otherwise, update the existing token
