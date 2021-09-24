@@ -264,19 +264,20 @@ def my_post_save_handler(sender, **kwargs):
             EmailToken.objects.create(user_id=user.id, email=user.email)
         if user.phone is not None:
             PhoneToken.objects.create(user_id=user.id, phone=user.phone)
-    if 'email' in user.get_dirty_fields():
-        if user.email is None:
-            EmailToken.objects.get(user_id=user.id).delete()
-        else:
-            email_device, created = EmailToken.objects.get_or_create(user=user)
-            email_device.email = user.email
-            email_device.verified = False
-            email_device.save(update_fields=['email', 'verified'])
-    if 'phone' in user.get_dirty_fields():
-        if user.phone is None:
-            PhoneToken.objects.get(user_id=user.id).delete()
-        else:
-            phone_device, created = PhoneToken.objects.get_or_create(user=user)
-            phone_device.phone = user.phone
-            phone_device.verified = False
-            phone_device.save(update_fields=['phone', 'verified'])
+    else:
+        if 'email' in user.get_dirty_fields():
+            if user.email is None:
+                EmailToken.objects.get(user_id=user.id).delete()
+            else:
+                email_device, created = EmailToken.objects.get_or_create(user=user)
+                email_device.email = user.email
+                email_device.verified = False
+                email_device.save(update_fields=['email', 'verified'])
+        if 'phone' in user.get_dirty_fields():
+            if user.phone is None:
+                PhoneToken.objects.get(user_id=user.id).delete()
+            else:
+                phone_device, created = PhoneToken.objects.get_or_create(user=user)
+                phone_device.phone = user.phone
+                phone_device.verified = False
+                phone_device.save(update_fields=['phone', 'verified'])
