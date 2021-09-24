@@ -269,10 +269,10 @@ def my_post_save_handler(sender, **kwargs):
 
         if 'email' in dirty_fields:
             if dirty_fields['email']['current'] is None:
-                # If the new value for email is None, delete the token
-                EmailToken.objects.get(user_id=user.id).delete()
+                # If the new value for email is None, delete the token if it exists
+                EmailToken.objects.filter(user_id=user.id).delete()
             elif dirty_fields['email']['saved'] is None:
-                # If the old value for email is None, create a new token
+                # If the old value for email is None and its new value is not None, create a new token
                 # todo: construct this instance manually?
                 EmailToken.objects.create(user=user, email=dirty_fields['email']['current'])
             else:
@@ -283,10 +283,10 @@ def my_post_save_handler(sender, **kwargs):
                 email_token.save(update_fields=['email', 'verified'])
         if 'phone' in dirty_fields:
             if dirty_fields['phone']['current'] is None:
-                # If the new value for phone is None, delete the token
-                PhoneToken.objects.get(user_id=user.id).delete()
+                # If the new value for phone is None, delete the token if it exists
+                PhoneToken.objects.filter(user_id=user.id).delete()
             elif dirty_fields['phone']['saved'] is None:
-                # If the old value for phone is None, create a new token
+                # If the old value for phone is None and its new value is not None, create a new token
                 # todo: construct this instance manually?
                 PhoneToken.objects.create(user=user, phone=dirty_fields['phone']['current'])
             else:
