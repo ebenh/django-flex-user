@@ -2,9 +2,9 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 
 
-class TestEmailDeviceUpdate(APITestCase):
+class TestEmailTokenUpdate(APITestCase):
     """
-    This class is designed to test django_flex_user.views.OTPEmailDevice
+    This class is designed to test django_flex_user.views.EmailToken
     """
     _REST_ENDPOINT_PATH = '/account/otp-devices/{type}/{id}'
 
@@ -32,7 +32,7 @@ class TestEmailDeviceUpdate(APITestCase):
 
         user = FlexUser.objects.create_user(email='validEmail@example.com')
         self.otp_device = EmailToken.objects.get(user=user)
-        self._REST_ENDPOINT_PATH = TestEmailDeviceUpdate._REST_ENDPOINT_PATH.format(type='email', id=self.otp_device.id)
+        self._REST_ENDPOINT_PATH = TestEmailTokenUpdate._REST_ENDPOINT_PATH.format(type='email', id=self.otp_device.id)
 
     def test_method_get(self):
         response = self.client.get(self._REST_ENDPOINT_PATH)
@@ -70,7 +70,7 @@ class TestEmailDeviceUpdate(APITestCase):
                 if not data.get('password'):
                     """
                     If the supplied password is either undefined, None or the empty string,
-                    django_flex_user.views.EmailDevice.post should return HTTP status code HTTP_400_BAD_REQUEST.
+                    django_flex_user.views.EmailToken.post should return HTTP status code HTTP_400_BAD_REQUEST.
                     """
                     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -81,7 +81,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
                 elif data['password'] == 'validPassword':
                     """
-                    If the supplied password is defined and valid, django_flex_user.views.EmailDevice.post should
+                    If the supplied password is defined and valid, django_flex_user.views.EmailToken.post should
                     return HTTP status code HTTP_200_OK.
                     """
                     self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -93,7 +93,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
                 elif data['password'] == 'invalidPassword':
                     """
-                    If the supplied password is defined and invalid, django_flex_user.views.EmailDevice.post
+                    If the supplied password is defined and invalid, django_flex_user.views.EmailToken.post
                     should return HTTP status code HTTP_401_UNAUTHORIZED.
                     """
                     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -130,7 +130,7 @@ class TestEmailDeviceUpdate(APITestCase):
                 if not data.get('password'):
                     """
                     If the supplied password is either undefined or the empty string,
-                    django_flex_user.views.EmailDevice.post should return HTTP status code HTTP_400_BAD_REQUEST.
+                    django_flex_user.views.EmailToken.post should return HTTP status code HTTP_400_BAD_REQUEST.
                     """
                     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -141,7 +141,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
                 elif data['password'] == 'validPassword':
                     """
-                    If the supplied password is defined and valid, django_flex_user.views.EmailDevice.post should
+                    If the supplied password is defined and valid, django_flex_user.views.EmailToken.post should
                     return HTTP status code HTTP_200_OK.
                     """
                     self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -153,7 +153,7 @@ class TestEmailDeviceUpdate(APITestCase):
                     self.assertEqual(self.otp_device.verification_failure_count, 0)
                 elif data['password'] == 'invalidPassword':
                     """
-                    If the supplied password is defined and invalid, django_flex_user.views.EmailDevice.post
+                    If the supplied password is defined and invalid, django_flex_user.views.EmailToken.post
                     should return HTTP status code HTTP_401_UNAUTHORIZED.
                     """
                     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -188,7 +188,7 @@ class TestEmailDeviceUpdate(APITestCase):
                 if not data.get('password') or data['password'] == 'validPassword':
                     """
                     If the supplied password is either undefined, None or the empty string OR if the supplied password
-                    is defined and valid the django_flex_user.views.EmailDevice.post should return HTTP status code
+                    is defined and valid the django_flex_user.views.EmailToken.post should return HTTP status code
                     HTTP_400_BAD_REQUEST.
                     """
                     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -201,7 +201,7 @@ class TestEmailDeviceUpdate(APITestCase):
                 elif data['password'] == 'invalidPassword':
                     """
                     If the supplied password is defined and invalid, or defined and valid,
-                    django_flex_user.views.EmailDevice.post should return HTTP status code HTTP_401_UNAUTHORIZED.
+                    django_flex_user.views.EmailToken.post should return HTTP status code HTTP_401_UNAUTHORIZED.
                     """
                     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -238,7 +238,7 @@ class TestEmailDeviceUpdate(APITestCase):
                 if not data.get('password') or data['password'] == 'validPassword':
                     """
                     If the supplied password is either undefined, None or the empty string OR if the supplied password
-                    is defined and valid the django_flex_user.views.EmailDevice.post should return HTTP status code
+                    is defined and valid the django_flex_user.views.EmailToken.post should return HTTP status code
                     HTTP_400_BAD_REQUEST.
                     """
                     self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -251,7 +251,7 @@ class TestEmailDeviceUpdate(APITestCase):
                 elif data['password'] == 'invalidPassword':
                     """
                     If the supplied password is defined and invalid, or defined and valid,
-                    django_flex_user.views.EmailDevice.post should return HTTP status code HTTP_401_UNAUTHORIZED.
+                    django_flex_user.views.EmailToken.post should return HTTP status code HTTP_401_UNAUTHORIZED.
                     """
                     self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -273,7 +273,7 @@ class TestEmailDeviceUpdate(APITestCase):
         with freeze_time() as frozen_datetime:
             for i in range(0, 10):
                 """
-                Here we try to verify an invalid password. django_flex_user.views.EmailDevice.post should return HTTP
+                Here we try to verify an invalid password. django_flex_user.views.EmailToken.post should return HTTP
                 status code HTTP_401_UNAUTHORIZED and subsequent verification attempts should be timed out for the next
                 2^i seconds.
                 """
@@ -282,7 +282,7 @@ class TestEmailDeviceUpdate(APITestCase):
 
                 """
                 Here we simulate the verification timeout period. For each second of the timeout period we attempt to
-                verify again. django_flex_user.views.EmailDevice.post should return HTTP status code
+                verify again. django_flex_user.views.EmailToken.post should return HTTP status code
                 HTTP_429_TOO_MANY_REQUESTS each time.
                 """
                 for j in range(0, 2 ** i):

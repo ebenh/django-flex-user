@@ -1,7 +1,7 @@
-from .test_endpoint_otpdevices_email_id import TestEmailDeviceUpdate
+from .test_endpoint_otpdevices_email_id import TestEmailTokenUpdate
 
 
-class TestPhoneDeviceUpdate(TestEmailDeviceUpdate):
+class TestPhoneDeviceUpdate(TestEmailTokenUpdate):
     """
     This class is designed to test django_flex_user.views.OTPPhoneDevice
     """
@@ -12,4 +12,4 @@ class TestPhoneDeviceUpdate(TestEmailDeviceUpdate):
 
         user = FlexUser.objects.create_user(phone='+12025551234')
         self.otp_device = PhoneToken.objects.get(user=user)
-        self._REST_ENDPOINT_PATH = TestEmailDeviceUpdate._REST_ENDPOINT_PATH.format(type='phone', id=self.otp_device.id)
+        self._REST_ENDPOINT_PATH = TestEmailTokenUpdate._REST_ENDPOINT_PATH.format(type='phone', id=self.otp_device.id)

@@ -327,7 +327,7 @@ class OTPSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
 
 
-class EmailDeviceSerializer(serializers.ModelSerializer):
+class EmailTokenSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField('get_name')
 
     @staticmethod

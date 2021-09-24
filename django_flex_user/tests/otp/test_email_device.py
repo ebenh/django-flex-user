@@ -1,9 +1,9 @@
 from django.test import TestCase
 
 
-class TestEmailDevice(TestCase):
+class TestEmailToken(TestCase):
     """
-    This class is designed to test django_flex_user.models.EmailDevice
+    This class is designed to test django_flex_user.models.EmailToken
     """
 
     def setUp(self):
