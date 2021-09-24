@@ -88,7 +88,7 @@ class OTPToken(models.Model):
 
 
 class SideChannelToken(OTPToken):
-    password = models.CharField(_('password'), blank=True, null=True, max_length=256)
+    password = models.CharField(_('password'), null=True, blank=True, max_length=256)
 
     @property
     def password_length(self):
