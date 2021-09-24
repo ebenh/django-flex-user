@@ -1,5 +1,11 @@
+from django.test import override_settings
+
 from rest_framework.test import APITestCase
 from rest_framework import status
+
+
+def _send_password(*args):
+    pass
 
 
 class TestEmailTokenUpdate(APITestCase):
@@ -34,6 +40,12 @@ class TestEmailTokenUpdate(APITestCase):
         self.otp_token = EmailToken.objects.get(user=user)
         self._REST_ENDPOINT_PATH = TestEmailTokenUpdate._REST_ENDPOINT_PATH.format(type='email', id=self.otp_token.id)
 
+    @override_settings(
+        FLEX_USER_OTP_EMAIL_FUNCTION='django_flex_user.tests.otp.test_endpoint_otp_tokens_email_id._send_password'
+    )
+    @override_settings(
+        FLEX_USER_OTP_SMS_FUNCTION='django_flex_user.tests.otp.test_endpoint_otp_tokens_email_id._send_password'
+    )
     def test_method_get(self):
         response = self.client.get(self._REST_ENDPOINT_PATH)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
