@@ -258,9 +258,9 @@ def my_pre__save_handler(sender, **kwargs):
 @receiver(post_save, sender=FlexUser)
 def my_post_save_handler(sender, **kwargs):
     if kwargs['created']:
-        if kwargs['instance'].email:
+        if kwargs['instance'].email is not None:
             EmailToken.objects.create(user_id=kwargs['instance'].id, email=kwargs['instance'].email)
-        if kwargs['instance'].phone:
+        if kwargs['instance'].phone is not None:
             PhoneToken.objects.create(user_id=kwargs['instance'].id, phone=kwargs['instance'].phone)
     if 'email' in kwargs['instance'].get_dirty_fields():
         email = kwargs['instance'].email
