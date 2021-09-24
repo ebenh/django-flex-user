@@ -32,7 +32,7 @@ class TransmissionError(Exception):
 
 class OTPToken(models.Model):
     user = models.ForeignKey('FlexUser', on_delete=models.CASCADE)
-    verified = models.BooleanField(_('token ownership verified'), default=False)
+    verified = models.BooleanField(_('verified'), default=False)
 
     timeout = models.DateTimeField(_('verification timeout'), null=True, blank=True)
     failure_count = models.PositiveIntegerField(_('verification failure count'), default=0)
