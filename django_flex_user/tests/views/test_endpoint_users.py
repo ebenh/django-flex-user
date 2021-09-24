@@ -24,10 +24,10 @@ class TestFlexUserCreate(APITestCase):
                             {'email': 'invalidEmail'}]
 
             phone_values = [{},
-                                   {'phone': None},
-                                   {'phone': ''},
-                                   {'phone': '+12025551234'},
-                                   {'phone': 'invalidPhoneNumber'}]
+                            {'phone': None},
+                            {'phone': ''},
+                            {'phone': '+12025551234'},
+                            {'phone': 'invalidPhoneNumber'}]
 
             password_values = [{},
                                {'password': None},
@@ -47,9 +47,9 @@ class TestFlexUserCreate(APITestCase):
                             {'email': 'invalidEmail'}]
 
             phone_values = [{},
-                                   {'phone': ''},
-                                   {'phone': '+12025551234'},
-                                   {'phone': 'invalidPhoneNumber'}]
+                            {'phone': ''},
+                            {'phone': '+12025551234'},
+                            {'phone': 'invalidPhoneNumber'}]
 
             password_values = [{},
                                {'password': ''},
@@ -149,9 +149,9 @@ class TestFlexUserCreate(APITestCase):
                                     {
                                         'username': data.get('username'),
                                         'email': data.get('email'),
-                                        'email_verified': False,
+                                        'email_verified': False if data.get('email') else None,
                                         'phone': data.get('phone'),
-                                        'phone_verified': False
+                                        'phone_verified': False if data.get('phone') else None
                                     }
                                 )
 
@@ -223,12 +223,11 @@ class TestFlexUserCreate(APITestCase):
                                 self.assertEqual(
                                     response.data,
                                     {
-                                        'username': data.get('username') if data.get('username') != '' else None,
-                                        'email': data.get('email') if data.get('email') != '' else None,
-                                        'email_verified': False,
-                                        'phone':
-                                            data.get('phone') if data.get('phone') != '' else None,
-                                        'phone_verified': False
+                                        'username': data.get('username') or None,
+                                        'email': data.get('email') or None,
+                                        'email_verified': False if data.get('email') else None,
+                                        'phone': data.get('phone') or None,
+                                        'phone_verified': False if data.get('phone') else None
                                     }
                                 )
 
