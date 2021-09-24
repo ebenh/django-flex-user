@@ -67,7 +67,7 @@ class TestEmailDevice(TestCase):
         self.otp_device.generate_password()
 
         with freeze_time():
-            self.assertFalse(self.otp_device.verify_password('INVALID_PASSWORD'))
+            self.assertFalse(self.otp_device.verify_password('invalidPassword'))
             self.assertFalse(self.otp_device.confirmed)
             self.assertEqual(self.otp_device.verification_timeout, timezone.now() + timedelta(seconds=1))
             self.assertEqual(self.otp_device.verification_failure_count, 1)
@@ -111,7 +111,7 @@ class TestEmailDevice(TestCase):
         from datetime import timedelta
 
         with freeze_time():
-            self.assertFalse(self.otp_device.verify_password('INVALID_PASSWORD'))
+            self.assertFalse(self.otp_device.verify_password('invalidPassword'))
             self.assertFalse(self.otp_device.confirmed)
             self.assertEqual(self.otp_device.verification_timeout, timezone.now() + timedelta(seconds=1))
             self.assertEqual(self.otp_device.verification_failure_count, 1)
@@ -125,14 +125,14 @@ class TestEmailDevice(TestCase):
         with freeze_time() as frozen_datetime:
             for i in range(0, 10):
                 # Try to verify an invalid password. The method should return false and set the timeout to 2^i seconds
-                success = self.otp_device.verify_password('INVALID_PASSWORD')
+                success = self.otp_device.verify_password('invalidPassword')
                 self.assertFalse(success)
 
                 # Here we simulate the timeout period. For each second of the timeout period we attempt to verify again.
                 # The verification method should raise an exception each time.
                 for j in range(0, 2 ** i):
                     # Try to verify again, the method should raise TimeoutError exception
-                    self.assertRaises(TimeoutError, self.otp_device.verify_password, 'INVALID_PASSWORD')
+                    self.assertRaises(TimeoutError, self.otp_device.verify_password, 'invalidPassword')
                     # The verify method should raise TimeoutError even if we submit the correct password
                     self.assertRaises(TimeoutError, self.otp_device.verify_password, self.otp_device.password)
                     # Advance time by 1 second
