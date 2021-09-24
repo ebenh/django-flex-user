@@ -25,7 +25,7 @@ class TestEmailToken(TestCase):
         self.assertIsNone(self.otp_token.timeout)
         self.assertEqual(self.otp_token.failure_count, 0)
 
-    def test_generate_password_verify_password_undefined(self):
+    def test_generate_password_check_password_undefined(self):
         self.otp_token.generate_password()
 
         self.assertRaises(TypeError, self.otp_token.check_password)
@@ -33,7 +33,7 @@ class TestEmailToken(TestCase):
         self.assertIsNone(self.otp_token.timeout)
         self.assertEqual(self.otp_token.failure_count, 0)
 
-    def test_generate_password_verify_password_none(self):
+    def test_generate_password_check_password_none(self):
         from freezegun import freeze_time
         from django.utils import timezone
         from datetime import timedelta
@@ -46,7 +46,7 @@ class TestEmailToken(TestCase):
             self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
             self.assertEqual(self.otp_token.failure_count, 1)
 
-    def test_generate_password_verify_password_empty_string(self):
+    def test_generate_password_check_password_empty_string(self):
         from freezegun import freeze_time
         from django.utils import timezone
         from datetime import timedelta
@@ -59,7 +59,7 @@ class TestEmailToken(TestCase):
             self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
             self.assertEqual(self.otp_token.failure_count, 1)
 
-    def test_generate_password_verify_password_valid_password(self):
+    def test_generate_password_check_password_valid_password(self):
         self.otp_token.generate_password()
 
         self.assertTrue(self.otp_token.check_password(self.otp_token.password))
@@ -67,7 +67,7 @@ class TestEmailToken(TestCase):
         self.assertIsNone(self.otp_token.timeout)
         self.assertEqual(self.otp_token.failure_count, 0)
 
-    def test_generate_password_verify_password_invalid_password(self):
+    def test_generate_password_check_password_invalid_password(self):
         from freezegun import freeze_time
         from django.utils import timezone
         from datetime import timedelta
@@ -80,13 +80,13 @@ class TestEmailToken(TestCase):
             self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
             self.assertEqual(self.otp_token.failure_count, 1)
 
-    def test_verify_password_undefined(self):
+    def test_check_password_undefined(self):
         self.assertRaises(TypeError, self.otp_token.check_password)
         self.assertFalse(self.otp_token.verified)
         self.assertIsNone(self.otp_token.timeout)
         self.assertEqual(self.otp_token.failure_count, 0)
 
-    def test_verify_password_none(self):
+    def test_check_password_none(self):
         from freezegun import freeze_time
         from django.utils import timezone
         from datetime import timedelta
@@ -97,7 +97,7 @@ class TestEmailToken(TestCase):
             self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
             self.assertEqual(self.otp_token.failure_count, 1)
 
-    def test_verify_password_empty_string(self):
+    def test_check_password_empty_string(self):
         from freezegun import freeze_time
         from django.utils import timezone
         from datetime import timedelta
@@ -108,7 +108,7 @@ class TestEmailToken(TestCase):
             self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
             self.assertEqual(self.otp_token.failure_count, 1)
 
-    def test_verify_password_valid_password(self):
+    def test_check_password_valid_password(self):
         from freezegun import freeze_time
         from django.utils import timezone
         from datetime import timedelta
@@ -119,7 +119,7 @@ class TestEmailToken(TestCase):
             self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
             self.assertEqual(self.otp_token.failure_count, 1)
 
-    def test_verify_password_invalid_password(self):
+    def test_check_password_invalid_password(self):
         from freezegun import freeze_time
         from django.utils import timezone
         from datetime import timedelta
@@ -130,7 +130,7 @@ class TestEmailToken(TestCase):
             self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
             self.assertEqual(self.otp_token.failure_count, 1)
 
-    def test_verify_password_throttling(self):
+    def test_check_password_throttling(self):
         from django_flex_user.models.otp import TimeoutError
         from freezegun import freeze_time
 
