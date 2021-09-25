@@ -32,7 +32,7 @@ class TestUtil(TestCase):
 
         # Unicode
         ('validEmail@bücher.com', 'va********@bü****.***'),
-        ('validEmail@xn--bcher-kva.com', 'va********@bü****.***'),
+        ('validEmail@xn--bcher-kva.com', 'va********@xn***********.***'),
     )
 
     def test_obscure_email(self):
