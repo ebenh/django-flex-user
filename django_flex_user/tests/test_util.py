@@ -35,42 +35,6 @@ class TestUtil(TestCase):
         ('validEmail@xn--bcher-kva.com', 'va********@bü****.***'),
     )
 
-    _phones = (
-        # Empty
-        (None, ''),
-        ('', ''),
-
-        # US phone number
-        ('2025551234', '********34'),
-        ('(202)555-1234', '(***)***-**34'),  # National format
-        ('+12025551234', '+*********34'),  # E164 format
-        ('+1202-555-1234', '+****-***-**34'),  # International format
-        ('1(202)555-1234', '*(***)***-**34'),  # Out-of-country format from US
-        ('001202-555-1234', '******-***-**34'),  # Out-of-country format from CH
-
-        # ET phone Number
-        ('0911234567', '********67'),  # National format
-        ('+251911234567', '+**********67'),  # E164 format
-        ('+251911234567', '+**********67'),  # International format
-        ('011251911234567', '*************67'),  # Out-of-country format from US
-        ('00251911234567', '************67'),  # Out-of-country format from CH
-
-        # GB phone number with extension
-        ('07400123456x123', '*********56x123'),  # National format
-        ('+447400123456', '+**********56'),  # E164 format
-        ('+447400123456x123', '+**********56x123'),  # International format
-        ('011447400123456 x123', '*************56'),  # Out-of-country format from US
-        ('00447400123456x123', '************56x123'),  # Out-of-country format from CH
-
-        # Alpha-numeric/vanity phone number
-        ('800sixflag', '********ag'),
-        ('(800)six-flag', '(***)***-**ag'),  # National format
-        ('+18007493524', '+*********24'),  # E164 format
-        ('+1800-six-flag', '+****-***-**ag'),  # International format
-        ('1(800)six-flag', '*(***)***-**ag'),  # Out-of-country format from US
-        ('001800-six-flag', '******-***-**ag'),  # Out-of-country format from CH
-    )
-
     def test_obscure_email(self):
         from django_flex_user.util import obscure_email
 
@@ -78,9 +42,82 @@ class TestUtil(TestCase):
             with self.subTest(email):
                 self.assertEqual(obscure_email(email), email_obscured)
 
-    def test_obscure_phone(self):
+    def test_obscure_phone_us_number(self):
+        import phonenumbers
+
+        phone = phonenumbers.parse('+1 202-555-1234')
+
+        data = (
+            ('E164', phonenumbers.PhoneNumberFormat.E164, '+*********34'),
+            ('INTERNATIONAL', phonenumbers.PhoneNumberFormat.INTERNATIONAL, '+* ***-***-**34'),
+            ('NATIONAL', phonenumbers.PhoneNumberFormat.NATIONAL, '(***) ***-**34'),
+            ('RFC3966', phonenumbers.PhoneNumberFormat.RFC3966, 'tel:+*-***-***-**34')
+        )
+
+        for test_name, output_format, expected_output in data:
+            with self.subTest(test_name):
+                from django_flex_user.util import obscure_phone
+
+                self.assertEqual(obscure_phone(phone, output_format), expected_output)
+
+    def test_obscure_phone_et_number(self):
+        import phonenumbers
+
+        phone = phonenumbers.parse('+251 91 123 4567')
+
+        data = (
+            ('E164', phonenumbers.PhoneNumberFormat.E164, '+**********67'),
+            ('INTERNATIONAL', phonenumbers.PhoneNumberFormat.INTERNATIONAL, '+*** ** *** **67'),
+            ('NATIONAL', phonenumbers.PhoneNumberFormat.NATIONAL, '*** *** **67'),
+            ('RFC3966', phonenumbers.PhoneNumberFormat.RFC3966, 'tel:+***-**-***-**67')
+        )
+
+        for test_name, output_format, expected_output in data:
+            with self.subTest(test_name):
+                from django_flex_user.util import obscure_phone
+
+                self.assertEqual(obscure_phone(phone, output_format), expected_output)
+
+    def test_obscure_phone_gb_number_with_extension(self):
+        import phonenumbers
+
+        phone = phonenumbers.parse('+44 7400 123456 x123')
+
+        data = (
+            ('E164', phonenumbers.PhoneNumberFormat.E164, '+**********56'),
+            ('INTERNATIONAL', phonenumbers.PhoneNumberFormat.INTERNATIONAL, '+** **** ****56 x123'),
+            ('NATIONAL', phonenumbers.PhoneNumberFormat.NATIONAL, '***** ****56 x123'),
+            ('RFC3966', phonenumbers.PhoneNumberFormat.RFC3966, 'tel:+**-****-****56;ext=123')
+        )
+
+        for test_name, output_format, expected_output in data:
+            with self.subTest(test_name):
+                from django_flex_user.util import obscure_phone
+
+                self.assertEqual(obscure_phone(phone, output_format), expected_output)
+
+    def test_obscure_phone_alphanumeric_vanity_number(self):
+        import phonenumbers
+
+        phone = phonenumbers.parse('+1 800-six-flag')
+
+        data = (
+            ('E164', phonenumbers.PhoneNumberFormat.E164, '+*********24'),
+            ('INTERNATIONAL', phonenumbers.PhoneNumberFormat.INTERNATIONAL, '+* ***-***-**24'),
+            ('NATIONAL', phonenumbers.PhoneNumberFormat.NATIONAL, '(***) ***-**24'),
+            ('RFC3966', phonenumbers.PhoneNumberFormat.RFC3966, 'tel:+*-***-***-**24')
+        )
+
+        for test_name, output_format, expected_output in data:
+            with self.subTest(test_name):
+                from django_flex_user.util import obscure_phone
+
+                self.assertEqual(obscure_phone(phone, output_format), expected_output)
+
+    def test_obscure_invalid_number(self):
+        import phonenumbers
         from django_flex_user.util import obscure_phone
 
-        for phone, phone_obscured in self._phones:
-            with self.subTest(phone):
-                self.assertEqual(obscure_phone(phone), phone_obscured)
+        phone = phonenumbers.parse('+251 191 123 4567')
+
+        self.assertRaises(ValueError, obscure_phone, phone)

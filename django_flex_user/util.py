@@ -1,6 +1,7 @@
-import re
+import re, copy
 
 import tldextract
+from phonenumbers import PhoneNumber, PhoneNumberFormat, is_valid_number, format_number
 
 
 def _obscure_email_part(part):
@@ -46,9 +47,38 @@ def obscure_email(email):
     return f'{user}@{subdomain}{"." if subdomain and domain else ""}{domain}{"." if domain and suffix else ""}{suffix}'
 
 
-def obscure_phone(phone):
-    if not phone:
-        return ''
+def obscure_phone(phone, output_format=PhoneNumberFormat.E164):
+    if not isinstance(phone, PhoneNumber):
+        raise ValueError
+    if not is_valid_number(phone):
+        raise ValueError
+    if output_format not in (PhoneNumberFormat.E164,
+                             PhoneNumberFormat.INTERNATIONAL,
+                             PhoneNumberFormat.NATIONAL,
+                             PhoneNumberFormat.RFC3966):
+        raise ValueError
 
-    count = sum(c.isdigit() for c in phone)
-    return re.sub(r'\d', '*', phone, count=count - 2)
+    # If phone has an extension, we remove it and save it so we can append it later
+    extension = None
+    if phone.extension is not None:
+        # Save the extension
+        extension = phone.extension
+        # Clear the extension in phone
+        phone = copy.copy(phone)
+        phone.extension = None
+
+    # Convert phone to a string
+    phone_string = format_number(phone, output_format)
+
+    # Replace all but the last two digits of phone_string with asterisks
+    digit_count = sum(c.isdigit() for c in phone_string)
+    phone_string_obscured = re.sub(r'\d', '*', phone_string, count=digit_count - 2)
+
+    # If phone had an extension, append it to phone_string_obscured
+    if extension is not None:
+        if output_format == PhoneNumberFormat.INTERNATIONAL or output_format == PhoneNumberFormat.NATIONAL:
+            phone_string_obscured = f'{phone_string_obscured} x{extension}'
+        elif output_format == PhoneNumberFormat.RFC3966:
+            phone_string_obscured = f'{phone_string_obscured};ext={extension}'
+
+    return phone_string_obscured

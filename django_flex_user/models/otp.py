@@ -145,12 +145,12 @@ class PhoneToken(SideChannelToken):
 
     password_length = getattr(settings, 'FLEX_USER_OTP_LENGTH_FOR_PHONE_TOKEN', 6)
     password_alphabet = getattr(settings, 'FLEX_USER_OTP_ALPHABET_FOR_PHONE_TOKEN', string.digits)
-    
+
     def get_name(self):
         return str(self.phone)
 
     def get_obscured_name(self):
-        return obscure_phone(str(self.phone))
+        return obscure_phone(self.phone)
 
     def send_password(self):
         flex_user_sms_function = getattr(settings, 'FLEX_USER_OTP_SMS_FUNCTION', None)
