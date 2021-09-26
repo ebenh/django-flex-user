@@ -32,11 +32,22 @@ def _obscure_email_part(part):
         return part[:2] + '*' * (length - 2)  # At most 50% revealed, At least 50% obscured
 
 
-def obscure_email(email):
+def obscure_email(email, denormalize=False):
     if not email or '@' not in email:
         raise ValueError('must be a valid email address')
 
     user, host = email.split('@')
+
+    # If the caller asks, try to denormalize the email address's host part before obscuring it. Obscuring a normalized
+    # email address can make it extremely difficult to identify.
+    if denormalize:
+        if host.startswith('xn--'):
+            try:
+                host = host.encode('ascii').decode('idna')
+            except UnicodeError:
+                # The host part contains non-ascii characters
+                raise
+
     subdomain, domain, suffix = tldextract.extract(host)
 
     user = _obscure_email_part(user)
