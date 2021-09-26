@@ -34,7 +34,7 @@ def _obscure_email_part(part):
 
 def obscure_email(email):
     if not email or '@' not in email:
-        raise ValueError
+        raise ValueError('must be a valid email address')
 
     user, host = email.split('@')
     subdomain, domain, suffix = tldextract.extract(host)
@@ -49,14 +49,14 @@ def obscure_email(email):
 
 def obscure_phone(phone, output_format=PhoneNumberFormat.E164):
     if not isinstance(phone, PhoneNumber):
-        raise ValueError
+        raise ValueError('must be an instance of phonenumbers.PhoneNumber')
     if not is_valid_number(phone):
-        raise ValueError
+        raise ValueError('must be a valid phone number')
     if output_format not in (PhoneNumberFormat.E164,
                              PhoneNumberFormat.INTERNATIONAL,
                              PhoneNumberFormat.NATIONAL,
                              PhoneNumberFormat.RFC3966):
-        raise ValueError
+        raise ValueError('invalid phone number format')
 
     # If phone has an extension, we remove it and save it so we can append it later
     extension = None
