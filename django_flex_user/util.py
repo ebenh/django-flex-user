@@ -33,8 +33,8 @@ def _obscure_email_part(part):
 
 
 def obscure_email(email):
-    if not email:
-        return ''
+    if not email or '@' not in email:
+        raise ValueError
 
     user, host = email.split('@')
     subdomain, domain, suffix = tldextract.extract(host)
