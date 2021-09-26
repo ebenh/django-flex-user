@@ -46,7 +46,7 @@ def obscure_email(email, denormalize=False):
             try:
                 host = host.encode('ascii').decode('idna')
             except UnicodeError:
-                # The host part contains non-ascii characters despite starting with the idna prefix. Something is
+                # If the host part contains non-ascii characters despite starting with the idna prefix something is
                 # really wrong.
                 raise
 
@@ -55,7 +55,7 @@ def obscure_email(email, denormalize=False):
     user = _obscure_email_part(user)
     subdomain = _obscure_email_part(subdomain)
     domain = _obscure_email_part(domain)
-    suffix = re.sub('[^.]', '*', suffix)  # always obscure the TLD and SLD
+    suffix = re.sub('[^.]', '*', suffix)  # Always obscure the TLD and SLD
 
     return f'{user}@{subdomain}{"." if subdomain and domain else ""}{domain}{"." if domain and suffix else ""}{suffix}'
 
