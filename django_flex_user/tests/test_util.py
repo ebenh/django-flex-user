@@ -1,47 +1,91 @@
 from django.test import TestCase
 
 
-class TestUtil(TestCase):
-    _emails = (
-        # Empty
-        (None, ''),
-        ('', ''),
-
-        # User part
-        ('a@example.com', '*@ex*****.***'),
-        ('ab@example.com', 'a*@ex*****.***'),
-        ('abc@example.com', 'a**@ex*****.***'),
-        ('abcd@example.com', 'ab**@ex*****.***'),
-
-        # Host part with first-level domain
-        ('example@a.com', 'ex*****@*.***'),
-        ('example@ab.com', 'ex*****@a*.***'),
-        ('example@abc.com', 'ex*****@a**.***'),
-        ('example@abcd.com', 'ex*****@ab**.***'),
-
-        # Host part with subdomain
-        ('example@a.example.com', 'ex*****@*.ex*****.***'),
-        ('example@ab.example.com', 'ex*****@a*.ex*****.***'),
-        ('example@abc.example.com', 'ex*****@a**.ex*****.***'),
-        ('example@abcd.example.com', 'ex*****@ab**.ex*****.***'),
-
-        # Host part with second-level domain
-        ('example@example.co.za', 'ex*****@ex*****.**.**'),
-        ('example@example.org.uk', 'ex*****@ex*****.***.**'),
-        ('example@example.gc.ca', 'ex*****@ex*****.**.**'),
-
-        # Unicode
-        ('validEmail@bücher.com', 'va********@bü****.***'),
-        ('validEmail@xn--bcher-kva.com', 'va********@xn***********.***'),
-    )
-
-    def test_obscure_email(self):
+class TestObscureEmail(TestCase):
+    def test_obscure_email_none(self):
         from django_flex_user.util import obscure_email
 
-        for email, email_obscured in self._emails:
-            with self.subTest(email):
-                self.assertEqual(obscure_email(email), email_obscured)
+        self.assertRaises(ValueError, obscure_email, None)
 
+    def test_obscure_email_empty_string(self):
+        from django_flex_user.util import obscure_email
+
+        self.assertRaises(ValueError, obscure_email, '')
+
+    def test_obscure_email_user_part(self):
+        data = (
+            ('a@example.com', '*@ex*****.***'),
+            ('ab@example.com', 'a*@ex*****.***'),
+            ('abc@example.com', 'a**@ex*****.***'),
+            ('abcd@example.com', 'ab**@ex*****.***')
+        )
+
+        for email, expected_output in data:
+            with self.subTest(email):
+                from django_flex_user.util import obscure_email
+
+                self.assertEqual(obscure_email(email), expected_output)
+
+    def test_obscure_email_host_part_with_first_level_domain(self):
+        data = (
+            ('example@a.com', 'ex*****@*.***'),
+            ('example@ab.com', 'ex*****@a*.***'),
+            ('example@abc.com', 'ex*****@a**.***'),
+            ('example@abcd.com', 'ex*****@ab**.***')
+        )
+
+        for email, expected_output in data:
+            with self.subTest(email):
+                from django_flex_user.util import obscure_email
+
+                self.assertEqual(obscure_email(email), expected_output)
+
+    def test_obscure_email_host_part_with_second_level_domain(self):
+        data = (
+            ('example@example.co.za', 'ex*****@ex*****.**.**'),
+            ('example@example.org.uk', 'ex*****@ex*****.***.**'),
+            ('example@example.gc.ca', 'ex*****@ex*****.**.**')
+        )
+
+        for email, expected_output in data:
+            with self.subTest(email):
+                from django_flex_user.util import obscure_email
+
+                self.assertEqual(obscure_email(email), expected_output)
+
+    def test_obscure_email_host_part_with_subdomain(self):
+        data = (
+            ('example@a.example.com', 'ex*****@*.ex*****.***'),
+            ('example@ab.example.com', 'ex*****@a*.ex*****.***'),
+            ('example@abc.example.com', 'ex*****@a**.ex*****.***'),
+            ('example@abcd.example.com', 'ex*****@ab**.ex*****.***')
+        )
+
+        for email, expected_output in data:
+            with self.subTest(email):
+                from django_flex_user.util import obscure_email
+
+                self.assertEqual(obscure_email(email), expected_output)
+
+    def test_obscure_email_with_unicode_domain(self):
+        data = (
+            ('validEmail@bücher.com', 'va********@bü****.***'),
+            ('validEmail@xn--bcher-kva.com', 'va********@xn***********.***')
+        )
+
+        for email, expected_output in data:
+            with self.subTest(email):
+                from django_flex_user.util import obscure_email
+
+                self.assertEqual(obscure_email(email), expected_output)
+
+    def test_obscure_email_invalid_email(self):
+        from django_flex_user.util import obscure_email
+
+        self.assertRaises(ValueError, obscure_email, 'invalidEmail')
+
+
+class TestObscurePhone(TestCase):
     def test_obscure_phone_us_number(self):
         import phonenumbers
 
@@ -59,6 +103,16 @@ class TestUtil(TestCase):
                 from django_flex_user.util import obscure_phone
 
                 self.assertEqual(obscure_phone(phone, output_format), expected_output)
+
+    def test_obscure_phone_none(self):
+        from django_flex_user.util import obscure_phone
+
+        self.assertRaises(ValueError, obscure_phone, None)
+
+    def test_obscure_phone_empty_string(self):
+        from django_flex_user.util import obscure_phone
+
+        self.assertRaises(ValueError, obscure_phone, '')
 
     def test_obscure_phone_et_number(self):
         import phonenumbers
