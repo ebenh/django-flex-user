@@ -69,20 +69,26 @@ class TestObscureEmail(TestCase):
 
     def test_obscure_email_with_unicode_domain(self):
         data = (
-            ('validEmail@bücher.com', 'va********@bü****.***'),
-            ('validEmail@xn--bcher-kva.com', 'va********@xn***********.***')
+            ('validEmail@bücher.com', 'va********@bü****.***', False),
+            ('validEmail@bücher.com', 'va********@bü****.***', True),
+            ('validEmail@xn--bcher-kva.com', 'va********@xn***********.***', False),
+            ('validEmail@xn--bcher-kva.com', 'va********@bü****.***', True)
         )
 
-        for email, expected_output in data:
-            with self.subTest(email):
+        for email, expected_output, denormalize in data:
+            with self.subTest(email, denormalize=denormalize):
                 from django_flex_user.util import obscure_email
 
-                self.assertEqual(obscure_email(email), expected_output)
+                self.assertEqual(obscure_email(email, denormalize), expected_output)
 
     def test_obscure_email_invalid_email(self):
         from django_flex_user.util import obscure_email
 
+        # Missing an "@" symbol
         self.assertRaises(ValueError, obscure_email, 'invalidEmail')
+
+        # The domain part starts with idna prefix "xn--" followed by a non-normalized (i.e. unicode) character "ü"
+        self.assertRaises(UnicodeError, obscure_email, 'invalidEmail@xn--bücher.com', True)
 
 
 class TestObscurePhone(TestCase):
