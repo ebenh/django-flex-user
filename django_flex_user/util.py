@@ -16,7 +16,7 @@ def _obscure_email_part(part):
     :return:
     """
     if not part:
-        return part  # part is None or the empty string, nothing to obscure
+        return part  # If part is None or the empty string, there's nothing to obscure
 
     length = len(part)
     if length == 1:
@@ -29,7 +29,7 @@ def _obscure_email_part(part):
         return part[:1] + '**'  # 33% revealed, 66% obscured
 
     if length > 3:
-        return part[:2] + '*' * (length - 2)  # At most 50% revealed, At least 50% obscured
+        return part[:2] + '*' * (length - 2)  # At most 50% revealed, at least 50% obscured
 
 
 def obscure_email(email, denormalize=False):
