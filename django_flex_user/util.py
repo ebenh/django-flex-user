@@ -46,7 +46,7 @@ def obscure_email(email, denormalize=False):
             try:
                 host = host.encode('ascii').decode('idna')
             except UnicodeError:
-                # The host part contains non-ascii characters in spite of starting with the idna prefix. Something is
+                # The host part contains non-ascii characters despite starting with the idna prefix. Something is
                 # really wrong.
                 raise
 
