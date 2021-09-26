@@ -41,11 +41,13 @@ def obscure_email(email, denormalize=False):
     # If the caller asks, try to denormalize the email address's host part before obscuring it. Obscuring a normalized
     # email address can make it extremely difficult to identify.
     if denormalize:
+        # Check for the the idna prefix
         if host.startswith('xn--'):
             try:
                 host = host.encode('ascii').decode('idna')
             except UnicodeError:
-                # The host part contains non-ascii characters
+                # The host part contains non-ascii characters in spite of starting with the idna prefix. Something is
+                # really wrong.
                 raise
 
     subdomain, domain, suffix = tldextract.extract(host)
