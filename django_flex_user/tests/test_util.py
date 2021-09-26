@@ -87,7 +87,7 @@ class TestObscureEmail(TestCase):
         # Missing an "@" symbol
         self.assertRaises(ValueError, obscure_email, 'invalidEmail')
 
-        # The domain part starts with idna prefix "xn--" followed by a non-normalized (i.e. unicode) character "ü"
+        # Domain part with idna prefix "xn--" followed by non-normalized (i.e. unicode) character "ü"
         self.assertRaises(UnicodeError, obscure_email, 'invalidEmail@xn--bücher.com', True)
 
 
