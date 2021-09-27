@@ -26,5 +26,6 @@ urlpatterns = [
 ]
 
 urlpatterns += [
+    # djangorestframework
     path('api-auth/', include('rest_framework.urls')),
 ]
