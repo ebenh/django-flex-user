@@ -327,8 +327,9 @@ class OTPSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
 
 
-class EmailTokenSerializer(serializers.ModelSerializer):
+class EmailTokenSerializer(serializers.HyperlinkedModelSerializer):
     name = serializers.SerializerMethodField('get_name')
+    uri = serializers.HyperlinkedIdentityField(view_name='email-token')
 
     @staticmethod
     def get_name(obj):
@@ -336,11 +337,12 @@ class EmailTokenSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EmailToken
-        fields = ['id', 'name']
+        fields = ['name', 'uri']
 
 
-class PhoneTokenSerializer(serializers.ModelSerializer):
+class PhoneTokenSerializer(serializers.HyperlinkedModelSerializer):
     name = serializers.SerializerMethodField('get_name')
+    uri = serializers.HyperlinkedIdentityField(view_name='phone-token')
 
     @staticmethod
     def get_name(obj):
@@ -348,4 +350,4 @@ class PhoneTokenSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PhoneToken
-        fields = ['id', 'name']
+        fields = ['name', 'uri']

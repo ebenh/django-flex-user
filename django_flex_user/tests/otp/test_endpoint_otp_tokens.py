@@ -41,22 +41,25 @@ class TestOTPTokensRetrieve(APITestCase):
     def test_method_get_with_query_string(self):
         for value, expect_match in self._search_values:
             with self.subTest(search_value=value):
+                from django.urls import reverse
+
                 response = self.client.get(self._REST_ENDPOINT_PATH, {'search': value})
                 self.assertEqual(response.status_code, status.HTTP_200_OK)
+
                 if expect_match:
                     self.assertEqual(
                         response.data,
                         {
                             'EmailToken': [
                                 {
-                                    'id': 1,
-                                    'name': 'va*********@ex*****.***'
+                                    'name': 'va*********@ex*****.***',
+                                    'uri': f"http://testserver{reverse('email-token', args='1')}"
                                 }
                             ],
                             'PhoneToken': [
                                 {
-                                    'id': 1,
-                                    'name': '+*********01'
+                                    'name': '+*********01',
+                                    'uri': f"http://testserver{reverse('phone-token', args='1')}"
                                 }
                             ]
                         }
