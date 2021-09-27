@@ -53,13 +53,13 @@ class TestOTPTokensRetrieve(APITestCase):
                             'EmailToken': [
                                 {
                                     'name': 'va*********@ex*****.***',
-                                    'uri': f"http://testserver{reverse('email-token', args='1')}"
+                                    'uri': f"http://testserver{reverse('email-token', args=(1,))}"
                                 }
                             ],
                             'PhoneToken': [
                                 {
                                     'name': '+*********01',
-                                    'uri': f"http://testserver{reverse('phone-token', args='1')}"
+                                    'uri': f"http://testserver{reverse('phone-token', args=(1,))}"
                                 }
                             ]
                         }
