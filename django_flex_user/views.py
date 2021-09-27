@@ -135,8 +135,18 @@ class OTPTokens(ObjectMultipleModelAPIView):
     permission_classes = [AllowAny]
 
     querylist = (
-        {'queryset': EmailToken.objects.all(), 'serializer_class': EmailTokenSerializer, 'filter_fn': my_filter},
-        {'queryset': PhoneToken.objects.all(), 'serializer_class': PhoneTokenSerializer, 'filter_fn': my_filter},
+        {
+            'queryset': EmailToken.objects.all(),
+            'serializer_class': EmailTokenSerializer,
+            'filter_fn': my_filter,
+            'label': 'email'
+        },
+        {
+            'queryset': PhoneToken.objects.all(),
+            'serializer_class': PhoneTokenSerializer,
+            'filter_fn': my_filter,
+            'label': 'phone'
+        },
     )
 
 

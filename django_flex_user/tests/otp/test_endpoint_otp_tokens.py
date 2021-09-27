@@ -50,13 +50,13 @@ class TestOTPTokensRetrieve(APITestCase):
                     self.assertEqual(
                         response.data,
                         {
-                            'EmailToken': [
+                            'email': [
                                 {
                                     'name': 'va*********@ex*****.***',
                                     'uri': f"http://testserver{reverse('email-token', args=(1,))}"
                                 }
                             ],
-                            'PhoneToken': [
+                            'phone': [
                                 {
                                     'name': '+*********01',
                                     'uri': f"http://testserver{reverse('phone-token', args=(1,))}"
@@ -68,8 +68,8 @@ class TestOTPTokensRetrieve(APITestCase):
                     self.assertEqual(
                         response.data,
                         {
-                            'EmailToken': [],
-                            'PhoneToken': []
+                            'email': [],
+                            'phone': []
                         }
                     )
 
