@@ -1,8 +1,10 @@
-from .forms import OTPTokensSearchForm
+from .forms import OTPTokensSearchForm, VerifyOTPForm
 from django.shortcuts import render
 from django.contrib.auth import get_user_model
+from django.http import Http404
 
 from django_flex_user.models import EmailToken, PhoneToken
+from django_flex_user.models.otp import TransmissionError, TimeoutError
 from django_flex_user.validators import FlexUserUnicodeUsernameValidator
 
 UserModel = get_user_model()
@@ -58,4 +60,52 @@ def search_otp_tokens(request):
             'search_results_email_tokens': search_results_email_tokens,
             'search_results_phone_tokens': search_results_phone_tokens
         }
+    )
+
+
+def verify_otp(request, id, type):
+    otp_token = None
+    try:
+        if type == 'email':
+            otp_token = EmailToken.objects.get(id=id)
+        elif type == 'phone':
+            otp_token = PhoneToken.objects.get(id=id)
+        else:
+            raise Http404
+    except (EmailToken.DoesNotExist, PhoneToken.DoesNotExist):
+        raise Http404
+
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = VerifyOTPForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            password = form.cleaned_data['password']
+
+            try:
+                success = otp_token.check_password(password)
+                if success:
+                    print('Success')
+                else:
+                    print('Bad password')
+            except TimeoutError:
+                print('Timed out')
+            except TransmissionError:
+                print('Transmission error')
+
+            # return HttpResponseRedirect('/thanks/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = VerifyOTPForm()
+        otp_token.generate_password()
+
+    return render(
+        request,
+        'test_project/password-reset/verify.html',
+        {'form': form}
     )

@@ -15,3 +15,7 @@ class OTPTokensSearchForm(forms.Form):
             )
         )
     )
+
+
+class VerifyOTPForm(forms.Form):
+    password = forms.CharField(label='Password')
