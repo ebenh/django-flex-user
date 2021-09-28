@@ -1,7 +1,7 @@
 from .forms import OTPTokensSearchForm, VerifyOTPForm
 from django.shortcuts import render
 from django.contrib.auth import get_user_model
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 
 from django_flex_user.models import EmailToken, PhoneToken
 from django_flex_user.validators import FlexUserUnicodeUsernameValidator
@@ -82,8 +82,7 @@ def verify_otp(request, token_id, token_type):
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
-            print('success!!!')
-            # return HttpResponseRedirect('/thanks/')
+            return HttpResponseRedirect('/accounts/password-reset/change-password/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -95,3 +94,7 @@ def verify_otp(request, token_id, token_type):
         'test_project/password-reset/verify.html',
         {'form': form}
     )
+
+
+def change_password(request):
+    return render(request, 'test_project/password-reset/change_password.html')
