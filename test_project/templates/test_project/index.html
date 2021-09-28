@@ -7,8 +7,8 @@
 <body>
 <h1>django-flex-user</h1>
 <ul>
-    <li><a href="{% url 'sign-up' %}">Sign up</a></li>
     {% if not request.user.is_authenticated %}
+        <li><a href="{% url 'sign-up' %}">Sign up</a></li>
         <li><a href="{% url 'sign-in' %}">Sign in</a></li>
     {% else %}
         <li><a href="{% url 'sign-out' %}">Sign out</a></li>
