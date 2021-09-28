@@ -1,5 +1,5 @@
 {#Search form#}
-<form action="/accounts/password-reset/find-my-account/" method="post">
+<form action="{{ request.path }}" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Search">
