@@ -31,7 +31,7 @@ class FlexUserAuthenticationForm(AuthenticationForm):
         """
         self.request = request
         self.user_cache = None
-        super().__init__(*args, **kwargs)
+        super(forms.Form, self).__init__(*args, **kwargs)
 
     def clean(self):
         username = self.cleaned_data.get('username')
