@@ -1,6 +1,6 @@
 from .forms import OTPTokensSearchForm, VerifyOTPForm
 from django.shortcuts import render
-from django.contrib.auth import get_user_model, login
+from django.contrib.auth import get_user_model, login, logout
 from django.http import Http404, HttpResponseRedirect
 
 from django_flex_user.models import EmailToken, PhoneToken
@@ -35,6 +35,11 @@ def sign_in(request):
         'test_project/sign_in.html',
         {'form': form}
     )
+
+
+def sign_out(request):
+    logout(request)
+    return HttpResponseRedirect('/')
 
 
 def sign_up(request):
