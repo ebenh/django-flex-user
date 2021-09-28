@@ -2,6 +2,7 @@ from .forms import OTPTokensSearchForm, VerifyOTPForm
 from django.shortcuts import render
 from django.contrib.auth import get_user_model, login, logout
 from django.http import Http404, HttpResponseRedirect
+from django.urls import reverse
 
 from django_flex_user.models import EmailToken, PhoneToken
 from django_flex_user.validators import FlexUserUnicodeUsernameValidator
@@ -25,7 +26,7 @@ def sign_in(request):
             # ...
             # redirect to a new URL:
             login(request, form.get_user())
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect(reverse('index'))
     # if a GET (or any other method) we'll create a blank form
     else:
         form = FlexUserAuthenticationForm()
@@ -39,7 +40,7 @@ def sign_in(request):
 
 def sign_out(request):
     logout(request)
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect(reverse(index))
 
 
 def sign_up(request):
