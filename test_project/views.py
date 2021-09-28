@@ -1,10 +1,11 @@
 from .forms import OTPTokensSearchForm, VerifyOTPForm
 from django.shortcuts import render
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login
 from django.http import Http404, HttpResponseRedirect
 
 from django_flex_user.models import EmailToken, PhoneToken
 from django_flex_user.validators import FlexUserUnicodeUsernameValidator
+from django_flex_user.forms import FlexUserAuthenticationForm
 
 UserModel = get_user_model()
 
@@ -14,7 +15,26 @@ def index(request):
 
 
 def sign_in(request):
-    return render(request, 'test_project/sign_in.html')
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = FlexUserAuthenticationForm(request, request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            login(request, form.get_user())
+            return HttpResponseRedirect('/')
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = FlexUserAuthenticationForm()
+
+    return render(
+        request,
+        'test_project/sign_in.html',
+        {'form': form}
+    )
 
 
 def sign_up(request):
