@@ -16,7 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+from . import views
+
 urlpatterns = [
+    path('', views.index, name='index'),
+    path('accounts/password-reset/find-my-account/', views.search_otp_tokens),
+
     path('accounts/', include('django_flex_user.urls')),
     path('admin/', admin.site.urls),
     # social-auth-app-django

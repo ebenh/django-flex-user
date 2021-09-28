@@ -1,0 +1,21 @@
+{#Search form#}
+<form action="/accounts/password-reset/find-my-account/" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Search">
+</form>
+
+{#Search Results#}
+{% if search_results_email_tokens is not None %}
+    <ul>
+        {% for i in search_results_email_tokens %}
+            <li>Email a one-time link to {{ i.get_obscured_name }}</li>
+        {% endfor %}
+        {% for i in search_results_phone_tokens %}
+            <li>SMS a one-time code to {{ i.get_obscured_name }}</li>
+        {% endfor %}
+    </ul>
+    {% if search_results_email_tokens|length_is:'0' and search_results_phone_tokens|length_is:'0' %}
+        <p>Couldn't find a recovery method for the details provided.</p>
+    {% endif %}
+{% endif %}
