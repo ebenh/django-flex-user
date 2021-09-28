@@ -13,6 +13,14 @@ def index(request):
     return render(request, 'test_project/index.html')
 
 
+def sign_in(request):
+    return render(request, 'test_project/sign_in.html')
+
+
+def sign_up(request):
+    return render(request, 'test_project/sign_up.html')
+
+
 def search_otp_tokens(request):
     search_results_email_tokens = None
     search_results_phone_tokens = None
