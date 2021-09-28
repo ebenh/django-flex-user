@@ -1,6 +1,9 @@
 from django import forms
 from django.utils.text import capfirst
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+
+from django_flex_user.models.otp import TimeoutError
 
 UserModel = get_user_model()
 
@@ -19,3 +22,20 @@ class OTPTokensSearchForm(forms.Form):
 
 class VerifyOTPForm(forms.Form):
     password = forms.CharField(label='Password')
+
+    def __init__(self, otp_token=None, *args, **kwargs):
+        self.otp_token = otp_token
+        super().__init__(*args, **kwargs)
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+
+        try:
+            success = self.otp_token.check_password(password)
+        except TimeoutError:
+            raise ValidationError("You're doing that too much. Please wait before trying again.")
+        else:
+            if not success:
+                raise ValidationError('The password you entered was incorrect.')
+
+        return password
