@@ -62,13 +62,12 @@ def search_otp_tokens(request):
     )
 
 
-def verify_otp(request, id, type):
-    otp_token = None
+def verify_otp(request, token_id, token_type):
     try:
-        if type == 'email':
-            otp_token = EmailToken.objects.get(id=id)
-        elif type == 'phone':
-            otp_token = PhoneToken.objects.get(id=id)
+        if token_type == 'email':
+            otp_token = EmailToken.objects.get(id=token_id)
+        elif token_type == 'phone':
+            otp_token = PhoneToken.objects.get(id=token_id)
         else:
             raise Http404
     except (EmailToken.DoesNotExist, PhoneToken.DoesNotExist):

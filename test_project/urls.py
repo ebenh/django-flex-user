@@ -21,7 +21,7 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('accounts/password-reset/find-my-account/', views.search_otp_tokens),
-    path('accounts/password-reset/verify/<slug:type>/<int:id>/', views.verify_otp),
+    path('accounts/password-reset/verify/<slug:token_type>/<int:token_id>/', views.verify_otp),
 
     path('accounts/', include('django_flex_user.urls')),
     path('admin/', admin.site.urls),
