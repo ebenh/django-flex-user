@@ -16,4 +16,5 @@ urlpatterns = [
     path('otp-tokens/phone/<str:pk>', views.PhoneToken.as_view(), name='phone-token'),
 ]
 
+# djangorestframework
 urlpatterns = format_suffix_patterns(urlpatterns)
