@@ -1,6 +1,6 @@
 from django import forms
 from django.utils.text import capfirst
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, password_validation
 from django.core.exceptions import ValidationError
 
 from django_flex_user.models.otp import TimeoutError
@@ -39,3 +39,46 @@ class VerifyOTPForm(forms.Form):
                 raise ValidationError('The password you entered was incorrect.')
 
         return password
+
+
+class SignUpWithUsernameForm(forms.ModelForm):
+    class Meta:
+        model = UserModel
+        fields = ('username', 'password')
+        # required = ('username', 'password')
+        widgets = {
+            'password': forms.PasswordInput()
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Override bank = True set in our model
+        self.fields['username'].required = True
+
+    def clean_username(self):
+        # Normalize username
+        username = self.cleaned_data['username']
+        return UserModel.normalize_username(username)
+
+    def clean(self):
+        # Validate unique
+        super().clean()
+
+        # Check password strength
+        username = self.cleaned_data['username']
+        password = self.cleaned_data['password']
+
+        # note eben: UserAttributeSimilarityValidator doesn't normalize email before comparing it
+        # note eben: Be aware that there may be issues if a password validator expects the user instance to have
+        # a valid id and/or have been persisted to the database. For example, issues may occur in a password
+        # validator that checks for password reuse.
+        temp_user = self.Meta.model(username=username)
+        temp_user.set_unusable_password()
+        password_validation.validate_password(password, temp_user)
+
+        return self.cleaned_data
+
+    def save(self):
+        password = self.cleaned_data.pop('password')
+        self.instance.set_password(password)
+        return super().save()
