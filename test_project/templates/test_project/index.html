@@ -11,7 +11,7 @@
         <li><a href="{% url 'sign-up-method-selector' %}">Sign up</a></li>
         <li><a href="{% url 'sign-in' %}">Sign in</a></li>
     {% else %}
-        <li><a href="">My profile</a></li>
+        <li><a href="{% url 'user' %}">My profile</a></li>
         <li><a href="{% url 'sign-out' %}">Sign out</a></li>
     {% endif %}
 </ul>

@@ -205,3 +205,7 @@ def verify_otp(request, token_id, token_type):
 
 def change_password(request):
     return render(request, 'test_project/password-reset/change_password.html')
+
+
+def user(request):
+    return render(request, 'test_project/user.html')
