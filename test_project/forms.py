@@ -55,11 +55,6 @@ class SignUpWithUsernameForm(forms.ModelForm):
         # Override bank = True set in our model
         self.fields['username'].required = True
 
-    def clean_username(self):
-        # Normalize username
-        username = self.cleaned_data['username']
-        return UserModel.normalize_username(username)
-
     def clean(self):
         # Validate unique
         super().clean()
