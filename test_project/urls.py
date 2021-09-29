@@ -20,7 +20,7 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('accounts/sign-up/', views.sign_up, name='sign-up'),
+    path('accounts/sign-up-method-selector/', views.sign_up_method_selector, name='sign-up-method-selector'),
     path('accounts/sign-in/', views.sign_in, name='sign-in'),
     path('accounts/sign-out/', views.sign_out, name='sign-out'),
     path('accounts/password-reset/find-my-account/', views.search_otp_tokens, name='password-reset'),

@@ -15,6 +15,10 @@ def index(request):
     return render(request, 'test_project/index.html')
 
 
+def sign_up_method_selector(request):
+    return render(request, 'test_project/sign_up_method_selector.html')
+
+
 def sign_in(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -41,10 +45,6 @@ def sign_in(request):
 def sign_out(request):
     logout(request)
     return HttpResponseRedirect(reverse(index))
-
-
-def sign_up(request):
-    return render(request, 'test_project/sign_up.html')
 
 
 def search_otp_tokens(request):
