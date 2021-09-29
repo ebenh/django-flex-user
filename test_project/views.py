@@ -2,6 +2,7 @@ from .forms import (OTPTokensSearchForm, VerifyOTPForm, SignUpWithUsernameForm, 
                     SignUpWithPhoneForm, UserForm)
 from django.shortcuts import render
 from django.contrib.auth import get_user_model, login, logout
+from django.contrib.auth.forms import PasswordChangeForm
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.core.exceptions import ValidationError
@@ -228,5 +229,28 @@ def user(request):
     return render(
         request,
         'test_project/user.html',
+        {'form': form}
+    )
+
+
+def change_password(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = PasswordChangeForm(request.user, request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            form.save()
+            return HttpResponseRedirect(reverse('sign-in'))
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = PasswordChangeForm(request.user)
+
+    return render(
+        request,
+        'test_project/password-reset/change_password.html',
         {'form': form}
     )

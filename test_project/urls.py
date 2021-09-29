@@ -28,7 +28,7 @@ urlpatterns = [
     path('accounts/sign-out/', views.sign_out, name='sign-out'),
     path('accounts/password-reset/find-my-account/', views.search_otp_tokens, name='password-reset'),
     path('accounts/password-reset/verify/<slug:token_type>/<int:token_id>/', views.verify_otp, name='verify-otp'),
-    path('accounts/password-reset/change-password/', views.change_password),
+    path('accounts/password-reset/change-password/', views.change_password, name='change-password'),
     path('accounts/user/', views.user, name='user'),
 
     path('accounts/', include('django_flex_user.urls')),
