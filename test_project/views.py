@@ -1,4 +1,4 @@
-from .forms import OTPTokensSearchForm, VerifyOTPForm, SignUpWithUsernameForm, SignUpWithEmailForm
+from .forms import OTPTokensSearchForm, VerifyOTPForm, SignUpWithUsernameForm, SignUpWithEmailForm, SignUpWithPhoneForm
 from django.shortcuts import render
 from django.contrib.auth import get_user_model, login, logout
 from django.http import Http404, HttpResponseRedirect
@@ -69,7 +69,27 @@ def sign_up_with_email(request):
 
 
 def sign_up_with_phone(request):
-    return render(request, 'test_project/sign_up_with_phone.html')
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = SignUpWithPhoneForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            user = form.save()
+            login(request, user, backend='django_flex_user.backends.FlexUserModelBackend')
+            return HttpResponseRedirect(reverse('index'))
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = SignUpWithPhoneForm()
+
+    return render(
+        request,
+        'test_project/sign_up_with_phone.html',
+        {'form': form}
+    )
 
 
 def sign_in(request):

@@ -115,3 +115,56 @@ class SignUpWithEmailForm(forms.ModelForm):
         password = self.cleaned_data.pop('password')
         self.instance.set_password(password)
         return super().save()
+
+
+class SignUpWithPhoneForm(forms.ModelForm):
+    class Meta:
+        model = UserModel
+        fields = ('phone', 'password')
+        # required = ('username', 'password')
+        widgets = {
+            'password': forms.PasswordInput()
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Override bank = True set in our model
+        self.fields['phone'].required = True
+
+    def clean_phone(self):
+        phone = self.cleaned_data['phone']
+        return phone
+
+    def clean(self):
+        # Validate unique
+        super().clean()
+
+        # Check password strength
+
+        # If phonenumber_field.formfields.PhoneNumberField.to_python can't convert the user's text input into a valid
+        # phonenumbers.phonenumber.PhoneNumber object, an exception is raised and no "phone" key is added to
+        # self.cleaned_data (It's also worth mentioning that following this error the validator
+        # phonenumber_field.validators import validate_international_phonenumber will not run).
+        # This results in the following field error:
+        #   "Enter a valid phone number (e.g. (201) 555-0123) or a number with an international call prefix."
+        # As well as the following (redundant) non-field error:
+        #   "You must supply at least one of username, email address or phone number."
+        # To suppress the redundant non-field error, provide the user a widget for inputting phone numbers which
+        # constrains their input to only values which can form a valid phonenumbers.phonenumber.PhoneNumber object.
+        phone = self.cleaned_data.get('phone')
+        password = self.cleaned_data['password']
+
+        # note eben: UserAttributeSimilarityValidator doesn't normalize email before comparing it
+        # note eben: Be aware that there may be issues if a password validator expects the user instance to have
+        # a valid id and/or have been persisted to the database. For example, issues may occur in a password
+        # validator that checks for password reuse.
+        temp_user = self.Meta.model(phone=phone)
+        temp_user.set_unusable_password()
+        password_validation.validate_password(password, temp_user)
+
+        return self.cleaned_data
+
+    def save(self):
+        password = self.cleaned_data.pop('password')
+        self.instance.set_password(password)
+        return super().save()
