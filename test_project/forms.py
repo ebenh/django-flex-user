@@ -131,10 +131,6 @@ class SignUpWithPhoneForm(forms.ModelForm):
         # Override bank = True set in our model
         self.fields['phone'].required = True
 
-    def clean_phone(self):
-        phone = self.cleaned_data['phone']
-        return phone
-
     def clean(self):
         # Validate unique
         super().clean()
