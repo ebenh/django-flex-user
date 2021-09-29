@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.contrib.auth import get_user_model, login, logout
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
+from django.core.exceptions import ValidationError
 
 from django_flex_user.models import EmailToken, PhoneToken
 from django_flex_user.validators import FlexUserUnicodeUsernameValidator
