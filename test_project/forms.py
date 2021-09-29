@@ -77,3 +77,41 @@ class SignUpWithUsernameForm(forms.ModelForm):
         password = self.cleaned_data.pop('password')
         self.instance.set_password(password)
         return super().save()
+
+
+class SignUpWithEmailForm(forms.ModelForm):
+    class Meta:
+        model = UserModel
+        fields = ('email', 'password')
+        # required = ('username', 'password')
+        widgets = {
+            'password': forms.PasswordInput()
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Override bank = True set in our model
+        self.fields['email'].required = True
+
+    def clean(self):
+        # Validate unique
+        super().clean()
+
+        # Check password strength
+        email = self.cleaned_data['email']
+        password = self.cleaned_data['password']
+
+        # note eben: UserAttributeSimilarityValidator doesn't normalize email before comparing it
+        # note eben: Be aware that there may be issues if a password validator expects the user instance to have
+        # a valid id and/or have been persisted to the database. For example, issues may occur in a password
+        # validator that checks for password reuse.
+        temp_user = self.Meta.model(email=email)
+        temp_user.set_unusable_password()
+        password_validation.validate_password(password, temp_user)
+
+        return self.cleaned_data
+
+    def save(self):
+        password = self.cleaned_data.pop('password')
+        self.instance.set_password(password)
+        return super().save()
