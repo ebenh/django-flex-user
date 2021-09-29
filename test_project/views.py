@@ -23,19 +23,12 @@ def sign_up_method_selector(request):
 
 
 def sign_up_with_username(request):
-    # if this is a POST request we need to process the form data
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
         form = SignUpWithUsernameForm(request.POST)
-        # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
             user = form.save()
             login(request, user, backend='django_flex_user.backends.FlexUserModelBackend')
             return HttpResponseRedirect(reverse('index'))
-    # if a GET (or any other method) we'll create a blank form
     else:
         form = SignUpWithUsernameForm()
 
@@ -47,19 +40,12 @@ def sign_up_with_username(request):
 
 
 def sign_up_with_email(request):
-    # if this is a POST request we need to process the form data
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
         form = SignUpWithEmailForm(request.POST)
-        # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
             user = form.save()
             login(request, user, backend='django_flex_user.backends.FlexUserModelBackend')
             return HttpResponseRedirect(reverse('index'))
-    # if a GET (or any other method) we'll create a blank form
     else:
         form = SignUpWithEmailForm()
 
@@ -71,19 +57,12 @@ def sign_up_with_email(request):
 
 
 def sign_up_with_phone(request):
-    # if this is a POST request we need to process the form data
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
         form = SignUpWithPhoneForm(request.POST)
-        # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
             user = form.save()
             login(request, user, backend='django_flex_user.backends.FlexUserModelBackend')
             return HttpResponseRedirect(reverse('index'))
-    # if a GET (or any other method) we'll create a blank form
     else:
         form = SignUpWithPhoneForm()
 
@@ -95,18 +74,11 @@ def sign_up_with_phone(request):
 
 
 def sign_in(request):
-    # if this is a POST request we need to process the form data
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
         form = FlexUserAuthenticationForm(request, request.POST)
-        # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
             login(request, form.get_user())
             return HttpResponseRedirect(reverse('index'))
-    # if a GET (or any other method) we'll create a blank form
     else:
         form = FlexUserAuthenticationForm()
 
@@ -126,15 +98,9 @@ def search_otp_tokens(request):
     search_results_email_tokens = None
     search_results_phone_tokens = None
 
-    # if this is a POST request we need to process the form data
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
         form = OTPTokensSearchForm(request.POST)
-        # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
             user_identifier = form.cleaned_data['user_identifier']
 
             q = {}
@@ -153,10 +119,6 @@ def search_otp_tokens(request):
 
             search_results_email_tokens = EmailToken.objects.filter(**q)
             search_results_phone_tokens = PhoneToken.objects.filter(**q)
-
-            # return HttpResponseRedirect('/thanks/')
-
-    # if a GET (or any other method) we'll create a blank form
     else:
         form = OTPTokensSearchForm()
 
@@ -182,18 +144,10 @@ def verify_otp(request, token_id, token_type):
     except (EmailToken.DoesNotExist, PhoneToken.DoesNotExist):
         raise Http404
 
-    # if this is a POST request we need to process the form data
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
         form = VerifyOTPForm(otp_token, request.POST)
-        # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
             return HttpResponseRedirect('/accounts/password-reset/change-password/')
-
-    # if a GET (or any other method) we'll create a blank form
     else:
         form = VerifyOTPForm()
         otp_token.generate_password()
@@ -210,19 +164,12 @@ def change_password(request):
 
 
 def user(request):
-    # if this is a POST request we need to process the form data
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
         form = UserForm(request.POST, instance=request.user)
-        # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
             user = form.save()
             login(request, user, backend='django_flex_user.backends.FlexUserModelBackend')
             return HttpResponseRedirect(reverse('index'))
-    # if a GET (or any other method) we'll create a blank form
     else:
         form = UserForm(instance=request.user)
 
@@ -234,18 +181,11 @@ def user(request):
 
 
 def change_password(request):
-    # if this is a POST request we need to process the form data
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
         form = PasswordChangeForm(request.user, request.POST)
-        # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
-            # redirect to a new URL:
             form.save()
             return HttpResponseRedirect(reverse('sign-in'))
-    # if a GET (or any other method) we'll create a blank form
     else:
         form = PasswordChangeForm(request.user)
 
