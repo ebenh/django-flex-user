@@ -24,8 +24,8 @@ class VerifyOTPForm(forms.Form):
     password = forms.CharField(label='Password')
 
     def __init__(self, otp_token=None, *args, **kwargs):
-        self.otp_token = otp_token
         super().__init__(*args, **kwargs)
+        self.otp_token = otp_token
 
     def clean_password(self):
         password = self.cleaned_data['password']
