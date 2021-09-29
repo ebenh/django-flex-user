@@ -164,3 +164,9 @@ class SignUpWithPhoneForm(forms.ModelForm):
         password = self.cleaned_data.pop('password')
         self.instance.set_password(password)
         return super().save()
+
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = UserModel
+        fields = ('username', 'email', 'phone')
