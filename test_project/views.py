@@ -19,6 +19,18 @@ def sign_up_method_selector(request):
     return render(request, 'test_project/sign_up_method_selector.html')
 
 
+def sign_up_with_username(request):
+    return render(request, 'test_project/sign_up_with_username.html')
+
+
+def sign_up_with_email(request):
+    return render(request, 'test_project/sign_up_with_email.html')
+
+
+def sign_up_with_phone(request):
+    return render(request, 'test_project/sign_up_with_phone.html')
+
+
 def sign_in(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
