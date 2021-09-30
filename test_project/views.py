@@ -206,15 +206,8 @@ def user(request):
     else:
         form = UserForm(instance=request.user)
 
-    try:
-        email_token = EmailToken.objects.get(user=request.user)
-    except EmailToken.DoesNotExist:
-        email_token = None
-
-    try:
-        phone_token = PhoneToken.objects.get(user=request.user)
-    except PhoneToken.DoesNotExist:
-        phone_token = None
+    email_token = EmailToken.objects.filter(user=request.user).first()
+    phone_token = PhoneToken.objects.filter(user=request.user).first()
 
     return render(
         request,
