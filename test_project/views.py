@@ -104,6 +104,46 @@ def account(request):
     )
 
 
+@login_required()
+def user(request):
+    if request.method == 'POST':
+        form = UserForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+    else:
+        form = UserForm(instance=request.user)
+
+    email_token = EmailToken.objects.filter(user=request.user).first()
+    phone_token = PhoneToken.objects.filter(user=request.user).first()
+
+    return render(
+        request,
+        'test_project/account/user.html',
+        {
+            'form': form,
+            'email_token': email_token,
+            'phone_token': phone_token
+        }
+    )
+
+
+@login_required()
+def password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('sign-in'))
+    else:
+        form = PasswordChangeForm(request.user)
+
+    return render(
+        request,
+        'test_project/account/password.html',
+        {'form': form}
+    )
+
+
 def search_otp_tokens(request):
     search_results_email_tokens = None
     search_results_phone_tokens = None
@@ -193,46 +233,6 @@ def verify_otp2(request, token_id, token_type):
     return render(
         request,
         'test_project/forgot_password/verify.html',
-        {'form': form}
-    )
-
-
-@login_required()
-def user(request):
-    if request.method == 'POST':
-        form = UserForm(request.POST, instance=request.user)
-        if form.is_valid():
-            form.save()
-    else:
-        form = UserForm(instance=request.user)
-
-    email_token = EmailToken.objects.filter(user=request.user).first()
-    phone_token = PhoneToken.objects.filter(user=request.user).first()
-
-    return render(
-        request,
-        'test_project/account/user.html',
-        {
-            'form': form,
-            'email_token': email_token,
-            'phone_token': phone_token
-        }
-    )
-
-
-@login_required()
-def password(request):
-    if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('sign-in'))
-    else:
-        form = PasswordChangeForm(request.user)
-
-    return render(
-        request,
-        'test_project/account/password.html',
         {'form': form}
     )
 
