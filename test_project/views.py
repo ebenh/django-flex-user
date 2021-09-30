@@ -3,6 +3,7 @@ from .forms import (OTPTokensSearchForm, VerifyOTPForm, SignUpWithUsernameForm, 
 from django.shortcuts import render
 from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.decorators import login_required
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
 from django.core.exceptions import ValidationError
@@ -159,10 +160,7 @@ def verify_otp(request, token_id, token_type):
     )
 
 
-def change_password(request):
-    return render(request, 'test_project/password-reset/change_password.html')
-
-
+@login_required()
 def user(request):
     if request.method == 'POST':
         form = UserForm(request.POST, instance=request.user)
@@ -180,6 +178,7 @@ def user(request):
     )
 
 
+@login_required
 def change_password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
