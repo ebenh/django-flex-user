@@ -132,7 +132,7 @@ def search_otp_tokens(request):
 
     return render(
         request,
-        'test_project/password-reset/search.html',
+        'test_project/find_my_account.html',
         {
             'form': form,
             'search_results_email_tokens': search_results_email_tokens,
@@ -162,7 +162,7 @@ def verify_otp(request, token_id, token_type):
 
     return render(
         request,
-        'test_project/password-reset/verify.html',
+        'test_project/verify_my_account.html',
         {'form': form}
     )
 

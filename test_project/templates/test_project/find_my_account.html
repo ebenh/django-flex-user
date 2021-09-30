@@ -9,10 +9,10 @@
 {% if search_results_email_tokens is not None %}
     <ul>
         {% for i in search_results_email_tokens %}
-            <li><a href="{% url 'verify-otp' 'email' i.id %}">Email a one-time link to {{ i.get_obscured_name }}</a></li>
+            <li><a href="{% url 'verify-my-account' 'email' i.id %}">Email a one-time link to {{ i.get_obscured_name }}</a></li>
         {% endfor %}
         {% for i in search_results_phone_tokens %}
-            <li><a href="{% url 'verify-otp' 'phone' i.id %}">SMS a one-time code to {{ i.get_obscured_name }}</a></li>
+            <li><a href="{% url 'verify-my-account' 'phone' i.id %}">SMS a one-time code to {{ i.get_obscured_name }}</a></li>
         {% endfor %}
     </ul>
     {% if search_results_email_tokens|length_is:'0' and search_results_phone_tokens|length_is:'0' %}
