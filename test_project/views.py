@@ -19,11 +19,11 @@ def index(request):
     return render(request, 'test_project/index.html')
 
 
-def sign_up_method_selector(request):
-    return render(request, 'test_project/sign_up_method_selector.html')
+def sign_up(request):
+    return render(request, 'test_project/account/sign_up/index.html')
 
 
-def sign_up_with_username(request):
+def sign_up_username(request):
     if request.method == 'POST':
         form = SignUpWithUsernameForm(request.POST)
         if form.is_valid():
@@ -35,12 +35,12 @@ def sign_up_with_username(request):
 
     return render(
         request,
-        'test_project/sign_up_with_username.html',
+        'test_project/account/sign_up/username.html',
         {'form': form}
     )
 
 
-def sign_up_with_email(request):
+def sign_up_email(request):
     if request.method == 'POST':
         form = SignUpWithEmailForm(request.POST)
         if form.is_valid():
@@ -52,12 +52,12 @@ def sign_up_with_email(request):
 
     return render(
         request,
-        'test_project/sign_up_with_email.html',
+        'test_project/account/sign_up/email.html',
         {'form': form}
     )
 
 
-def sign_up_with_phone(request):
+def sign_up_phone(request):
     if request.method == 'POST':
         form = SignUpWithPhoneForm(request.POST)
         if form.is_valid():
@@ -69,7 +69,7 @@ def sign_up_with_phone(request):
 
     return render(
         request,
-        'test_project/sign_up_with_phone.html',
+        'test_project/account/sign_up/phone.html',
         {'form': form}
     )
 
@@ -85,7 +85,7 @@ def sign_in(request):
 
     return render(
         request,
-        'test_project/sign_in.html',
+        'test_project/account/sign_in.html',
         {'form': form}
     )
 
@@ -95,10 +95,10 @@ def sign_out(request):
     return HttpResponseRedirect(reverse(index))
 
 
-def accounts(request):
+def account(request):
     return render(
         request,
-        'test_project/accounts.html'
+        'test_project/account/index.html'
     )
 
 
@@ -132,7 +132,7 @@ def search_otp_tokens(request):
 
     return render(
         request,
-        'test_project/find.html',
+        'test_project/account/find.html',
         {
             'form': form,
             'search_results_email_tokens': search_results_email_tokens,
@@ -155,14 +155,14 @@ def verify_otp(request, token_id, token_type):
     if request.method == 'POST':
         form = VerifyOTPForm(otp_token, request.POST)
         if form.is_valid():
-            return HttpResponseRedirect('/accounts/password/')
+            return HttpResponseRedirect(reverse('account-password'))
     else:
         form = VerifyOTPForm()
         otp_token.generate_password()
 
     return render(
         request,
-        'test_project/verify.html',
+        'test_project/account/verify.html',
         {'form': form}
     )
 
@@ -180,7 +180,7 @@ def user(request):
 
     return render(
         request,
-        'test_project/user.html',
+        'test_project/account/user.html',
         {'form': form}
     )
 
@@ -197,6 +197,6 @@ def password(request):
 
     return render(
         request,
-        'test_project/password.html',
+        'test_project/account/password.html',
         {'form': form}
     )

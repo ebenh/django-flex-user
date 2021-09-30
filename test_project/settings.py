@@ -161,7 +161,7 @@ AUTHENTICATION_BACKENDS = [
 
 # Tell Django to use our login template
 
-LOGIN_URL = '/accounts/sign-in/'
+LOGIN_URL = '/account/sign-in/'
 
 # Configure django-phonenumber-field
 
