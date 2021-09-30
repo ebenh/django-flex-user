@@ -1,7 +1,7 @@
 {% extends "test_project/__base.html" %}
 
 {% block content %}
-<h1>My profile</h1>
+<h1>User details</h1>
 
 <form action="{{ request.path }}" method="post">
     {% csrf_token %}
