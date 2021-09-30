@@ -177,9 +177,7 @@ def user(request):
     if request.method == 'POST':
         form = UserForm(request.POST, instance=request.user)
         if form.is_valid():
-            user = form.save()
-            login(request, user, backend='django_flex_user.backends.FlexUserModelBackend')
-            return HttpResponseRedirect(reverse('index'))
+            form.save()
     else:
         form = UserForm(instance=request.user)
 
