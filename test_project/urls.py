@@ -32,7 +32,7 @@ urlpatterns = [
     path('account/user/verify/<slug:token_type>/<int:token_id>/', views.verify_otp2, name='account-user-verify'),
     path('forgot-password/', views.search_otp_tokens, name='forgot-password-index'),
     path('forgot-password/verify/<slug:token_type>/<int:token_id>/', views.verify_otp, name='forgot-password-verify'),
-    path('forgot-password/reset-password/<int:pk>/', views.password_reset, name='forgot-password-reset-password'),
+    path('forgot-password/reset-password/<int:pk>/', views.reset_password, name='forgot-password-reset-password'),
 
     path('account/', include('django_flex_user.urls')),
     path('admin/', admin.site.urls),

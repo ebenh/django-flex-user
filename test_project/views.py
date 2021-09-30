@@ -237,7 +237,7 @@ def password(request):
     )
 
 
-def password_reset(request, pk):
+def reset_password(request, pk):
     user = get_object_or_404(UserModel, pk=pk)
     auth_token = request.session.get('auth_token')
     if not default_token_generator.check_token(user, auth_token):
