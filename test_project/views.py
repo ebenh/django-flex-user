@@ -95,6 +95,13 @@ def sign_out(request):
     return HttpResponseRedirect(reverse(index))
 
 
+def accounts(request):
+    return render(
+        request,
+        'test_project/accounts.html'
+    )
+
+
 def search_otp_tokens(request):
     search_results_email_tokens = None
     search_results_phone_tokens = None
@@ -148,7 +155,7 @@ def verify_otp(request, token_id, token_type):
     if request.method == 'POST':
         form = VerifyOTPForm(otp_token, request.POST)
         if form.is_valid():
-            return HttpResponseRedirect('/accounts/password-reset/change-password/')
+            return HttpResponseRedirect('/accounts/password/')
     else:
         form = VerifyOTPForm()
         otp_token.generate_password()
@@ -179,7 +186,7 @@ def user(request):
 
 
 @login_required
-def change_password(request):
+def password(request):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
@@ -190,6 +197,6 @@ def change_password(request):
 
     return render(
         request,
-        'test_project/password-reset/change_password.html',
+        'test_project/password.html',
         {'form': form}
     )
