@@ -264,6 +264,7 @@ SOCIAL_AUTH_CLEAN_USERNAME_FUNCTION = 'django_flex_user.validators.flex_user_cle
 #
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+DEFAULT_FROM_EMAIL = 'eben@derso.org'
 
 #
 # Configure django-flex-user
