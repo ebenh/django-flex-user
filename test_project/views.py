@@ -144,7 +144,33 @@ def password(request):
     )
 
 
-def search_otp_tokens(request):
+def verify_user(request, token_type, token_id):
+    try:
+        if token_type == 'email':
+            otp_token = EmailToken.objects.get(id=token_id)
+        elif token_type == 'phone':
+            otp_token = PhoneToken.objects.get(id=token_id)
+        else:
+            raise Http404
+    except (EmailToken.DoesNotExist, PhoneToken.DoesNotExist):
+        raise Http404
+
+    if request.method == 'POST':
+        form = VerifyOTPForm(otp_token, request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect(reverse('user'))
+    else:
+        form = VerifyOTPForm()
+        otp_token.generate_password()
+
+    return render(
+        request,
+        'test_project/forgot_password/verify.html',
+        {'form': form}
+    )
+
+
+def forgot_password(request):
     search_results_email_tokens = None
     search_results_phone_tokens = None
 
@@ -183,7 +209,7 @@ def search_otp_tokens(request):
     )
 
 
-def verify_otp(request, token_id, token_type):
+def forgot_password_verify(request, token_type, token_id):
     try:
         if token_type == 'email':
             otp_token = EmailToken.objects.get(id=token_id)
@@ -199,7 +225,7 @@ def verify_otp(request, token_id, token_type):
         if form.is_valid():
             auth_token = default_token_generator.make_token(otp_token.user)
             request.session['auth_token'] = auth_token
-            return HttpResponseRedirect(reverse('forgot-password-reset-password', args=(otp_token.user.id,)))
+            return HttpResponseRedirect(reverse('password-reset', args=(otp_token.user.id,)))
     else:
         form = VerifyOTPForm()
         otp_token.generate_password()
@@ -211,33 +237,7 @@ def verify_otp(request, token_id, token_type):
     )
 
 
-def verify_otp2(request, token_id, token_type):
-    try:
-        if token_type == 'email':
-            otp_token = EmailToken.objects.get(id=token_id)
-        elif token_type == 'phone':
-            otp_token = PhoneToken.objects.get(id=token_id)
-        else:
-            raise Http404
-    except (EmailToken.DoesNotExist, PhoneToken.DoesNotExist):
-        raise Http404
-
-    if request.method == 'POST':
-        form = VerifyOTPForm(otp_token, request.POST)
-        if form.is_valid():
-            return HttpResponseRedirect(reverse('account-user'))
-    else:
-        form = VerifyOTPForm()
-        otp_token.generate_password()
-
-    return render(
-        request,
-        'test_project/forgot_password/verify.html',
-        {'form': form}
-    )
-
-
-def reset_password(request, pk):
+def password_reset(request, pk):
     user = get_object_or_404(UserModel, pk=pk)
     auth_token = request.session.get('auth_token')
     if not default_token_generator.check_token(user, auth_token):
