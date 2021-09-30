@@ -4,9 +4,11 @@ from django.shortcuts import render
 from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, HttpResponseRedirect
+from django.contrib.auth.tokens import default_token_generator
+from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.core.exceptions import ValidationError
+from django.shortcuts import get_object_or_404
 
 from django_flex_user.models import EmailToken, PhoneToken
 from django_flex_user.validators import FlexUserUnicodeUsernameValidator
@@ -20,7 +22,7 @@ def index(request):
 
 
 def sign_up(request):
-    return render(request, 'test_project/account/sign_up/index.html')
+    return render(request, 'test_project/sign_up/index.html')
 
 
 def sign_up_username(request):
@@ -35,7 +37,7 @@ def sign_up_username(request):
 
     return render(
         request,
-        'test_project/account/sign_up/username.html',
+        'test_project/sign_up/username.html',
         {'form': form}
     )
 
@@ -52,7 +54,7 @@ def sign_up_email(request):
 
     return render(
         request,
-        'test_project/account/sign_up/email.html',
+        'test_project/sign_up/email.html',
         {'form': form}
     )
 
@@ -69,7 +71,7 @@ def sign_up_phone(request):
 
     return render(
         request,
-        'test_project/account/sign_up/phone.html',
+        'test_project/sign_up/phone.html',
         {'form': form}
     )
 
@@ -85,7 +87,7 @@ def sign_in(request):
 
     return render(
         request,
-        'test_project/account/sign_in.html',
+        'test_project/sign_in.html',
         {'form': form}
     )
 
@@ -155,7 +157,10 @@ def verify_otp(request, token_id, token_type):
     if request.method == 'POST':
         form = VerifyOTPForm(otp_token, request.POST)
         if form.is_valid():
-            return HttpResponseRedirect(reverse('account-password'))
+            user = otp_token.user
+            auth_token = default_token_generator.make_token(user)
+            request.session['auth_token'] = auth_token
+            return HttpResponseRedirect(reverse('account-password', args=(user.id,)))
     else:
         form = VerifyOTPForm()
         otp_token.generate_password()
@@ -185,10 +190,13 @@ def user(request):
     )
 
 
-@login_required
-def password(request):
+def password(request, id):
+    user = get_object_or_404(UserModel, pk=id)
+    if user != request.user and not default_token_generator.check_token(user, request.session.get('auth_token')):
+        return HttpResponse('Unauthorized', status=401)
+
     if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
+        form = PasswordChangeForm(user, request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('sign-in'))
