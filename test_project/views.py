@@ -144,7 +144,7 @@ def password(request):
     )
 
 
-def verify_user(request, token_type, token_id):
+def verify_user(request, token_type, token_id, password=None):
     try:
         if token_type == 'email':
             otp_token = EmailToken.objects.get(id=token_id)
@@ -160,7 +160,12 @@ def verify_user(request, token_type, token_id):
         if form.is_valid():
             return HttpResponseRedirect(reverse('user'))
     else:
-        form = VerifyOTPForm()
+        if password:
+            form = VerifyOTPForm(otp_token, data={'password': password})
+            if form.is_valid():
+                return HttpResponseRedirect(reverse('user'))
+        else:
+            form = VerifyOTPForm()
         otp_token.generate_password()
 
     return render(
@@ -209,7 +214,7 @@ def forgot_password(request):
     )
 
 
-def forgot_password_verify(request, token_type, token_id):
+def forgot_password_verify(request, token_type, token_id, password=None):
     try:
         if token_type == 'email':
             otp_token = EmailToken.objects.get(id=token_id)
@@ -227,8 +232,15 @@ def forgot_password_verify(request, token_type, token_id):
             request.session['auth_token'] = auth_token
             return HttpResponseRedirect(reverse('password-reset', args=(otp_token.user.id,)))
     else:
-        form = VerifyOTPForm()
-        otp_token.generate_password()
+        if password:
+            form = VerifyOTPForm(otp_token, data={'password': password})
+            if form.is_valid():
+                auth_token = default_token_generator.make_token(otp_token.user)
+                request.session['auth_token'] = auth_token
+                return HttpResponseRedirect(reverse('password-reset', args=(otp_token.user.id,)))
+        else:
+            form = VerifyOTPForm()
+            otp_token.generate_password()
 
     return render(
         request,
