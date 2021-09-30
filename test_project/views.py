@@ -2,7 +2,7 @@ from .forms import (OTPTokensSearchForm, VerifyOTPForm, SignUpWithUsernameForm, 
                     SignUpWithPhoneForm, UserForm)
 from django.shortcuts import render
 from django.contrib.auth import get_user_model, login, logout
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
 from django.http import Http404, HttpResponseRedirect, HttpResponse
@@ -134,7 +134,7 @@ def search_otp_tokens(request):
 
     return render(
         request,
-        'test_project/account/find.html',
+        'test_project/forgot_password/index.html',
         {
             'form': form,
             'search_results_email_tokens': search_results_email_tokens,
@@ -157,17 +157,17 @@ def verify_otp(request, token_id, token_type):
     if request.method == 'POST':
         form = VerifyOTPForm(otp_token, request.POST)
         if form.is_valid():
-            user = otp_token.user
-            auth_token = default_token_generator.make_token(user)
+            auth_token = default_token_generator.make_token(otp_token.user)
             request.session['auth_token'] = auth_token
-            return HttpResponseRedirect(reverse('account-password', args=(user.id,)))
+            # return HttpResponseRedirect(f'{reverse("account-password")}?pk={otp_token.user.id}')
+            return HttpResponseRedirect(reverse('forgot-password-reset-password', args=(otp_token.user.id,)))
     else:
         form = VerifyOTPForm()
         otp_token.generate_password()
 
     return render(
         request,
-        'test_project/account/verify.html',
+        'test_project/forgot_password/verify.html',
         {'form': form}
     )
 
@@ -190,13 +190,10 @@ def user(request):
     )
 
 
-def password(request, id):
-    user = get_object_or_404(UserModel, pk=id)
-    if user != request.user and not default_token_generator.check_token(user, request.session.get('auth_token')):
-        return HttpResponse('Unauthorized', status=401)
-
+@login_required()
+def password(request):
     if request.method == 'POST':
-        form = PasswordChangeForm(user, request.POST)
+        form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('sign-in'))
@@ -206,5 +203,26 @@ def password(request, id):
     return render(
         request,
         'test_project/account/password.html',
+        {'form': form}
+    )
+
+
+def password_reset(request, pk):
+    user = get_object_or_404(UserModel, pk=pk)
+    auth_token = request.session.get('auth_token')
+    if not default_token_generator.check_token(user, auth_token):
+        return HttpResponse('Unauthorized', status=401)
+
+    if request.method == 'POST':
+        form = SetPasswordForm(user, request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('sign-in'))
+    else:
+        form = SetPasswordForm(user)
+
+    return render(
+        request,
+        'test_project/forgot_password/reset_password.html',
         {'form': form}
     )
