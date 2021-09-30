@@ -265,6 +265,6 @@ def password_reset(request, pk):
 
     return render(
         request,
-        'test_project/forgot_password/reset_password.html',
+        'test_project/forgot_password/password_reset.html',
         {'form': form}
     )
