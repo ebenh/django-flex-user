@@ -14,7 +14,7 @@ from django_flex_user.models.otp import TransmissionError
 
 def email_otp(recipient, password):
     try:
-        send_mail('Verify your account', f'Your one-time password:\n\n{password}', 'eben@derso.org', (recipient,))
+        send_mail('Verify your account', f'Your one-time password:\n\n{password}', None, (recipient,))
     except (SMTPException, ValueError) as e:
         raise TransmissionError from e
 
