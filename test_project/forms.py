@@ -21,7 +21,7 @@ class OTPTokensSearchForm(forms.Form):
 
 
 class VerifyOTPForm(forms.Form):
-    password = forms.CharField(label='Password')
+    password = forms.CharField(label='Verification code')
 
     def __init__(self, otp_token=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
