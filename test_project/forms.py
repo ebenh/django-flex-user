@@ -36,7 +36,7 @@ class VerifyOTPForm(forms.Form):
             raise ValidationError("You're doing that too much. Please wait before trying again.")
         else:
             if not success:
-                raise ValidationError('The password you entered was incorrect.')
+                raise ValidationError('The verification code you entered was incorrect.')
 
         return password
 
