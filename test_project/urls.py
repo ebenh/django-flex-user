@@ -28,8 +28,8 @@ urlpatterns = [
     path('accounts/sign-out/', views.sign_out, name='sign-out'),
     path('accounts/', views.accounts, name='accounts'),
     path('accounts/password/', views.password, name='password'),
-    path('accounts/find-my-account/', views.search_otp_tokens, name='find-my-account'),
-    path('accounts/verify/<slug:token_type>/<int:token_id>/', views.verify_otp, name='verify-my-account'),
+    path('accounts/find/', views.search_otp_tokens, name='find-account'),
+    path('accounts/verify/<slug:token_type>/<int:token_id>/', views.verify_otp, name='verify-account'),
     path('accounts/user/', views.user, name='user'),
 
     path('accounts/', include('django_flex_user.urls')),
