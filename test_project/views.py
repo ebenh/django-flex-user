@@ -212,7 +212,11 @@ def user(request):
     return render(
         request,
         'test_project/account/user.html',
-        {'form': form, 'email_token': email_token, 'phone_token': phone_token}
+        {
+            'form': form,
+            'email_token': email_token,
+            'phone_token': phone_token
+        }
     )
 
 
