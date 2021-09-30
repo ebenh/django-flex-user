@@ -21,7 +21,7 @@
                 <span title="verified">✔</span>
             {% endif %}
             {% if email_token and not email_token.verified %}
-                <span>Click <a href="{% url 'account-verify' 'email' email_token.id %}">here</a> to verify your email address</span>
+                <span>Click <a href="{% url 'account-user-verify' 'email' email_token.id %}">here</a> to verify your email address</span>
             {% endif %}
         </p>
         <p>
@@ -33,7 +33,7 @@
                 <span title="verified">✔</span>
             {% endif %}
             {% if phone_token and not phone_token.verified %}
-                <span>Click <a href="{% url 'account-verify' 'phone' phone_token.id %}">here</a> to verify your phone number</span>
+                <span>Click <a href="{% url 'account-user-verify' 'phone' phone_token.id %}">here</a> to verify your phone number</span>
             {% endif %}
         </p>
         <input type="submit" value="Save">
