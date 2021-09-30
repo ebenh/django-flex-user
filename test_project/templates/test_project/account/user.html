@@ -1,11 +1,42 @@
 {% extends "test_project/__base.html" %}
 
 {% block content %}
-<h1>User details</h1>
+    <h1>User details</h1>
 
-<form action="{{ request.path }}" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Save">
-</form>
+    <form action="{{ request.path }}" method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <p>
+            {{ form.username.errors }}
+            <label for="{{ form.username.id_for_label }}">{{ form.username.label_tag }}</label>
+            {{ form.username }}
+            {{ form.username.help_text }}
+        </p>
+        <p>
+            {{ form.email.errors }}
+            <label for="{{ form.email.id_for_label }}">{{ form.email.label_tag }}</label>
+            {{ form.email }}
+            {{ form.email.help_text }}
+            {% if email_token and email_token.verified %}
+                <span title="verified">✔</span>
+            {% endif %}
+            {% if email_token and not email_token.verified %}
+                <span>Click <a href="{% url 'account-verify' 'email' email_token.id %}">here</a> to verify your email address</span>
+            {% endif %}
+        </p>
+        <p>
+            {{ form.phone.errors }}
+            <label for="{{ form.phone.id_for_label }}">{{ form.phone.label_tag }}</label>
+            {{ form.phone }}
+            {{ form.phone.help_text }}
+            {% if phone_token and phone_token.verified %}
+                <span title="verified">✔</span>
+            {% endif %}
+            {% if phone_token and not phone_token.verified %}
+                <span>Click <a href="{% url 'account-verify' 'phone' phone_token.id %}">here</a> to verify your phone number</span>
+            {% endif %}
+        </p>
+        <input type="submit" value="Save">
+    </form>
+    <p>{{ verified }}</p>
 {% endblock content %}
