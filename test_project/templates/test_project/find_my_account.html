@@ -1,3 +1,6 @@
+{% extends "test_project/__base.html" %}
+
+{% block content %}
 <h1>Find my account</h1>
 
 {#Search form#}
@@ -21,3 +24,4 @@
         <p>Couldn't find a recovery method for the details provided.</p>
     {% endif %}
 {% endif %}
+{% endblock content %}

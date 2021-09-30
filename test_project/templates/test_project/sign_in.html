@@ -1,3 +1,6 @@
+{% extends "test_project/__base.html" %}
+
+{% block content %}
 <h1>Sign in</h1>
 
 <form action="{{ request.path }}" method="post">
@@ -7,3 +10,4 @@
 </form>
 
 <p>Forgot your password? Click <a href="{% url 'find-my-account' %}">here</a>.</p>
+{% endblock content %}

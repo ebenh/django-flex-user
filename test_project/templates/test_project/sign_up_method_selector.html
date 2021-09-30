@@ -1,3 +1,6 @@
+{% extends "test_project/__base.html" %}
+
+{% block content %}
 <h1>How would you like to sign up?</h1>
 <ul>
     <li><a href="{% url 'sign-up-with-username' %}">Sign up with username</a></li>
@@ -6,3 +9,4 @@
     <li><a href="">Sign up with Google</a></li>
     <li><a href="">Sign up with Facebook</a></li>
 </ul>
+{% endblock content %}
