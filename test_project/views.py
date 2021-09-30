@@ -94,7 +94,7 @@ def sign_in(request):
 
 def sign_out(request):
     logout(request)
-    return HttpResponseRedirect(reverse(index))
+    return HttpResponseRedirect(reverse('index'))
 
 
 def account(request):
