@@ -100,9 +100,9 @@ class SideChannelToken(OTPToken):
 
     @OTPToken.throttle_reset
     def generate_password(self):
-        password = ''.join(
-            random.SystemRandom().choice(self.password_alphabet) for _ in range(self.password_length))
-        self.password = password.encode('unicode_escape').decode('utf-8')
+        self.password = ''.join(
+            random.SystemRandom().choice(self.password_alphabet) for _ in range(self.password_length)
+        )
 
     @OTPToken.throttle
     def check_password(self, password):

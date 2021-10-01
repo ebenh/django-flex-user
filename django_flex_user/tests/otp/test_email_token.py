@@ -19,9 +19,7 @@ class TestEmailToken(TestCase):
         self.assertFalse(self.otp_token.verified)
         self.assertIsNotNone(self.otp_token.password)
         self.assertNotEqual(self.otp_token.password, '')
-        # note eben: Because escape characters are inserted into the password string, the password string's length may
-        # be greater than or equal to its configured length
-        self.assertGreaterEqual(len(self.otp_token.password), self.otp_token.password_length)
+        self.assertEqual(len(self.otp_token.password), self.otp_token.password_length)
         self.assertIsNone(self.otp_token.timeout)
         self.assertEqual(self.otp_token.failure_count, 0)
 
