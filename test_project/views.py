@@ -166,12 +166,15 @@ def verify_user(request, token_type, token_id, password=None):
                 return HttpResponseRedirect(reverse('user'))
         else:
             form = VerifyOTPForm()
-        otp_token.generate_password()
+            otp_token.generate_password()
 
     return render(
         request,
         'test_project/forgot_password/verify.html',
-        {'form': form}
+        {
+            'form': form,
+            'otp_token': otp_token
+        }
     )
 
 
@@ -245,7 +248,10 @@ def forgot_password_verify(request, token_type, token_id, password=None):
     return render(
         request,
         'test_project/forgot_password/verify.html',
-        {'form': form}
+        {
+            'form': form,
+            'otp_token': otp_token
+        }
     )
 
 
