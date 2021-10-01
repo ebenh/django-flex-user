@@ -164,7 +164,10 @@ def verify_user(request, token_type, token_id, password=None):
             return HttpResponseRedirect(reverse('user'))
     else:
         if password:
-            password = base64.urlsafe_b64decode(password.encode('utf-8')).decode('utf-8')
+            try:
+                password = base64.urlsafe_b64decode(password.encode('utf-8')).decode('utf-8')
+            except base64.binascii.Error:
+                password = None
             form = VerifyOTPForm(otp_token, data={'password': password})
             if form.is_valid():
                 return HttpResponseRedirect(reverse('user'))
@@ -245,7 +248,10 @@ def forgot_password_verify(request, token_type, token_id, password=None):
             return HttpResponseRedirect(reverse('password-reset', args=(otp_token.user.id,)))
     else:
         if password:
-            password = base64.urlsafe_b64decode(password.encode('utf-8')).decode('utf8')
+            try:
+                password = base64.urlsafe_b64decode(password.encode('utf-8')).decode('utf8')
+            except base64.binascii.Error:
+                password = None
             form = VerifyOTPForm(otp_token, data={'password': password})
             if form.is_valid():
                 auth_token = default_token_generator.make_token(otp_token.user)
