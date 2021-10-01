@@ -26,7 +26,7 @@ def email_otp(email_token, **kwargs):
 
     try:
         send_mail(
-            'Verify your account',
+            '[django-flex-user] Verify your account',
             f'Click the link below to verify your account:\n\n{link}',
             None,
             (email_token.email,)
