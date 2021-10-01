@@ -27,7 +27,7 @@ def email_otp(email_token, **kwargs):
     try:
         send_mail(
             '[django-flex-user] Verify your account',
-            f'Click the link below to verify your account:\n\n{link}',
+            f'Click the link below to verify your django-flex-user account:\n\n{link}',
             None,
             (email_token.email,)
         )
@@ -39,7 +39,7 @@ def sms_otp(phone_token, **kwargs):
     # note eben: This API key only allows us to send one free message a day
     resp = requests.post('https://textbelt.com/text', {
         'phone': phone_token.phone.as_e164,
-        'message': f'Your verification code:\n\n{phone_token.password}',
+        'message': f'Your django-flex-user verification code:\n\n{phone_token.password}',
         'key': 'textbelt',
     })
     try:
