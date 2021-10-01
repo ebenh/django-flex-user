@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
-from django.http import Http404, HttpResponseRedirect, HttpResponse
+from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseServerError
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
@@ -174,7 +174,8 @@ def verify_user(request, token_type, token_id, password=None):
             try:
                 otp_token.send_password(request=request, view_name='foo')
             except TransmissionError:
-                pass
+                # Return HTTP error code 500, internal server error
+                return HttpResponseServerError()
 
     return render(
         request,
@@ -256,7 +257,8 @@ def forgot_password_verify(request, token_type, token_id, password=None):
             try:
                 otp_token.send_password(request=request, view_name='bar')
             except TransmissionError:
-                pass
+                # Return HTTP error code 500, internal server error
+                return HttpResponseServerError()
 
     return render(
         request,
