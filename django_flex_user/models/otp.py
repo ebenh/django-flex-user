@@ -122,7 +122,7 @@ class SideChannelToken(OTPToken):
 class EmailToken(SideChannelToken):
     email = models.EmailField(_('email address'))
 
-    password_length = getattr(settings, 'FLEX_USER_OTP_LENGTH_FOR_EMAIL_TOKEN', 128)
+    password_length = getattr(settings, 'FLEX_USER_OTP_LENGTH_FOR_EMAIL_TOKEN', 64)
     password_alphabet = getattr(settings, 'FLEX_USER_OTP_ALPHABET_FOR_EMAIL_TOKEN', string.printable)
 
     def get_name(self):
