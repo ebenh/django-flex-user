@@ -15,13 +15,18 @@ class TestEmailTokenSerializer(TestCase):
 
     def test_serialize(self):
         from django_flex_user.serializers import EmailTokenSerializer
+        from rest_framework.test import APIRequestFactory
+        from django.urls import reverse
+
+        # Dummy request for serializer context and building absolute URI's
+        request = APIRequestFactory().get('/')
 
         # Make sure the serializer only exposes the data we want it to
-        serializer = EmailTokenSerializer(self.email_token)
+        serializer = EmailTokenSerializer(self.email_token, context={'request': request})
         self.assertEqual(
             serializer.data,
             {
-                'id': 1,
-                'name': 'va*********@ex*****.***'
+                'name': 'va*********@ex*****.***',
+                'uri': f'{request.build_absolute_uri(reverse("email-token", args=(self.email_token.id,)))}'
             }
         )

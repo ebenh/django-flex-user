@@ -16,9 +16,9 @@ class TestOTPTokensRetrieve(APITestCase):
         ('validUsername', False),  # Partial match username
         ('validEmail1@', False),  # Partial match email
         ('+1202', False),  # Partial match phone
-        ('validUsername1', True), # Matching username
-        ('validEmail1@example.com', True), # Matching email
-        ('+12025550001', True) # Matching phone
+        ('validUsername1', True),  # Matching username
+        ('validEmail1@example.com', True),  # Matching email
+        ('+12025550001', True)  # Matching phone
     )
 
     def setUp(self):
@@ -33,18 +33,22 @@ class TestOTPTokensRetrieve(APITestCase):
         self.assertEqual(
             response.data,
             {
-                'EmailToken': [],
-                'PhoneToken': []
+                'email': [],
+                'phone': []
             }
         )
 
     def test_method_get_with_query_string(self):
         for value, expect_match in self._search_values:
             with self.subTest(search_value=value):
+                from rest_framework.test import APIRequestFactory
                 from django.urls import reverse
 
                 response = self.client.get(self._REST_ENDPOINT_PATH, {'search': value})
                 self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+                # Dummy request for building absolute URI's
+                request = APIRequestFactory().get('/')
 
                 if expect_match:
                     self.assertEqual(
@@ -53,13 +57,13 @@ class TestOTPTokensRetrieve(APITestCase):
                             'email': [
                                 {
                                     'name': 'va*********@ex*****.***',
-                                    'uri': f"http://testserver{reverse('email-token', args=(1,))}"
+                                    'uri': f'{request.build_absolute_uri(reverse("email-token", args=(1,)))}'
                                 }
                             ],
                             'phone': [
                                 {
                                     'name': '+*********01',
-                                    'uri': f"http://testserver{reverse('phone-token', args=(1,))}"
+                                    'uri': f'{request.build_absolute_uri(reverse("phone-token", args=(1,)))}'
                                 }
                             ]
                         }
