@@ -89,6 +89,7 @@ class OTPToken(models.Model):
 
 class SideChannelToken(OTPToken):
     password = models.CharField(_('password'), null=True, blank=True, max_length=256)
+    expiration = models.DateTimeField(_('expiration'), null=True, blank=True)
 
     @property
     def password_length(self):
@@ -103,13 +104,22 @@ class SideChannelToken(OTPToken):
         self.password = ''.join(
             random.SystemRandom().choice(self.password_alphabet) for _ in range(self.password_length)
         )
+        self.expiration = timezone.now() + getattr(settings, 'FLEX_USER_OTP_TTL', timedelta(minutes=15))
 
     @OTPToken.throttle
     def check_password(self, password):
+        # Check whether the password has expired
+        if self.expiration and self.expiration <= timezone.now():
+            self.password = None
+            self.expiration = None
+            return False
+
+        # Check the password
         success = False if self.password is None else self.password == password
         if success:
             self.password = None
             self.verified = True
+
         return success
 
     def send_password(self, **kwargs):
