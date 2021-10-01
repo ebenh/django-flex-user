@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
 from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseServerError
 from django.urls import reverse
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied
 from django.shortcuts import get_object_or_404
 
 from django_flex_user.models import EmailToken, PhoneToken
@@ -280,7 +280,7 @@ def password_reset(request, pk):
     user = get_object_or_404(UserModel, pk=pk)
     auth_token = request.session.get('auth_token')
     if not default_token_generator.check_token(user, auth_token):
-        return HttpResponse('Unauthorized', status=401)
+        raise PermissionDenied
 
     if request.method == 'POST':
         form = SetPasswordForm(user, request.POST)
