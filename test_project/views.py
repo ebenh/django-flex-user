@@ -172,7 +172,7 @@ def verify_user(request, token_type, token_id, password=None):
             form = VerifyOTPForm()
             otp_token.generate_password()
             try:
-                otp_token.send_password(request=request, view_name='foo')
+                otp_token.send_password(request=request, view_name='account-verify')
             except TransmissionError:
                 # Return HTTP error code 500, internal server error
                 return HttpResponseServerError()
@@ -255,7 +255,7 @@ def forgot_password_verify(request, token_type, token_id, password=None):
             form = VerifyOTPForm()
             otp_token.generate_password()
             try:
-                otp_token.send_password(request=request, view_name='bar')
+                otp_token.send_password(request=request, view_name='forgot-password-verify')
             except TransmissionError:
                 # Return HTTP error code 500, internal server error
                 return HttpResponseServerError()
