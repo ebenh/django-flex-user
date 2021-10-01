@@ -1,3 +1,5 @@
+import base64
+
 from .forms import (OTPTokensSearchForm, VerifyOTPForm, SignUpWithUsernameForm, SignUpWithEmailForm,
                     SignUpWithPhoneForm, UserForm)
 from django.shortcuts import render
@@ -11,6 +13,7 @@ from django.core.exceptions import ValidationError
 from django.shortcuts import get_object_or_404
 
 from django_flex_user.models import EmailToken, PhoneToken
+from django_flex_user.models.otp import TransmissionError
 from django_flex_user.validators import FlexUserUnicodeUsernameValidator
 from django_flex_user.forms import FlexUserAuthenticationForm
 
@@ -161,12 +164,17 @@ def verify_user(request, token_type, token_id, password=None):
             return HttpResponseRedirect(reverse('user'))
     else:
         if password:
+            password = base64.urlsafe_b64decode(password.encode('utf-8')).decode('utf-8')
             form = VerifyOTPForm(otp_token, data={'password': password})
             if form.is_valid():
                 return HttpResponseRedirect(reverse('user'))
         else:
             form = VerifyOTPForm()
             otp_token.generate_password()
+            try:
+                otp_token.send_password(request=request, view_name='foo')
+            except TransmissionError:
+                pass
 
     return render(
         request,
@@ -236,6 +244,7 @@ def forgot_password_verify(request, token_type, token_id, password=None):
             return HttpResponseRedirect(reverse('password-reset', args=(otp_token.user.id,)))
     else:
         if password:
+            password = base64.urlsafe_b64decode(password.encode('utf-8')).decode('utf8')
             form = VerifyOTPForm(otp_token, data={'password': password})
             if form.is_valid():
                 auth_token = default_token_generator.make_token(otp_token.user)
@@ -244,6 +253,10 @@ def forgot_password_verify(request, token_type, token_id, password=None):
         else:
             form = VerifyOTPForm()
             otp_token.generate_password()
+            try:
+                otp_token.send_password(request=request, view_name='bar')
+            except TransmissionError:
+                pass
 
     return render(
         request,

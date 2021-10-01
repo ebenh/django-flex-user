@@ -30,10 +30,10 @@ urlpatterns = [
     path('account/user/', views.user, name='user'),
     path('account/password/', views.password, name='user-password'),
     path('account/user/verify/<slug:token_type>/<int:token_id>/', views.verify_user, name='verify-user'),
-    path('account/user/verify/<slug:token_type>/<int:token_id>/<str:password>/', views.verify_user),
+    path('account/user/verify/<slug:token_type>/<int:token_id>/<str:password>/', views.verify_user, name='foo'),
     path('forgot-password/', views.forgot_password, name='forgot-password'),
     path('forgot-password/verify/<slug:token_type>/<int:token_id>/', views.forgot_password_verify, name='forgot-password-verify'),
-    path('forgot-password/verify/<slug:token_type>/<int:token_id>/<str:password>/', views.forgot_password_verify),
+    path('forgot-password/verify/<slug:token_type>/<int:token_id>/<str:password>/', views.forgot_password_verify, name='bar'),
     path('forgot-password/password-reset/<int:pk>/', views.password_reset, name='password-reset'),
 
     path('account/', include('django_flex_user.urls')),

@@ -112,7 +112,7 @@ class SideChannelToken(OTPToken):
             self.verified = True
         return success
 
-    def send_password(self):
+    def send_password(self, **kwargs):
         raise NotImplementedError
 
     class Meta:
@@ -131,13 +131,13 @@ class EmailToken(SideChannelToken):
     def get_obscured_name(self):
         return obscure_email(self.email)
 
-    def send_password(self):
+    def send_password(self, **kwargs):
         flex_user_email_function = getattr(settings, 'FLEX_USER_OTP_EMAIL_FUNCTION', None)
         if flex_user_email_function is None:
             raise NotImplementedError
 
         fun = get_module_member(flex_user_email_function)
-        fun(self.email, self.password)
+        fun(self, **kwargs)
 
 
 class PhoneToken(SideChannelToken):
@@ -152,10 +152,10 @@ class PhoneToken(SideChannelToken):
     def get_obscured_name(self):
         return obscure_phone(self.phone)
 
-    def send_password(self):
+    def send_password(self, **kwargs):
         flex_user_sms_function = getattr(settings, 'FLEX_USER_OTP_SMS_FUNCTION', None)
         if flex_user_sms_function is None:
             raise NotImplementedError
 
         fun = get_module_member(flex_user_sms_function)
-        fun(self.phone, self.password)
+        fun(self, **kwargs)
