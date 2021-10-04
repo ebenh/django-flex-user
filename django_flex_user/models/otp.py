@@ -110,15 +110,14 @@ class SideChannelToken(OTPToken):
     def check_password(self, password):
         # Check whether the password has expired
         if self.expiration and self.expiration <= timezone.now():
-            self.password = None
-            self.expiration = None
             return False
 
         # Check the password
         success = False if self.password is None else self.password == password
         if success:
-            self.password = None
             self.verified = True
+            self.password = None
+            self.expiration = None
 
         return success
 
