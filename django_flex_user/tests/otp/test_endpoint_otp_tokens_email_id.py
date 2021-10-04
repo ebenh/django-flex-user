@@ -68,7 +68,7 @@ class TestEmailTokenUpdate(APITestCase):
             self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
 
     @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
-    def test_method_post_format_application_json_generate_password_validate_password(self):
+    def test_method_post_format_application_json_generate_password_check_password(self):
         from django.db import transaction
         from freezegun import freeze_time
 
@@ -133,7 +133,7 @@ class TestEmailTokenUpdate(APITestCase):
                 transaction.set_rollback(True)
 
     @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
-    def test_method_post_format_multipart_form_data_generate_password_validate_password(self):
+    def test_method_post_format_multipart_form_data_generate_password_check_password(self):
         from django.db import transaction
         from freezegun import freeze_time
 
@@ -199,7 +199,7 @@ class TestEmailTokenUpdate(APITestCase):
 
                 transaction.set_rollback(True)
 
-    def test_method_post_format_application_json_validate_password(self):
+    def test_method_post_format_application_json_check_password(self):
         from django.db import transaction
         from freezegun import freeze_time
 
@@ -248,7 +248,7 @@ class TestEmailTokenUpdate(APITestCase):
 
                 transaction.set_rollback(True)
 
-    def test_method_post_format_multipart_form_data_validate_password(self):
+    def test_method_post_format_multipart_form_data_check_password(self):
         from django.db import transaction
         from freezegun import freeze_time
 
