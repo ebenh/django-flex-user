@@ -103,9 +103,9 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
             {
                 'username': 'validUsername',
                 'email': None,
-                'email_verified': False,
+                'email_verified': None,
                 'phone': None,
-                'phone_verified': False
+                'phone_verified': None
             }
         )
 
@@ -216,9 +216,9 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
                                     {
                                         'username': data.get('username', 'validUsername'),
                                         'email': data.get('email'),
-                                        'email_verified': False,
+                                        'email_verified': False if data.get('email') else None,
                                         'phone': data.get('phone'),
-                                        'phone_verified': False
+                                        'phone_verified': False if data.get('phone') else None
                                     }
                                 )
 
@@ -309,15 +309,11 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
                                 self.assertEqual(
                                     response.data,
                                     {
-                                        'username':
-                                            data.get('username', 'validUsername')
-                                            if data.get('username') != '' else None,
-                                        'email':
-                                            data.get('email') if data.get('email') != '' else None,
-                                        'email_verified': False,
-                                        'phone':
-                                            data.get('phone') if data.get('phone') != '' else None,
-                                        'phone_verified': False
+                                        'username': data.get('username', 'validUsername') or None,
+                                        'email': data.get('email') or None,
+                                        'email_verified': False if data.get('email') else None,
+                                        'phone': data.get('phone') or None,
+                                        'phone_verified': False if data.get('phone') else None
                                     }
                                 )
 

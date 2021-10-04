@@ -476,3 +476,55 @@ class TestUserSerializer(TestCase):
         user = serializer.save()
         self.assertIsNotNone(user)
         self.assertEqual(user.email, 'validEmail@xn--bcher-kva.example')
+
+    def test_email_verified(self):
+        from django_flex_user.models import FlexUser, EmailToken
+        from django_flex_user.serializers import FlexUserSerializer
+
+        # Create user
+        user = FlexUser.objects.create_user(email='validEmail@example.com', password='validPassword')
+        # Serialize user
+        serializer = FlexUserSerializer(user)
+
+        # Check email_verified and phone_verified
+        self.assertFalse(serializer.data['email_verified'])
+        self.assertIsNone(serializer.data['phone_verified'])
+
+        # Verify email address
+        email_token = EmailToken.objects.get(user=user)
+        email_token.generate_password()
+        email_token.check_password(email_token.password)
+
+        # Reload data from db
+        user.refresh_from_db()
+        serializer = FlexUserSerializer(user)
+
+        # Check email_verified and phone_verified
+        self.assertTrue(serializer.data['email_verified'])
+        self.assertIsNone(serializer.data['phone_verified'])
+
+    def test_phone_verified(self):
+        from django_flex_user.models import FlexUser, PhoneToken
+        from django_flex_user.serializers import FlexUserSerializer
+
+        # Create user
+        user = FlexUser.objects.create_user(phone='+12025551234', password='validPassword')
+        # Serialize user
+        serializer = FlexUserSerializer(user)
+
+        # Check email_verified and phone_verified
+        self.assertFalse(serializer.data['phone_verified'])
+        self.assertIsNone(serializer.data['email_verified'])
+
+        # Verify phone number
+        phone_token = PhoneToken.objects.get(user=user)
+        phone_token.generate_password()
+        phone_token.check_password(phone_token.password)
+
+        # Reload data from db
+        user.refresh_from_db()
+        serializer = FlexUserSerializer(user)
+
+        # Check email_verified and phone_verified
+        self.assertTrue(serializer.data['phone_verified'])
+        self.assertIsNone(serializer.data['email_verified'])

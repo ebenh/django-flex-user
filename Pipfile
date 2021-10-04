@@ -9,11 +9,12 @@ djangorestframework = "*"
 django-phonenumber-field = "*"
 tldextract = "*"
 regex = "*"
-django-otp = "*"
 social-auth-app-django = "*"
 django-dirtyfields = "*"
 djangorestframework-simplejwt = "*"
 phonenumbers = "*"
+django-rest-multiple-models = "*"
+django-environ = "*"
 
 [dev-packages]
 freezegun = "*"

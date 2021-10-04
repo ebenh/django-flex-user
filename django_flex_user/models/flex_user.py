@@ -7,15 +7,12 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 
-from django_otp.plugins.otp_email.models import EmailDevice
-
 from phonenumber_field.modelfields import PhoneNumberField
-
 from dirtyfields import DirtyFieldsMixin
 
-from .validators import FlexUserUnicodeUsernameValidator
-
-from .fields import CICharField
+from django_flex_user.validators import FlexUserUnicodeUsernameValidator
+from django_flex_user.fields import CICharField
+from django_flex_user.models.otp import EmailToken, PhoneToken
 
 
 # Reference: https://docs.djangoproject.com/en/3.0/topics/auth/customizing/
@@ -260,9 +257,47 @@ def my_pre__save_handler(sender, **kwargs):
 
 @receiver(post_save, sender=FlexUser)
 def my_post_save_handler(sender, **kwargs):
+    user = kwargs['instance']
+
     if kwargs['created']:
-        EmailDevice.objects.create(name="default", user_id=kwargs['instance'].id, confirmed=False)
-    if 'email' in kwargs['instance'].get_dirty_fields():
-        email_device = EmailDevice.objects.get(user=kwargs['instance'], email=None)
-        email_device.confirmed = False
-        email_device.save(update_fields=['confirmed'])
+        if user.email is not None:
+            EmailToken.objects.create(user_id=user.id, email=user.email)
+        if user.phone is not None:
+            PhoneToken.objects.create(user_id=user.id, phone=user.phone)
+    else:
+        dirty_fields = user.get_dirty_fields(verbose=True)
+
+        if 'email' in dirty_fields:
+            if dirty_fields['email']['current'] is None:
+                # If the new value for email is None, delete the token if it exists
+                EmailToken.objects.filter(user_id=user.id).delete()
+            elif dirty_fields['email']['saved'] is None:
+                # If the old value for email is None and its new value is not None, create a new token
+                # todo: construct this instance manually?
+                EmailToken.objects.create(user=user, email=dirty_fields['email']['current'])
+            else:
+                # Otherwise, update the existing token
+                email_token = EmailToken.objects.get(user=user)
+                email_token.email = user.email
+                # Reset the password
+                email_token.verified = False
+                email_token.password = None
+                email_token.expiration = None
+                email_token.save(update_fields=['email', 'verified', 'password', 'expiration'])
+        if 'phone' in dirty_fields:
+            if dirty_fields['phone']['current'] is None:
+                # If the new value for phone is None, delete the token if it exists
+                PhoneToken.objects.filter(user_id=user.id).delete()
+            elif dirty_fields['phone']['saved'] is None:
+                # If the old value for phone is None and its new value is not None, create a new token
+                # todo: construct this instance manually?
+                PhoneToken.objects.create(user=user, phone=dirty_fields['phone']['current'])
+            else:
+                # Otherwise, update the existing token
+                phone_token = PhoneToken.objects.get(user=user)
+                phone_token.phone = user.phone
+                # Reset the password
+                phone_token.verified = False
+                phone_token.password = None
+                phone_token.expiration = None
+                phone_token.save(update_fields=['phone', 'verified', 'password', 'expiration'])

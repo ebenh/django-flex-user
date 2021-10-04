@@ -1,0 +1,27 @@
+{% extends "test_project/__base.html" %}
+
+{% block content %}
+<h1>Find your account</h1>
+
+{#Search form#}
+<form action="{{ request.path }}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Search">
+</form>
+
+{#Search Results#}
+{% if search_results_email_tokens is not None %}
+    <ul>
+        {% for i in search_results_email_tokens %}
+            <li><a href="{% url 'forgot-password-verify' 'email' i.id %}">Email a verification link to {{ i.get_obscured_name }}</a></li>
+        {% endfor %}
+        {% for i in search_results_phone_tokens %}
+            <li><a href="{% url 'forgot-password-verify' 'phone' i.id %}">SMS a verification code to {{ i.get_obscured_name }}</a></li>
+        {% endfor %}
+    </ul>
+    {% if search_results_email_tokens|length_is:'0' and search_results_phone_tokens|length_is:'0' %}
+        <p>Couldn't find a recovery method for the details provided.</p>
+    {% endif %}
+{% endif %}
+{% endblock content %}

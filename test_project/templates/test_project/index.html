@@ -1,0 +1,15 @@
+{% extends "test_project/__base.html" %}
+
+{% block content %}
+    <h1>django-flex-user</h1>
+    <ul>
+        {% if not request.user.is_authenticated %}
+            <li><a href="{% url 'sign-up' %}">Sign up</a></li>
+            <li><a href="{% url 'sign-in' %}">Sign in</a></li>
+        {% else %}
+            <li><a href="{% url 'account' %}">Account</a></li>
+            <li><a href="{% url 'sign-out' %}">Sign out</a></li>
+        {% endif %}
+    </ul>
+    <p>Hello {{ request.user }}</p>
+{% endblock content %}

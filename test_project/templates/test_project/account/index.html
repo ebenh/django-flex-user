@@ -1,0 +1,10 @@
+{% extends "test_project/__base.html" %}
+
+{% block content %}
+<h1>Account</h1>
+
+<ul>
+    <li><a href="{% url 'user' %}">Update your username, email address or phone number</a></li>
+    <li><a href="{% url 'user-password' %}">Update your password</a></li>
+</ul>
+{% endblock content %}

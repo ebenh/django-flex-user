@@ -1,0 +1,21 @@
+{% extends "test_project/__base.html" %}
+
+{% block content %}
+    <h1>Verify your account</h1>
+
+    {% if otp_token.email %}
+        <p>We've sent a verification link to {{ otp_token.email }}.</p>
+        <p>Click the link to verify your account.</p>
+
+        {{ form.password.errors }}
+    {% elif otp_token.phone %}
+        <p>We've sent a verification code to {{ otp_token.phone }}.</p>
+        <p>Enter the code below to verify your account.</p>
+
+        <form action="{{ request.path }}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Submit">
+        </form>
+    {% endif %}
+{% endblock content %}

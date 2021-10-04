@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
@@ -11,13 +11,10 @@ urlpatterns = [
     path('users/user/oauth-providers/', views.OAuthProviders.as_view()),
     path('sessions/', views.Sessions.as_view()),
 
-    path('otp-devices/', views.OTPDevices.as_view()),
-    path('otp-devices/<str:pk>', views.OTPDevice.as_view()),
-
-    path('', include('social_django.urls', namespace='social')),
-    # Password Reset
-    path('', include('django.contrib.auth.urls')),
-    # path('password_reset', include('django_rest_passwordreset.urls', namespace='password_reset')),
+    path('otp-tokens/', views.OTPTokens.as_view()),
+    path('otp-tokens/email/<str:pk>', views.EmailToken.as_view(), name='email-token'),
+    path('otp-tokens/phone/<str:pk>', views.PhoneToken.as_view(), name='phone-token'),
 ]
 
+# djangorestframework
 urlpatterns = format_suffix_patterns(urlpatterns)

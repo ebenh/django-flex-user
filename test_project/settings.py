@@ -10,10 +10,23 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import environ
 from pathlib import Path
+
+#
+# Configure django-environ
+#
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Read environment variables from .env file (this is part of django-environ config)
+environ.Env.read_env(Path(BASE_DIR).joinpath('.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -31,9 +44,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'rest_framework',  # djangorestframework
     'rest_framework.authtoken',  # djangorestframework
+    'drf_multiple_model',  # django-rest-multiple-models
     'social_django',  # social-auth-app-django
-    'django_otp',  # django-otp
-    'django_otp.plugins.otp_email',  # django-otp
     'django_flex_user.apps.DjangoFlexUserConfig',  # django-flex-user
     'django.contrib.admin',
     'django.contrib.auth',
@@ -50,7 +62,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django_otp.middleware.OTPMiddleware',  # django-otp
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -60,7 +71,7 @@ ROOT_URLCONF = 'test_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [Path(BASE_DIR).joinpath('test_project', 'templates'), ],  # Added template directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -150,7 +161,7 @@ AUTHENTICATION_BACKENDS = [
 
 # Tell Django to use our login template
 
-LOGIN_URL = '/account/log-in/'
+LOGIN_URL = '/sign-in/'
 
 # Configure django-phonenumber-field
 
@@ -253,3 +264,22 @@ SOCIAL_AUTH_CLEAN_USERNAME_FUNCTION = 'django_flex_user.validators.flex_user_cle
 #
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+DEFAULT_FROM_EMAIL = 'eben@derso.org'
+
+#
+# Configure django-flex-user
+#
+
+FLEX_USER_OTP_EMAIL_FUNCTION = 'test_project.verification.email_otp'
+FLEX_USER_OTP_SMS_FUNCTION = 'test_project.verification.sms_otp'
+
+#
+# Configure SendGrid
+#
+
+SENDGRID_API_KEY = env('SENDGRID_API_KEY')
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'  # this is exactly the value 'apikey'
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

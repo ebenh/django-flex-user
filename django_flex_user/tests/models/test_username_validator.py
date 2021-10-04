@@ -18,7 +18,7 @@ from django.test import TestCase
 # "Falsehoods Programmers Believe About Phone Numbers":
 # https://github.com/google/libphonenumber/blob/272b7f1866fbea072dbe6ad2865aca5393fc0eb5/FALSEHOODS.md
 
-class TestUserSerializer(TestCase):
+class TestUsernameValidator(TestCase):
     _valid_usernames = [
         # Separators
         'valid.username',  # Period

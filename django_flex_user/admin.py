@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.utils.translation import gettext_lazy as _
 
 from .forms import FlexUserAuthenticationForm
+from .models.otp import EmailToken, PhoneToken
 
 # Reference: https://docs.djangoproject.com/en/3.0/topics/auth/customizing/
 
@@ -101,3 +102,33 @@ class FlexUserAdmin(UserAdmin):
 admin.site.register(UserModel, FlexUserAdmin)
 # admin.site.login_template = 'account/login.html'
 admin.site.login_form = FlexUserAuthenticationForm
+
+
+class EmailTokenAdmin(admin.ModelAdmin):
+    readonly_fields = ['user', 'email', 'verified', 'password', 'timeout', 'failure_count', 'expiration']
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
+class PhoneTokenAdmin(admin.ModelAdmin):
+    readonly_fields = ['user', 'phone', 'verified', 'password', 'timeout', 'failure_count', 'expiration']
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
+admin.site.register(EmailToken, EmailTokenAdmin)
+admin.site.register(PhoneToken, PhoneTokenAdmin)
