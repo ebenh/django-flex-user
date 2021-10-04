@@ -121,11 +121,6 @@ class SideChannelToken(OTPToken):
 
         return success
 
-    def reset_password(self):
-        self.verified = False
-        self.password = None
-        self.expiration = None
-
     def send_password(self, **kwargs):
         raise NotImplementedError
 
