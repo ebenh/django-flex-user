@@ -300,7 +300,7 @@ class TestEmailTokenUpdate(APITestCase):
 
                 transaction.set_rollback(True)
 
-    def test_method_post_check_password_throttling(self):
+    def test_method_post_throttling(self):
         from freezegun import freeze_time
 
         self.otp_token.generate_password()
