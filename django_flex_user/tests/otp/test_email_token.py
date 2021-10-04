@@ -182,11 +182,10 @@ class TestEmailToken(TestCase):
     @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
     def test_expiration(self):
         from freezegun import freeze_time
-
+        from datetime import timedelta
+        from django.utils import timezone
+        
         with freeze_time() as frozen_datetime:
-            from datetime import timedelta
-            from django.utils import timezone
-
             self.otp_token.generate_password()
 
             # Advance time to exactly the expiration time
