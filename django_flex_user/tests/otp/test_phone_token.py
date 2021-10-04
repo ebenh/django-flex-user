@@ -13,6 +13,9 @@ class TestPhoneToken(TestEmailToken):
         user = FlexUser.objects.create_user(phone='+12025551234')
         self.otp_token = PhoneToken.objects.get(user=user)
 
+    def test_generate_password_update_email_check_password(self):
+        pass
+
     def test_generate_password_update_phone_check_password(self):
         from freezegun import freeze_time
         from django.utils import timezone

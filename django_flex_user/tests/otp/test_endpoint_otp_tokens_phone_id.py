@@ -16,6 +16,9 @@ class TestPhoneTokenUpdate(TestEmailTokenUpdate):
         self.otp_token = PhoneToken.objects.get(user=user)
         self._REST_ENDPOINT_PATH = TestEmailTokenUpdate._REST_ENDPOINT_PATH.format(type='phone', id=self.otp_token.id)
 
+    def test_method_post_generate_password_update_email_check_password(self):
+        pass
+
     def test_method_post_generate_password_update_phone_check_password(self):
         from freezegun import freeze_time
         from django.utils import timezone
