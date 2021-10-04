@@ -279,8 +279,8 @@ def my_post_save_handler(sender, **kwargs):
                 # Otherwise, update the existing token
                 email_token = EmailToken.objects.get(user=user)
                 email_token.email = user.email
-                email_token.verified = False
-                email_token.save(update_fields=['email', 'verified'])
+                email_token.reset_password()
+                email_token.save()
         if 'phone' in dirty_fields:
             if dirty_fields['phone']['current'] is None:
                 # If the new value for phone is None, delete the token if it exists
@@ -293,5 +293,5 @@ def my_post_save_handler(sender, **kwargs):
                 # Otherwise, update the existing token
                 phone_token = PhoneToken.objects.get(user=user)
                 phone_token.phone = user.phone
-                phone_token.verified = False
-                phone_token.save(update_fields=['phone', 'verified'])
+                phone_token.reset_password()
+                phone_token.save()
