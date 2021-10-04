@@ -115,7 +115,9 @@ class SideChannelToken(OTPToken):
         # Check the password
         success = False if self.password is None else self.password == password
         if success:
-            self.reset_password()
+            self.verified = True
+            self.password = None
+            self.expiration = None
 
         return success
 
