@@ -15,6 +15,7 @@ djangorestframework-simplejwt = "*"
 phonenumbers = "*"
 django-rest-multiple-models = "*"
 django-environ = "*"
+django-split-settings = "*"
 
 [dev-packages]
 freezegun = "*"
