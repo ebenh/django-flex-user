@@ -23,7 +23,7 @@ env = environ.Env(
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Read environment variables from .env file (this is part of django-environ config)
 environ.Env.read_env(Path(BASE_DIR).joinpath('.env'))
@@ -71,7 +71,7 @@ ROOT_URLCONF = 'test_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [Path(BASE_DIR).joinpath('test_project', 'templates'), ],  # Added template directory
+        'DIRS': [Path(BASE_DIR).joinpath('test_project', '../templates'), ],  # Added template directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
