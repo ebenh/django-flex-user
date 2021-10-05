@@ -1,21 +1,20 @@
 # Configure social-auth-app-django
 
-# SOCIAL_AUTH_POSTGRES_JSONFIELD = True  # social-auth-app-django ... deprecated
-# SOCIAL_AUTH_JSONFIELD_ENABLED = True  # social-auth-app-django ... todo: enable this when using pgsql
-# SOCIAL_AUTH_URL_NAMESPACE = 'social'  # social-auth-app-django
+# Description of the various settings here:
+# https://python-social-auth.readthedocs.io/en/latest/configuration/settings.html
 
-SOCIAL_AUTH_ALLOWED_REDIRECT_HOSTS = ['localhost:4200', 'cnn.com', 'yahoo.com',
-                                      'cbc.ca']  # note eben: no need to include 'localhost:8000', it's added implicitly
-
-SOCIAL_AUTH_NEW_USER_REDIRECT_URL = 'http://localhost:4200/sign-in/oauth/complete/'
-SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = 'http://localhost:4200/sign-in/oauth/complete/'
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = 'http://localhost:4200/sign-in/oauth/complete/'
-SOCIAL_AUTH_LOGIN_ERROR_URL = 'http://localhost:4200/sign-in/oauth/complete/'
-SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = 'http://localhost:4200/account/'
+# URLs options
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_LOGIN_ERROR_URL = '/'
+SOCIAL_AUTH_LOGIN_URL = '/'
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
+SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = '/'
+SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = '/'
+SOCIAL_AUTH_INACTIVE_USER_URL = '/'
 
 # Facebook configuration
-SOCIAL_AUTH_FACEBOOK_KEY = '222626885799264'  # App ID
-SOCIAL_AUTH_FACEBOOK_SECRET = '148d517f78170127b46167a87c878848'  # App Secret
+SOCIAL_AUTH_FACEBOOK_KEY = '1018453275609332'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = env('SOCIAL_AUTH_FACEBOOK_SECRET')  # App Secret
 
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', ]  # It seems email scope is now included by default
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
@@ -27,8 +26,8 @@ SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [
 ]
 
 # Google configuration
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '87036211763-394ep44eajp4i8b0347fl44lgpdc0c44.apps.googleusercontent.com'  # client_id
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'SPhA2RPJ1GXQrM8LqIPj02dn'  # client_secret
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '487495415273-m9e0fvsajl1oapfpt9pfcthh1qmbhvs0.apps.googleusercontent.com'  # client_id
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')  # client_secret
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [  # These scopes don't seem to be necessary
     'https://www.googleapis.com/auth/userinfo.email',

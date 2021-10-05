@@ -39,7 +39,7 @@ urlpatterns = [
     path('account/', include('django_flex_user.urls')),
     path('admin/', admin.site.urls),
     # social-auth-app-django
-    path('', include('social_django.urls', namespace='social')),
+    path('account/', include('social_django.urls', namespace='social')),
     # Django authentication views
     path('', include('django.contrib.auth.urls')),
 ]
