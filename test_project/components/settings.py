@@ -136,3 +136,7 @@ LOGIN_URL = '/sign-in/'
 # Tell Django which from email to use
 
 DEFAULT_FROM_EMAIL = 'eben@derso.org'
+
+# If you intend to use Django's built in login views, you need to set this
+
+LOGIN_REDIRECT_URL = '/'
