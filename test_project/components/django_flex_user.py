@@ -8,9 +8,9 @@ INSTALLED_APPS += (
     'django_flex_user.apps.DjangoFlexUserConfig',
 )
 
-AUTHENTICATION_BACKENDS += [
+AUTHENTICATION_BACKENDS += (
     'django_flex_user.backends.FlexUserModelBackend',
-]
+)
 
 AUTH_USER_MODEL = 'django_flex_user.FlexUser'
 
