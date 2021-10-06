@@ -1,3 +1,9 @@
+#
+# Production Variables ... Needed for social-auth-app-django
+#
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
 # Configure social-auth-app-django
 
 # SOCIAL_AUTH_POSTGRES_JSONFIELD = True  # social-auth-app-django ... deprecated

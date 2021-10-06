@@ -139,8 +139,6 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Tell Django to use our authentication backend
-
 AUTHENTICATION_BACKENDS = [
     # 'django.contrib.auth.backends.ModelBackend'
 ]
@@ -149,9 +147,6 @@ AUTHENTICATION_BACKENDS = [
 
 LOGIN_URL = '/sign-in/'
 
-#
-# Production Variables ... Needed for social-auth-app-django
-#
+# Tell Django which from email to use
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 DEFAULT_FROM_EMAIL = 'eben@derso.org'
