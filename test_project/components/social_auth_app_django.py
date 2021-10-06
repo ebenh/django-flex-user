@@ -33,6 +33,8 @@ SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = '/'
 SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = '/'
 SOCIAL_AUTH_INACTIVE_USER_URL = '/'
 
+SOCIAL_AUTH_RAISE_EXCEPTIONS = False
+
 # Facebook configuration
 SOCIAL_AUTH_FACEBOOK_KEY = '1018453275609332'  # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = env('SOCIAL_AUTH_FACEBOOK_SECRET')  # App Secret
@@ -59,6 +61,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = [
     ('email', 'email', True)
 ]
 
+# Pipeline configuration
 SOCIAL_AUTH_PIPELINE = (
     # Get the information we can about the user and return it in a simple
     # format to create the user instance later. On some cases the details are
