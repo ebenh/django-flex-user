@@ -133,12 +133,21 @@ def user(request):
 @login_required()
 def password(request):
     if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
+        if request.user.has_usable_password():
+            form = PasswordChangeForm(request.user, request.POST)
+        else:
+            # If the user doesn't have a usable password, that means they signed up using OAUTH
+            form = SetPasswordForm(request.user, request.POST)
+
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('sign-in'))
     else:
-        form = PasswordChangeForm(request.user)
+        if request.user.has_usable_password():
+            form = PasswordChangeForm(request.user)
+        else:
+            # If the user doesn't have a usable password, that means they signed up using OAUTH
+            form = SetPasswordForm(request.user)
 
     return render(
         request,
