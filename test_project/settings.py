@@ -7,5 +7,6 @@ include(
     'components/social_auth_app_django.py',
     'components/sendgrid.py',
     'components/djangorestframework.py',
+    'components/drf_multiple_model.py',
     optional('local_settings.py')
 )
