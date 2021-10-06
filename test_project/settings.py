@@ -6,5 +6,6 @@ include(
     'components/django_phonenumber_field.py',
     'components/social_auth_app_django.py',
     'components/sendgrid.py',
+    'components/djangorestframework.py',
     optional('local_settings.py')
 )

@@ -42,8 +42,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'rest_framework',  # djangorestframework
-    'rest_framework.authtoken',  # djangorestframework
+    # 'rest_framework',  # djangorestframework
+    # 'rest_framework.authtoken',  # djangorestframework
     'drf_multiple_model',  # django-rest-multiple-models
     'django.contrib.admin',
     'django.contrib.auth',
