@@ -58,8 +58,10 @@ def mail_validation(backend, details, is_new=False, *args, **kwargs):
     # send_validation = details.get('email') and \
     #                   (is_new or backend.setting('PASSWORDLESS', False))
     send_validation = details.get('email') and \
-                      ((is_new and UserModel.objects.filter(email__iexact=details['email'])) or backend.setting(
-                          'PASSWORDLESS', False))
+                      (
+                              (is_new and UserModel.objects.filter(email__iexact=details['email']).exists()) or \
+                              backend.setting('PASSWORDLESS', False)
+                      )
     # todo: call userModel._default_manager.normalize_email() on input email before searching db?
 
     if requires_validation and send_validation:
