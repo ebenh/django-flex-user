@@ -20,14 +20,14 @@ def email_otp(email_token, **kwargs):
 
     if request and view_name:
         password = base64.urlsafe_b64encode(email_token.password.encode("utf-8")).decode("ascii")
-        link = request.build_absolute_uri(reverse(view_name, args=('email', email_token.id, password,)))
+        uri = request.build_absolute_uri(reverse(view_name, args=('email', email_token.id, password,)))
     else:
         raise ValueError('Missing kwargs')
 
     try:
         send_mail(
             '[django-flex-user] Verify your account',
-            f'Click the link below to verify your django-flex-user account:\n\n{link}',
+            f'Click the link below to verify your django-flex-user account:\n\n{uri}',
             None,
             (email_token.email,)
         )
@@ -64,18 +64,18 @@ def email_validation_link(strategy, backend, code, partial_token):
     :param partial_token:
     :return:
     """
-    url_prefix = strategy.build_absolute_uri(
+    uri_prefix = strategy.build_absolute_uri(
         reverse('social:complete', args=(backend.name,))
     )
 
-    url_postfix = f'?verification_code={code.code}&partial_token={partial_token}'
+    uri_postfix = f'?verification_code={code.code}&partial_token={partial_token}'
 
-    url = f'{url_prefix}{url_postfix}'
+    uri = f'{uri_prefix}{uri_postfix}'
 
     try:
         send_mail(
             '[django-flex-user] Verify your account',
-            f'Click the link below to verify your django-flex-user account:\n\n{url}',
+            f'Click the link below to verify your django-flex-user account:\n\n{uri}',
             None,
             (code.email,)
         )
