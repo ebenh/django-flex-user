@@ -26,6 +26,7 @@ AUTHENTICATION_BACKENDS += (
 
 # URLs options
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
+# Read me: https://python-social-auth.readthedocs.io/en/latest/configuration/django.html?#exceptions-middleware
 SOCIAL_AUTH_LOGIN_ERROR_URL = '/'
 SOCIAL_AUTH_LOGIN_URL = '/'
 SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
