@@ -2,7 +2,7 @@
 # Configure django-flex-user
 #
 
-from test_project.components.settings import INSTALLED_APPS, AUTHENTICATION_BACKENDS
+from test_project.components.base import INSTALLED_APPS, AUTHENTICATION_BACKENDS
 
 INSTALLED_APPS += (
     'django_flex_user.apps.DjangoFlexUserConfig',
