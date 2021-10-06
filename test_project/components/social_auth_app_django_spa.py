@@ -1,4 +1,8 @@
 #
+# Configure social-auth-app-django for single-page apps
+#
+
+#
 # Production Variables ... Needed for social-auth-app-django
 #
 

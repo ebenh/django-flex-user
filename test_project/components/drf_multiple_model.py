@@ -1,5 +1,5 @@
 #
-# django-rest-multiple-models
+# Configure django-rest-multiple-models
 #
 
 from test_project.components.settings import INSTALLED_APPS
