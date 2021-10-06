@@ -1,0 +1,9 @@
+{% extends "test_project/__base.html" %}
+
+{% block content %}
+    <h1>Verify your account</h1>
+
+    <p>We've sent a verification link to {{ request.session.email_validation_address }}.</p>
+    <p>Click the link to verify your account.</p>
+
+{% endblock content %}

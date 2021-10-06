@@ -104,7 +104,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.user_details'  # todo: disable this step
 )
 
-SOCIAL_AUTH_EMAIL_VALIDATION_URL = 'http://localhost:4200/verify/email/'
+SOCIAL_AUTH_EMAIL_VALIDATION_URL = 'oauth-verify'
 SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION = 'test_project.verification.email_validation_link'
 SOCIAL_AUTH_FACEBOOK_FORCE_EMAIL_VALIDATION = True
 

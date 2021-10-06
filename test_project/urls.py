@@ -39,7 +39,8 @@ urlpatterns = [
     path('account/', include('django_flex_user.urls')),
     path('admin/', admin.site.urls),
     # social-auth-app-django
-    path('account/', include('social_django.urls', namespace='social')),
+    path('oauth/', include('social_django.urls', namespace='social')),
+    path('oauth/verify', views.oauth_verify, name='oauth-verify'),
     # Django authentication views
     path('', include('django.contrib.auth.urls')),
 ]

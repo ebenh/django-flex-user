@@ -295,3 +295,7 @@ def password_reset(request, pk):
         'test_project/forgot_password/password_reset.html',
         {'form': form}
     )
+
+
+def oauth_verify(request):
+    return render(request, 'test_project/oauth/verify.html')
