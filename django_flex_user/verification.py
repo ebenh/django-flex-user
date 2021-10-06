@@ -39,7 +39,7 @@ def mail_validation(backend, details, is_new=False, *args, **kwargs):
 
     - An email address needs to be validated only if the social account isn't yet associated with a user (i.e. is_new is
     True) and there is an existing user already associated with the email address
-    - The email address to be validated is returned in the query string of the redirect URL and is no longer stored in
+    - The email address to be validated is returned in the query string of the redirect URL as well as being stored in
     the session
 
     There exists a very unlikely race condition where in the seconds between checking whether an email address is
