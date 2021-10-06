@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'rest_framework',  # djangorestframework
     'rest_framework.authtoken',  # djangorestframework
     'drf_multiple_model',  # django-rest-multiple-models
-    'django_flex_user.apps.DjangoFlexUserConfig',  # django-flex-user
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -143,17 +142,11 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Tell Django to use our new user model
-
-AUTH_USER_MODEL = 'django_flex_user.FlexUser'
-
 # Tell Django to use our authentication backend
 
 AUTHENTICATION_BACKENDS = [
-    'django_flex_user.backends.FlexUserModelBackend',
-    'django_flex_user.backends.FlexUserFacebookOAuth2',
-    'django_flex_user.backends.FlexUserGoogleOAuth2',
-]  # default: ['django.contrib.auth.backends.ModelBackend',]
+    # 'django.contrib.auth.backends.ModelBackend'
+]
 
 # Tell Django to use our login template
 
@@ -165,12 +158,3 @@ LOGIN_URL = '/sign-in/'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 DEFAULT_FROM_EMAIL = 'eben@derso.org'
-
-#
-# Configure django-flex-user
-#
-
-FLEX_USER_OTP_EMAIL_FUNCTION = 'test_project.verification.email_otp'
-FLEX_USER_OTP_SMS_FUNCTION = 'test_project.verification.sms_otp'
-
-

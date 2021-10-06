@@ -3,7 +3,7 @@
 #
 
 from test_project.components.settings import env
-from test_project.components.settings import INSTALLED_APPS, MIDDLEWARE, TEMPLATES
+from test_project.components.settings import INSTALLED_APPS, MIDDLEWARE, TEMPLATES, AUTHENTICATION_BACKENDS
 
 INSTALLED_APPS += (
     'social_django',
@@ -14,6 +14,11 @@ MIDDLEWARE = ['social_django.middleware.SocialAuthExceptionMiddleware'] + MIDDLE
 TEMPLATES[0]['OPTIONS']['context_processors'] += [
     'social_django.context_processors.backends',
     'social_django.context_processors.login_redirect'
+]
+
+AUTHENTICATION_BACKENDS += [
+    'django_flex_user.backends.FlexUserFacebookOAuth2',
+    'django_flex_user.backends.FlexUserGoogleOAuth2',
 ]
 
 # Description of the various settings here:
