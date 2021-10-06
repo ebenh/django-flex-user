@@ -2,7 +2,7 @@
 # Configure social-auth-app-django
 #
 
-from test_project.components.settings import env
+from test_project.components.django_environ import env
 from test_project.components.settings import INSTALLED_APPS, MIDDLEWARE, TEMPLATES, AUTHENTICATION_BACKENDS
 
 INSTALLED_APPS += (

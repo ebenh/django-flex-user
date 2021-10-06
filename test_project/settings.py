@@ -1,6 +1,7 @@
 from split_settings.tools import optional, include
 
 include(
+    'components/django_environ.py',
     'components/settings.py',
     'components/django_phonenumber_field.py',
     'components/django_flex_user.py',

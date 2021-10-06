@@ -2,7 +2,7 @@
 # Configure SendGrid
 #
 
-from test_project.components.settings import env
+from test_project.components.django_environ import env
 
 SENDGRID_API_KEY = env('SENDGRID_API_KEY')
 EMAIL_HOST = 'smtp.sendgrid.net'
