@@ -1,34 +1,9 @@
-from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 from social_core.pipeline.partial import partial
 from social_core.exceptions import InvalidEmail
 
 UserModel = get_user_model()
-
-
-def email_validation_link(strategy, backend, code, partial_token):
-    """
-    Our email verification function for social-auth-app-django. It's called by the mail_validation partial pipeline
-    function to send verification emails.
-
-    See SOCIAL_AUTH_EMAIL_VALIDATION_FUNCTION.
-
-    :param strategy:
-    :param backend:
-    :param code:
-    :param partial_token:
-    :return:
-    """
-    url_prefix = strategy.build_absolute_uri(
-        reverse('social:complete', args=(backend.name,))
-    )
-
-    url_postfix = f'?verification_code={code.code}&partial_token={partial_token}'
-
-    url = f'{url_prefix}{url_postfix}'
-
-    print(url)
 
 
 @partial
