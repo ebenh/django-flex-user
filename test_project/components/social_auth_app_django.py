@@ -1,4 +1,20 @@
+#
 # Configure social-auth-app-django
+#
+
+from test_project.components.settings import env
+from test_project.components.settings import INSTALLED_APPS, MIDDLEWARE, TEMPLATES
+
+INSTALLED_APPS += (
+    'social_django',
+)
+
+MIDDLEWARE = ['social_django.middleware.SocialAuthExceptionMiddleware'] + MIDDLEWARE
+
+TEMPLATES[0]['OPTIONS']['context_processors'] += [
+    'social_django.context_processors.backends',
+    'social_django.context_processors.login_redirect'
+]
 
 # Description of the various settings here:
 # https://python-social-auth.readthedocs.io/en/latest/configuration/settings.html

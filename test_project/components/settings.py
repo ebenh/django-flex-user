@@ -23,7 +23,7 @@ env = environ.Env(
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Read environment variables from .env file (this is part of django-environ config)
 environ.Env.read_env(Path(BASE_DIR).joinpath('.env'))
@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     'rest_framework',  # djangorestframework
     'rest_framework.authtoken',  # djangorestframework
     'drf_multiple_model',  # django-rest-multiple-models
-    'social_django',  # social-auth-app-django
     'django_flex_user.apps.DjangoFlexUserConfig',  # django-flex-user
     'django.contrib.admin',
     'django.contrib.auth',
@@ -56,7 +55,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'social_django.middleware.SocialAuthExceptionMiddleware',  # social-auth-app-django
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -79,8 +77,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',  # social-auth-app-django
-                'social_django.context_processors.login_redirect',  # social-auth-app-django
             ],
         },
     },
