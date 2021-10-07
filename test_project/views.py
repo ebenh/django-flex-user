@@ -7,7 +7,7 @@ from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
-from django.http import Http404, HttpResponseRedirect, HttpResponse, HttpResponseServerError
+from django.http import Http404, HttpResponseRedirect, HttpResponseServerError
 from django.urls import reverse
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.shortcuts import get_object_or_404
@@ -133,12 +133,21 @@ def user(request):
 @login_required()
 def password(request):
     if request.method == 'POST':
-        form = PasswordChangeForm(request.user, request.POST)
+        if request.user.has_usable_password():
+            form = PasswordChangeForm(request.user, request.POST)
+        else:
+            # If the user doesn't have a usable password, that means they signed up using OAUTH
+            form = SetPasswordForm(request.user, request.POST)
+
         if form.is_valid():
             form.save()
             return HttpResponseRedirect(reverse('sign-in'))
     else:
-        form = PasswordChangeForm(request.user)
+        if request.user.has_usable_password():
+            form = PasswordChangeForm(request.user)
+        else:
+            # If the user doesn't have a usable password, that means they signed up using OAUTH
+            form = SetPasswordForm(request.user)
 
     return render(
         request,
@@ -295,3 +304,7 @@ def password_reset(request, pk):
         'test_project/forgot_password/password_reset.html',
         {'form': form}
     )
+
+
+def oauth_verify(request):
+    return render(request, 'test_project/oauth/verify.html')

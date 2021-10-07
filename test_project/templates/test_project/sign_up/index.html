@@ -6,7 +6,7 @@
     <li><a href="{% url 'sign-up-username' %}">Sign up with username</a></li>
     <li><a href="{% url 'sign-up-email' %}">Sign up with email address</a></li>
     <li><a href="{% url 'sign-up-phone' %}">Sign up with phone number</a></li>
-    <li><a href="">Sign up with Google</a></li>
-    <li><a href="">Sign up with Facebook</a></li>
+    <li><a href="{% url 'social:begin' 'google-oauth2' %}">Sign up with Google</a></li>
+    <li><a href="{% url 'social:begin' 'facebook' %}">Sign up with Facebook</a></li>
 </ul>
 {% endblock content %}
