@@ -1,4 +1,5 @@
 from split_settings.tools import optional, include
+import django_heroku
 
 include(
     'components/django_environ.py',
@@ -11,3 +12,5 @@ include(
     'components/sendgrid.py',
     optional('local_settings.py')
 )
+
+django_heroku.settings(locals())

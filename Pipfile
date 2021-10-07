@@ -17,6 +17,7 @@ django-rest-multiple-models = "*"
 django-environ = "*"
 django-split-settings = "*"
 gunicorn = "*"
+django-heroku = "*"
 
 [dev-packages]
 freezegun = "*"
