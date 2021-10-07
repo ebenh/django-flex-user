@@ -6,7 +6,7 @@ Users may sign up with a **username**, **email address**, **phone number** or an
 sign up using an **OAUTH** provider such as Facebook or Google.
 
 **Batteries included.** Email and phone verification, as well as password reset functionality, included
-"in the box". **REST API** included we well.
+"in the box". **REST API** included as well.
 
 ## Getting Started
 
