@@ -21,6 +21,9 @@ AUTHENTICATION_BACKENDS += (
     'django_flex_user.backends.FlexUserGoogleOAuth2',
 )
 
+if not env('DEBUG'):
+    SOCIAL_AUTH_JSONFIELD_ENABLED = True
+
 # Description of the various settings here:
 # https://python-social-auth.readthedocs.io/en/latest/configuration/settings.html
 
