@@ -1,12 +1,11 @@
 # django-flex-user
 
-A flexible user model for Django designed to **maximize sign-up conversions**.
+A flexible user model for Django designed to **maximize sign-up conversion**.
 
 Users may sign up with a **username**, **email address**, **phone number** or any combination thereof. Users may also
 sign up using an **OAUTH** provider such as Facebook or Google.
 
-**Batteries included.** Email address and phone number verification, as well as password reset functionality, included
-"in the box".
+**Batteries included.** Email and phone verification, password reset, and **REST API** included "in the box".
 
 ## Getting Started
 
