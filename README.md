@@ -5,10 +5,8 @@ A flexible user model for Django designed to **maximize sign-up conversion**.
 Users may sign up with a **username**, **email address**, **phone number** or any combination thereof. Users may also
 sign up using an **OAUTH** provider such as Facebook or Google.
 
-**Batteries included.** Email address and phone number verification, as well as password reset functionality, included
-"in the box".
-
-Click [here](https://django-flex-user.herokuapp.com/) to see a **demo**.
+**Batteries included.** Email and phone verification, as well as password reset functionality, included
+"in the box". **REST API** included as well.
 
 ## Getting Started
 
