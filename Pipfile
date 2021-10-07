@@ -16,6 +16,7 @@ phonenumbers = "*"
 django-rest-multiple-models = "*"
 django-environ = "*"
 django-split-settings = "*"
+gunicorn = "*"
 
 [dev-packages]
 freezegun = "*"
