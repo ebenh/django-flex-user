@@ -1,2 +1,2 @@
-release: python manage.py migrate
+release: ./heroku.sh
 web: gunicorn test_project.wsgi
