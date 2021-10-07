@@ -1,1 +1,1 @@
-web: gunicorn django_flex_user.wsgi
+web: gunicorn test_project.wsgi
