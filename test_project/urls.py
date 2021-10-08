@@ -19,6 +19,10 @@ from django.urls import include, path
 from . import views
 
 urlpatterns = [
+    # Admin site
+    path('admin/', admin.site.urls),
+
+    # Demo site
     path('', views.index, name='index'),
     path('sign-up/', views.sign_up, name='sign-up'),
     path('sign-up/username/', views.sign_up_username, name='sign-up-username'),
@@ -36,12 +40,14 @@ urlpatterns = [
     path('forgot-password/verify/<slug:token_type>/<int:token_id>/<str:password>/', views.forgot_password_verify, name='forgot-password-verify'),
     path('forgot-password/password-reset/<int:pk>/', views.password_reset, name='password-reset'),
 
+    # REST API
     path('api/accounts/', include('django_flex_user.urls')),
-    path('admin/', admin.site.urls),
+
     # social-auth-app-django
     path('oauth/', include('social_django.urls', namespace='social')),
     path('oauth/verify', views.oauth_verify, name='oauth-verify'),
-    # Django authentication views
+
+    # Django built-in authentication views
     path('', include('django.contrib.auth.urls')),
 ]
 
