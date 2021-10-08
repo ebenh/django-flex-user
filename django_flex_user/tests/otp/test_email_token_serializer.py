@@ -7,8 +7,8 @@ class TestEmailTokenSerializer(TestCase):
     """
 
     def setUp(self):
-        from django_flex_user.models import FlexUser
-        from django_flex_user.models import EmailToken
+        from django_flex_user.models.user import FlexUser
+        from django_flex_user.models.otp import EmailToken
 
         user = FlexUser.objects.create_user(email='validEmail1@example.com')
         self.email_token = EmailToken.objects.get(user=user)

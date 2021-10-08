@@ -34,7 +34,7 @@ class TestAuthenticate(TestCase):
                         {'password': 'invalidPassword'}]
 
     def test_authenticate(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django.db import transaction
 
         FlexUser.objects.create_user(
@@ -119,7 +119,7 @@ class TestAuthenticate(TestCase):
                             transaction.set_rollback(True)
 
     def test_authenticate_with_unusable_password(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django.contrib.auth import authenticate
 
         FlexUser.objects.create_user(username='validUsername')
@@ -137,7 +137,7 @@ class TestAuthenticate(TestCase):
         self.assertIsNone(authenticate(email='validEmail@example.com', password='invalidPassword'))
 
     def test_authenticate_inactive_user(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django.contrib.auth import authenticate
 
         user = FlexUser.objects.create_user(username='validUsername', password='validPassword', is_active=False)
@@ -148,7 +148,7 @@ class TestAuthenticate(TestCase):
         self.assertIsNone(authenticate(username='validUsername', password='validPassword'))
 
     def test_authenticate_username_case_insensitivity(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django.contrib.auth import authenticate
 
         user1 = FlexUser.objects.create_user(username='validUsername', password='validPassword')
@@ -162,7 +162,7 @@ class TestAuthenticate(TestCase):
 
         :return:
         """
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django.contrib.auth import authenticate
 
         nfd = 'validUsérname'  # é = U+0065 U+0301
@@ -186,7 +186,7 @@ class TestAuthenticate(TestCase):
 
         :return:
         """
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django.contrib.auth import authenticate
 
         user1 = FlexUser.objects.create_user(email='validEmail@bücher.example', password='validPassword')

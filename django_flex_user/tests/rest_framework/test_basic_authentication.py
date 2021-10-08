@@ -32,7 +32,7 @@ class TestBasicAuthentication(APITestCase, URLPatternsTestCase):
         return f'basic {encoded.decode("utf-8")}'
 
     def setUp(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
 
         self.user = FlexUser.objects.create_user(username='validUsername', password='validPassword')
 

@@ -45,7 +45,7 @@ class TestUserModel(TestCase):
                         args.update(l)
 
                         with self.subTest(**args), transaction.atomic(), freeze_time():
-                            from django_flex_user.models import FlexUser
+                            from django_flex_user.models.user import FlexUser
                             from django.core.exceptions import ValidationError
                             from django.utils import timezone
 
@@ -114,7 +114,7 @@ class TestUserModel(TestCase):
                             transaction.set_rollback(True)
 
     def test_full_clean_and_save_username_case_insensitivity(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django.core.exceptions import ValidationError
 
         user1 = FlexUser(username='validUsername')
@@ -129,7 +129,7 @@ class TestUserModel(TestCase):
         self.assertRaises(ValidationError, user2.full_clean)
 
     def test_full_clean_and_save_duplicate_username(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django.core.exceptions import ValidationError
 
         user1 = FlexUser(username='validUsername')
@@ -142,7 +142,7 @@ class TestUserModel(TestCase):
         self.assertRaises(ValidationError, user2.full_clean)
 
     def test_full_clean_and_save_duplicate_email(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django.core.exceptions import ValidationError
 
         user1 = FlexUser(email='validEmail@example.com')
@@ -155,7 +155,7 @@ class TestUserModel(TestCase):
         self.assertRaises(ValidationError, user2.full_clean)
 
     def test_full_clean_and_save_duplicate_phone(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django.core.exceptions import ValidationError
 
         user1 = FlexUser(phone='+12025551234')
@@ -173,7 +173,7 @@ class TestUserModel(TestCase):
 
         :return:
         """
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django.core.exceptions import ValidationError
 
         user1 = FlexUser(username='validEmail@example.com')
@@ -190,7 +190,7 @@ class TestUserModel(TestCase):
 
         :return:
         """
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django.core.exceptions import ValidationError
 
         user1 = FlexUser(email='validUsername')
@@ -207,7 +207,7 @@ class TestUserModel(TestCase):
 
         :return:
         """
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django.core.exceptions import ValidationError
 
         user1 = FlexUser(phone='validUsername')
@@ -219,7 +219,7 @@ class TestUserModel(TestCase):
         self.assertRaises(ValidationError, user2.full_clean)
 
     def test_full_clean_and_save_normalize_username(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django.core.exceptions import ValidationError
 
         nfd = 'validUsérname'  # é = U+0065 U+0301
@@ -247,7 +247,7 @@ class TestUserModel(TestCase):
         self.assertRaises(ValidationError, user3.full_clean)
 
     def test_full_clean_and_save_normalize_email(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
 
         user = FlexUser(email='validEmail@bücher.example')
         user.set_unusable_password()
@@ -261,7 +261,7 @@ class TestUserModel(TestCase):
         user.save()
 
     def test_normalize_username(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
 
         username = FlexUser.normalize_username(None)
         self.assertIs(username, None)
@@ -290,7 +290,7 @@ class TestUserModel(TestCase):
 
         :return:
         """
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django.core import serializers
 
         # Create a user

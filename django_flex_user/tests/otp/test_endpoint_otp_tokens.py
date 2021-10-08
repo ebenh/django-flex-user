@@ -22,7 +22,7 @@ class TestOTPTokensRetrieve(APITestCase):
     )
 
     def setUp(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
 
         FlexUser.objects.create_user(username='validUsername1', email='validEmail1@example.com', phone='+12025550001')
         FlexUser.objects.create_user(username='validUsername2', email='validEmail2@example.com', phone='+12025550002')
