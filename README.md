@@ -7,6 +7,8 @@ sign up using an **OAUTH** provider such as Facebook or Google.
 
 **Batteries included.** Email and phone verification, password reset, and **REST API** included "in the box".
 
+Click [here](https://django-flex-user.herokuapp.com/) to see a **demo**.
+
 ## Getting Started
 
 1. Clone the repository
