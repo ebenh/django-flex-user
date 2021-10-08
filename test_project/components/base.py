@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from test_project.components import BASE_DIR
+from test_project.components.django_environ import env
 
 from pathlib import Path
 
@@ -18,12 +19,12 @@ from pathlib import Path
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-fyxp5o2zx)=)ou64*)ndz+y9vksix$bq&d!jmnste*p+1w%!*_'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['django-flex-user.herokuapp.com', ]
 
 # Application definition
 

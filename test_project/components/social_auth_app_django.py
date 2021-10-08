@@ -3,7 +3,7 @@
 #
 
 from test_project.components.django_environ import env
-from test_project.components.base import INSTALLED_APPS, MIDDLEWARE, TEMPLATES, AUTHENTICATION_BACKENDS
+from test_project.components.base import DEBUG, INSTALLED_APPS, MIDDLEWARE, TEMPLATES, AUTHENTICATION_BACKENDS
 
 INSTALLED_APPS += (
     'social_django',
@@ -13,13 +13,16 @@ MIDDLEWARE = list(('social_django.middleware.SocialAuthExceptionMiddleware',)) +
 
 TEMPLATES[0]['OPTIONS']['context_processors'] += (
     'social_django.context_processors.backends',
-    'social_django.context_processors.login_redirect'
+    'social_django.context_processors.login_redirect',
 )
 
 AUTHENTICATION_BACKENDS += (
     'django_flex_user.backends.FlexUserFacebookOAuth2',
     'django_flex_user.backends.FlexUserGoogleOAuth2',
 )
+
+if not DEBUG:
+    SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 # Description of the various settings here:
 # https://python-social-auth.readthedocs.io/en/latest/configuration/settings.html
