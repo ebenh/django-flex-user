@@ -13,7 +13,7 @@ MIDDLEWARE = list(('social_django.middleware.SocialAuthExceptionMiddleware',)) +
 
 TEMPLATES[0]['OPTIONS']['context_processors'] += (
     'social_django.context_processors.backends',
-    'social_django.context_processors.login_redirect'
+    'social_django.context_processors.login_redirect',
 )
 
 AUTHENTICATION_BACKENDS += (
