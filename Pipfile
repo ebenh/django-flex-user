@@ -21,6 +21,7 @@ django-heroku = "*"
 
 [dev-packages]
 freezegun = "*"
+sphinx = "*"
 
 [requires]
 python_version = "3.7"
