@@ -12,8 +12,7 @@ from django.urls import reverse
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.shortcuts import get_object_or_404
 
-from django_flex_user.models import EmailToken, PhoneToken
-from django_flex_user.models.otp import TransmissionError
+from django_flex_user.models.otp import EmailToken, PhoneToken, TransmissionError
 from django_flex_user.validators import FlexUserUnicodeUsernameValidator
 from django_flex_user.forms import FlexUserAuthenticationForm
 

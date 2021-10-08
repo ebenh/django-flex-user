@@ -1,2 +1,2 @@
-from .flex_user import FlexUserManager, FlexUser, FlexUserUnicodeUsernameValidator
+from .user import FlexUser
 from .otp import EmailToken, PhoneToken

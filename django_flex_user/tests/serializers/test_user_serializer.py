@@ -114,7 +114,7 @@ class TestUserSerializer(TestCase):
                             transaction.set_rollback(True)
 
     def test_update(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django.db import transaction
         from freezegun import freeze_time
 
@@ -218,7 +218,7 @@ class TestUserSerializer(TestCase):
         self.assertRaises(AssertionError, serializer.save)
 
     def test_update_username_case_insensitivity(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django_flex_user.serializers import FlexUserSerializer
 
         user = FlexUser.objects.create_user(username='validUsername', password='validPassword')
@@ -243,7 +243,7 @@ class TestUserSerializer(TestCase):
         self.assertRaises(AssertionError, serializer.save)
 
     def test_update_duplicate_username(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django_flex_user.serializers import FlexUserSerializer
 
         user = FlexUser.objects.create_user(username='validUsername', password='validPassword')
@@ -268,7 +268,7 @@ class TestUserSerializer(TestCase):
         self.assertRaises(AssertionError, serializer.save)
 
     def test_update_duplicate_email(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django_flex_user.serializers import FlexUserSerializer
 
         user = FlexUser.objects.create_user(email='validEmail@example.com', password='validPassword')
@@ -293,7 +293,7 @@ class TestUserSerializer(TestCase):
         self.assertRaises(AssertionError, serializer.save)
 
     def test_update_duplicate_phone(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django_flex_user.serializers import FlexUserSerializer
 
         user = FlexUser.objects.create_user(phone='+12025551234', password='validPassword')
@@ -328,7 +328,7 @@ class TestUserSerializer(TestCase):
 
         :return:
         """
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django_flex_user.serializers import FlexUserSerializer
 
         user = FlexUser.objects.create_user(username='validUsername', password='validPassword')
@@ -367,7 +367,7 @@ class TestUserSerializer(TestCase):
 
         :return:
         """
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django_flex_user.serializers import FlexUserSerializer
 
         user = FlexUser.objects.create_user(email='validEmail@example.com', password='validPassword')
@@ -406,7 +406,7 @@ class TestUserSerializer(TestCase):
 
         :return:
         """
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django_flex_user.serializers import FlexUserSerializer
 
         user = FlexUser.objects.create_user(phone='+12025551234', password='validPassword')
@@ -436,7 +436,7 @@ class TestUserSerializer(TestCase):
         self.assertEqual(user.username, nfkc)
 
     def test_update_normalize_username(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django_flex_user.serializers import FlexUserSerializer
 
         user = FlexUser.objects.create_user(username='validUsername', password='validPassword')
@@ -464,7 +464,7 @@ class TestUserSerializer(TestCase):
         self.assertEqual(user.email, 'validEmail@xn--bcher-kva.example')
 
     def test_update_normalize_email(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django_flex_user.serializers import FlexUserSerializer
 
         user = FlexUser.objects.create_user(email='validEmail@example.com', password='validPassword')
@@ -478,7 +478,8 @@ class TestUserSerializer(TestCase):
         self.assertEqual(user.email, 'validEmail@xn--bcher-kva.example')
 
     def test_email_verified(self):
-        from django_flex_user.models import FlexUser, EmailToken
+        from django_flex_user.models.user import FlexUser
+        from django_flex_user.models.otp import EmailToken
         from django_flex_user.serializers import FlexUserSerializer
 
         # Create user
@@ -504,7 +505,8 @@ class TestUserSerializer(TestCase):
         self.assertIsNone(serializer.data['phone_verified'])
 
     def test_phone_verified(self):
-        from django_flex_user.models import FlexUser, PhoneToken
+        from django_flex_user.models.user import FlexUser
+        from django_flex_user.models.otp import PhoneToken
         from django_flex_user.serializers import FlexUserSerializer
 
         # Create user

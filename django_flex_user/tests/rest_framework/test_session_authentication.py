@@ -45,7 +45,7 @@ class TestSessionAuthenticationCSRFToken(APITestCase, URLPatternsTestCase):
     ]
 
     def setUp(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
 
         self.client = APIClient(enforce_csrf_checks=True)
 
@@ -132,7 +132,7 @@ class TestSessionAuthentication(APITestCase, URLPatternsTestCase):
     ]
 
     def setUp(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
 
         self.user = FlexUser.objects.create_user(username='validUsername', password='validPassword')
 

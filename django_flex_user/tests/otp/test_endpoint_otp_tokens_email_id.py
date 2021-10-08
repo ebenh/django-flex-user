@@ -14,7 +14,7 @@ class TestEmailTokenUpdate(APITestCase):
     """
     This class is designed to test django_flex_user.views.EmailToken
     """
-    _REST_ENDPOINT_PATH = '/account/otp-tokens/{type}/{id}'
+    _REST_ENDPOINT_PATH = '/api/accounts/otp-tokens/{type}/{id}'
 
     class _ContentType:
         class ApplicationJSON:
@@ -35,8 +35,8 @@ class TestEmailTokenUpdate(APITestCase):
             )
 
     def setUp(self):
-        from django_flex_user.models import FlexUser
-        from django_flex_user.models import EmailToken
+        from django_flex_user.models.user import FlexUser
+        from django_flex_user.models.otp import EmailToken
 
         user = FlexUser.objects.create_user(email='validEmail@example.com')
         self.otp_token = EmailToken.objects.get(user=user)
@@ -173,6 +173,7 @@ class TestEmailTokenUpdate(APITestCase):
                     If the supplied password is defined and valid, django_flex_user.views.EmailToken.post should
                     return HTTP status code HTTP_200_OK.
                     """
+                    # todo: this test randomly fails and I don't know why
                     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
                     self.otp_token.refresh_from_db()

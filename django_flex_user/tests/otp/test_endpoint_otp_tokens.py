@@ -6,7 +6,7 @@ class TestOTPTokensRetrieve(APITestCase):
     """
     This class is designed to test django_flex_user.views.OTPTokens
     """
-    _REST_ENDPOINT_PATH = '/account/otp-tokens/'
+    _REST_ENDPOINT_PATH = '/api/accounts/otp-tokens/'
 
     _search_values = (
         ('', False),  # Empty string
@@ -22,7 +22,7 @@ class TestOTPTokensRetrieve(APITestCase):
     )
 
     def setUp(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
 
         FlexUser.objects.create_user(username='validUsername1', email='validEmail1@example.com', phone='+12025550001')
         FlexUser.objects.create_user(username='validUsername2', email='validEmail2@example.com', phone='+12025550002')

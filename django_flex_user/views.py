@@ -16,10 +16,10 @@ from drf_multiple_model.views import ObjectMultipleModelAPIView
 
 from social_django.models import UserSocialAuth
 
-from .models.otp import EmailToken, PhoneToken, TransmissionError, TimeoutError
-from .validators import FlexUserUnicodeUsernameValidator
+from django_flex_user.models.otp import EmailToken, PhoneToken, TransmissionError, TimeoutError
+from django_flex_user.validators import FlexUserUnicodeUsernameValidator
 
-from .serializers import FlexUserSerializer, AuthenticationSerializer, UserSocialAuthSerializer, \
+from django_flex_user.serializers import FlexUserSerializer, AuthenticationSerializer, UserSocialAuthSerializer, \
     OTPSerializer, EmailTokenSerializer, PhoneTokenSerializer
 
 UserModel = get_user_model()

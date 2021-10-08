@@ -6,8 +6,8 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 from django.utils.translation import gettext_lazy as _
 
-from .forms import FlexUserAuthenticationForm
-from .models.otp import EmailToken, PhoneToken
+from django_flex_user.forms import FlexUserAuthenticationForm
+from django_flex_user.models.otp import EmailToken, PhoneToken
 
 # Reference: https://docs.djangoproject.com/en/3.0/topics/auth/customizing/
 

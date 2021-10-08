@@ -7,8 +7,8 @@ class TestPhoneTokenSerializer(TestCase):
     """
 
     def setUp(self):
-        from django_flex_user.models import FlexUser
-        from django_flex_user.models import PhoneToken
+        from django_flex_user.models.user import FlexUser
+        from django_flex_user.models.otp import PhoneToken
 
         user = FlexUser.objects.create_user(phone='+12025550001')
         self.phone_token = PhoneToken.objects.get(user=user)

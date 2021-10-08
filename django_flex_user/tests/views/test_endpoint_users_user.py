@@ -6,7 +6,7 @@ class TestFlexUserRetrieveUpdate(APITestCase):
     """
     This class is designed to test django_flex_user.views.FlexUser
     """
-    _REST_ENDPOINT_PATH = '/account/users/user/'
+    _REST_ENDPOINT_PATH = '/api/accounts/users/user/'
 
     def test_method_get(self):
         response = self.client.get(self._REST_ENDPOINT_PATH)
@@ -37,7 +37,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
     """
     This class is designed to test django_flex_user.views.FlexUser
     """
-    _REST_ENDPOINT_PATH = '/account/users/user/'
+    _REST_ENDPOINT_PATH = '/api/accounts/users/user/'
 
     class _ContentType:
         class ApplicationJSON:
@@ -87,7 +87,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
                                {'password': 'invalid'}]
 
     def setUp(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
 
         self.user = FlexUser.objects.create_user(username='validUsername', password='validPassword')
 
@@ -321,7 +321,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
                                 transaction.set_rollback(True)
 
     def test_method_patch_username_case_insensitivity(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
 
         FlexUser.objects.create_user(username='validUsername2', password='validPassword')
 
@@ -334,7 +334,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
         self.client.logout()
 
     def test_method_patch_duplicate_username(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
 
         FlexUser.objects.create_user(username='validUsername2', password='validPassword')
 
@@ -347,7 +347,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
         self.client.logout()
 
     def test_method_patch_duplicate_email(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
 
         FlexUser.objects.create_user(email='validEmail@example.com', password='validPassword')
 
@@ -360,7 +360,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
         self.client.logout()
 
     def test_method_patch_duplicate_phone(self):
-        from django_flex_user.models import FlexUser
+        from django_flex_user.models.user import FlexUser
 
         FlexUser.objects.create_user(phone='+12025551234', password='validPassword')
 

@@ -6,8 +6,8 @@ class TestFlexUserCreate(APITestCase):
     """
     This class is designed to test django_flex_user.views.FlexUsers
     """
-    _CSRF_TOKENS_PATH = '/account/csrf-tokens/'
-    _REST_ENDPOINT_PATH = '/account/users/'
+    _CSRF_TOKENS_PATH = '/api/accounts/csrf-tokens/'
+    _REST_ENDPOINT_PATH = '/api/accounts/users/'
 
     class _ContentType:
         class ApplicationJSON:

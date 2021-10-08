@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from social_core.pipeline.partial import partial
 from social_core.exceptions import InvalidEmail
 
-from django_flex_user.models import EmailToken
+from django_flex_user.models.otp import EmailToken
 
 UserModel = get_user_model()
 

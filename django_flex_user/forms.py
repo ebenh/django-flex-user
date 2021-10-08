@@ -5,7 +5,7 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.forms import AuthenticationForm
 from django.utils.text import capfirst
 
-from .validators import FlexUserUnicodeUsernameValidator
+from django_flex_user.validators import FlexUserUnicodeUsernameValidator
 
 UserModel = get_user_model()
 
