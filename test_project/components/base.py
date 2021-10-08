@@ -19,7 +19,7 @@ from pathlib import Path
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-fyxp5o2zx)=)ou64*)ndz+y9vksix$bq&d!jmnste*p+1w%!*_'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
