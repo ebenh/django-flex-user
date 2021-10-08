@@ -6,7 +6,7 @@ class TestFlexUserRetrieveUpdate(APITestCase):
     """
     This class is designed to test django_flex_user.views.FlexUser
     """
-    _REST_ENDPOINT_PATH = '/account/users/user/'
+    _REST_ENDPOINT_PATH = '/api/accounts/users/user/'
 
     def test_method_get(self):
         response = self.client.get(self._REST_ENDPOINT_PATH)
@@ -37,7 +37,7 @@ class TestFlexUserRetrieveUpdateAuthenticated(APITestCase):
     """
     This class is designed to test django_flex_user.views.FlexUser
     """
-    _REST_ENDPOINT_PATH = '/account/users/user/'
+    _REST_ENDPOINT_PATH = '/api/accounts/users/user/'
 
     class _ContentType:
         class ApplicationJSON:

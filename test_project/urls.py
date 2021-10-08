@@ -36,7 +36,7 @@ urlpatterns = [
     path('forgot-password/verify/<slug:token_type>/<int:token_id>/<str:password>/', views.forgot_password_verify, name='forgot-password-verify'),
     path('forgot-password/password-reset/<int:pk>/', views.password_reset, name='password-reset'),
 
-    path('account/', include('django_flex_user.urls')),
+    path('api/accounts/', include('django_flex_user.urls')),
     path('admin/', admin.site.urls),
     # social-auth-app-django
     path('oauth/', include('social_django.urls', namespace='social')),
