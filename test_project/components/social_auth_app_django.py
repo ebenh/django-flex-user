@@ -3,7 +3,7 @@
 #
 
 from test_project.components.django_environ import env
-from test_project.components.base import INSTALLED_APPS, MIDDLEWARE, TEMPLATES, AUTHENTICATION_BACKENDS
+from test_project.components.base import DEBUG, INSTALLED_APPS, MIDDLEWARE, TEMPLATES, AUTHENTICATION_BACKENDS
 
 INSTALLED_APPS += (
     'social_django',
@@ -21,7 +21,7 @@ AUTHENTICATION_BACKENDS += (
     'django_flex_user.backends.FlexUserGoogleOAuth2',
 )
 
-if not env('DEBUG'):
+if not DEBUG:
     SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 # Description of the various settings here:
