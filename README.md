@@ -13,6 +13,8 @@ Click [here](https://django-flex-user.herokuapp.com/) to see a **demo**.
 
 1. Clone the repository
 
+        mkdir django-flex-user
+        cd django-flex-user
         git clone https://github.com/ebenh/django-flex-user
 
 2. Install dependencies
@@ -39,6 +41,11 @@ Click [here](https://django-flex-user.herokuapp.com/) to see a **demo**.
 
         py manage.py test
 
-8. Build the Python package
+8. Generate documentation
+
+        cd docs
+        make html
+
+9. Build a Python package
 
         py setup.py sdist
