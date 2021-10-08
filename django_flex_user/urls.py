@@ -2,7 +2,7 @@ from django.urls import path
 
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from . import views
+from django_flex_user import views
 
 urlpatterns = [
     path('csrf-tokens/', views.get_csrf_token),
