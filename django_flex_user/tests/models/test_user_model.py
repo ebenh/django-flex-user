@@ -320,7 +320,7 @@ class TestUserModel(TestCase):
         self.assertEqual(user2.phone, '+12025551234')
 
     def test_post_save_signal_create_user_with_email(self):
-        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django_flex_user.models.otp import EmailToken
 
         user = FlexUser(email='validEmail@example.com')
@@ -336,7 +336,7 @@ class TestUserModel(TestCase):
         self.assertEqual(email_token.failure_count, 0)
 
     def test_post_save_signal_create_user_with_phone(self):
-        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django_flex_user.models.otp import PhoneToken
 
         user = FlexUser(phone='+12025551234')
@@ -352,7 +352,7 @@ class TestUserModel(TestCase):
         self.assertEqual(phone_token.failure_count, 0)
 
     def test_post_save_signal_add_email(self):
-        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django_flex_user.models.otp import EmailToken
 
         user = FlexUser(username='validUsername')
@@ -372,7 +372,7 @@ class TestUserModel(TestCase):
         self.assertEqual(email_token.failure_count, 0)
 
     def test_post_save_signal_add_phone(self):
-        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django_flex_user.models.otp import PhoneToken
 
         user = FlexUser(username='validUsername')
@@ -392,7 +392,7 @@ class TestUserModel(TestCase):
         self.assertEqual(phone_token.failure_count, 0)
 
     def test_post_save_signal_remove_email(self):
-        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django_flex_user.models.otp import EmailToken
 
         user = FlexUser(username='validUsername', email='validEmail@example.com')
@@ -407,7 +407,7 @@ class TestUserModel(TestCase):
         self.assertRaises(EmailToken.DoesNotExist, EmailToken.objects.get, user_id=user.id)
 
     def test_post_save_signal_remove_phone(self):
-        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django_flex_user.models.otp import PhoneToken
 
         user = FlexUser(username='validUsername', phone='+12025551234')
@@ -422,7 +422,7 @@ class TestUserModel(TestCase):
         self.assertRaises(PhoneToken.DoesNotExist, PhoneToken.objects.get, user_id=user.id)
 
     def test_post_save_signal_update_email(self):
-        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django_flex_user.models.otp import EmailToken
 
         user = FlexUser(username='validUsername', email='validEmail@example.com')
@@ -442,7 +442,7 @@ class TestUserModel(TestCase):
         self.assertEqual(email_token.failure_count, 0)
 
     def test_test_post_save_signal_update_phone(self):
-        from django_flex_user.models.flex_user import FlexUser
+        from django_flex_user.models.user import FlexUser
         from django_flex_user.models.otp import PhoneToken
 
         user = FlexUser(username='validUsername', phone='+12025551234')

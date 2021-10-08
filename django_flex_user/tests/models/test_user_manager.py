@@ -284,7 +284,7 @@ class TestUserManager(TestCase):
         self.assertEqual(user.email, 'validEmail@xn--bcher-kva.example')
 
     def test_normalize_email(self):
-        from django_flex_user.models import FlexUserManager
+        from django_flex_user.models.user import FlexUserManager
 
         email = FlexUserManager.normalize_email(None)
         self.assertIs(email, None)

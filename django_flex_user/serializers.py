@@ -10,8 +10,8 @@ from phonenumber_field.validators import validate_international_phonenumber
 
 from social_django.models import UserSocialAuth
 
-from .models import FlexUserUnicodeUsernameValidator
-from .models.otp import EmailToken, PhoneToken
+from django_flex_user.models.user import FlexUserUnicodeUsernameValidator
+from django_flex_user.models.otp import EmailToken, PhoneToken
 
 UserModel = get_user_model()
 
