@@ -38,8 +38,8 @@ Installation
 
 5. Register callbacks::
 
-    FLEX_USER_OTP_EMAIL_FUNCTION = 'test_project.verification.email_otp'
-    FLEX_USER_OTP_SMS_FUNCTION = 'test_project.verification.sms_otp'
+    FLEX_USER_OTP_EMAIL_FUNCTION = ... # Your callback here
+    FLEX_USER_OTP_SMS_FUNCTION = ... # Your callback here
 
 4. Run :djadmin:`migrate`::
 

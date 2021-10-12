@@ -21,6 +21,8 @@ One-time passwords
 ------------------
 Email
 +++++
+Generate password
+#################
 ::
 
     from django_flex_user.models.otp import EmailToken, TimeoutError
@@ -28,7 +30,11 @@ Email
     email_token = EmailToken.objects.get(user=user)
     email_token.generate_password()
     email_token.send_password()
-    ...
+
+Check password
+##############
+::
+
     try:
         success = email_token.check_password(...)
     except TimeoutError:
@@ -39,6 +45,8 @@ Email
 
 Phone
 +++++
+Generate password
+#################
 ::
 
     from django_flex_user.models.otp import PhoneToken, TimeoutError
@@ -46,7 +54,11 @@ Phone
     phone_token = PhoneToken.objects.get(user=user)
     phone_token.generate_password()
     phone_token.send_password()
-    ...
+
+Check password
+##############
+::
+
     try:
         success = phone_token.check_password(...)
     except TimeoutError:
