@@ -58,20 +58,20 @@ class FlexUserManager(BaseUserManager):
         :meth:`~django.contrib.auth.models.User.set_unusable_password`.
 
         Note well that :setting:`AUTH_PASSWORD_VALIDATORS` are *not* run by this method. You must run password
-        validators before calling this method.
+        validators beforehand.
 
-        :param username: The desired username for the user, defaults to None.
+        :param username: The username for the user, defaults to None.
         :type username: str, optional
-        :param email: The desired email address for the user, defaults to None.
+        :param email: The email address for the user, defaults to None.
         :type email: str, optional
-        :param phone: The desired phone number for the user, defaults to None.
+        :param phone: The phone number for the user, defaults to None.
         :type phone: str, optional
-        :param password: The desired password for the user, defaults to None.
+        :param password: The password for the user, defaults to None.
         :type password: str, optional
         :param extra_fields: Additional model fields you wish to set for the user.
         :type extra_fields: dict, optional
         :raises django.core.exceptions.ValidationError: An exception is raised if any of the supplied parameters fails
-            model field validation (e.g. the supplied phone number is already registered by another user, the supplied
+            model field validation (e.g. the supplied phone number is already in use by another user, the supplied
             username is invalid, etc.)
         :return: The newly created user.
         :rtype: :class:`django_flex_user.models.user.FlexUser`
