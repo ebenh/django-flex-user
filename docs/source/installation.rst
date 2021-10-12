@@ -7,15 +7,30 @@ Installation
 
 2. Configure :setting:`INSTALLED_APPS`::
 
-    INSTALLED_APPS += (
-        'django_flex_user.apps.DjangoFlexUserConfig',
-    )
+    INSTALLED_APPS = [
+        'django.contrib.admin',
+        'django.contrib.auth',
+        'django.contrib.contenttypes',
+        'django.contrib.sessions',
+        'django.contrib.messages',
+        'django.contrib.staticfiles',
+        ...
+        'django_flex_user.apps.DjangoFlexUserConfig', # Add me
+    ]
 
 3. Configure :setting:`AUTHENTICATION_BACKENDS`::
 
-    AUTHENTICATION_BACKENDS += (
-        'django_flex_user.backends.FlexUserModelBackend',
-    )
+    MIDDLEWARE = [
+        'django.middleware.security.SecurityMiddleware',
+        'django.contrib.sessions.middleware.SessionMiddleware',
+        'django.middleware.common.CommonMiddleware',
+        'django.middleware.csrf.CsrfViewMiddleware',
+        'django.contrib.auth.middleware.AuthenticationMiddleware',
+        'django.contrib.messages.middleware.MessageMiddleware',
+        'django.middleware.clickjacking.XFrameOptionsMiddleware',
+        ...
+        'django_flex_user.backends.FlexUserModelBackend', # Add me
+    ]
 
 4. Configure :setting:`AUTH_USER_MODEL`::
 
