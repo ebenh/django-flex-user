@@ -9,6 +9,8 @@ Creating a user
 
     user = FlexUser.objects.create_user(...)
 
+.. automethod:: django_flex_user.models.user.FlexUserManager.create_user
+
 Creating a super user
 ---------------------
 ::
@@ -21,8 +23,8 @@ One-time passwords
 ------------------
 Email
 +++++
-Generate password
-#################
+Generate a one-time password
+############################
 ::
 
     from django_flex_user.models.otp import EmailToken
@@ -31,8 +33,8 @@ Generate password
     email_token.generate_password()
     email_token.send_password()
 
-Check password
-##############
+Check one-time password
+#######################
 ::
 
     from django_flex_user.models.otp import EmailToken, TimeoutError
@@ -49,8 +51,8 @@ Check password
 
 Phone
 +++++
-Generate password
-#################
+Generate a one-time password
+############################
 ::
 
     from django_flex_user.models.otp import PhoneToken
@@ -59,8 +61,8 @@ Generate password
     phone_token.generate_password()
     phone_token.send_password()
 
-Check password
-##############
+Check one-time password
+#######################
 ::
 
     from django_flex_user.models.otp import PhoneToken, TimeoutError

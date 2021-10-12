@@ -16,7 +16,11 @@
 
 import os
 import sys
+
+import django
+
 sys.path.insert(0, os.path.join(os.path.abspath('.'), '_ext'))
+sys.path.insert(0, os.path.abspath('../..'))
 
 # -- Project information -----------------------------------------------------
 
@@ -34,6 +38,7 @@ release = '0.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
     'djangodocs',
 ]
@@ -43,6 +48,9 @@ intersphinx_mapping = {
     'django': ('https://docs.djangoproject.com/en/3.2/', 'http://docs.djangoproject.com/en/3.2/_objects/'),
 }
 
+os.environ['DJANGO_SETTINGS_MODULE'] = 'test_project.settings'
+django.setup()
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -50,7 +58,6 @@ templates_path = ['_templates']
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
-
 
 # -- Options for HTML output -------------------------------------------------
 
