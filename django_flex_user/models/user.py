@@ -52,7 +52,7 @@ class FlexUserManager(BaseUserManager):
 
     def create_user(self, username=None, email=None, phone=None, password=None, **extra_fields):
         """
-        Creates a user. You must supply at least one of username, email, or phone.
+        Creates a user. You must supply at least one of ``username``, ``email``, or ``phone``.
 
         If password is None, the user's password will be set using \
         :meth:`~django.contrib.auth.models.User.set_unusable_password`.
