@@ -20,3 +20,7 @@ Installation
 
     FLEX_USER_OTP_EMAIL_FUNCTION = 'test_project.verification.email_otp'
     FLEX_USER_OTP_SMS_FUNCTION = 'test_project.verification.sms_otp'
+
+4. Apply database migrations::
+
+    python mange.py migrate
