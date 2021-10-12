@@ -14,6 +14,9 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+import os
+import sys
+sys.path.insert(0, os.path.join(os.path.abspath('.'), '_ext'))
 
 # -- Project information -----------------------------------------------------
 
@@ -31,7 +34,14 @@ release = '0.1'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.intersphinx',
+    'djangodocs',
 ]
+
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3/', None),
+    'django': ('https://docs.djangoproject.com/en/3.2/', 'http://docs.djangoproject.com/en/3.2/_objects/'),
+}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
