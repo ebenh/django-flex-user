@@ -57,6 +57,9 @@ class FlexUserManager(BaseUserManager):
         If password is None, the user's password will be set using \
         :meth:`~django.contrib.auth.models.User.set_unusable_password`.
 
+        Note well that :setting:`AUTH_PASSWORD_VALIDATORS` are *not* run by this method. You must run password
+        validators before calling this method.
+
         :param username: The desired username for the user, defaults to None.
         :type username: str, optional
         :param email: The desired email address for the user, defaults to None.
