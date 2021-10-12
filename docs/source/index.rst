@@ -12,6 +12,7 @@ Welcome to django-flex-user's documentation!
 
    overview
    installation
+   usage
 
 
 
