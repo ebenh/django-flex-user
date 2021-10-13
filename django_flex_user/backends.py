@@ -29,7 +29,7 @@ class FlexUserModelBackend(ModelBackend):
         :param password: The user's password, defaults to None.
         :type password: str, optional
         :return: The authenticated user.
-        :rtype: :class:`~django_flex_user.models.user.FlexUser`, None
+        :rtype: :class:`~django_flex_user.models.user.FlexUser`, :class:`NoneType`
         """
 
         try:
