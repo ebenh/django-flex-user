@@ -2,18 +2,20 @@ Reference Implementation
 ========================
 
 For convenience, we provide a test project which implements :mod:`django_flex_user` as a reference implementation. Feel
-free to use this project to guide your implementation.
+free to use the test project to guide your implementation.
 
 You can try a live version of the reference implementation `here <https://django-flex-user.herokuapp.com>`_.
 
 Alternatively, you can run the reference implementation on your local machine.
 
-Running the reference implementation on your local machine
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Running the reference implementation locally
+++++++++++++++++++++++++++++++++++++++++++++
 
 1. Clone the git repository::
 
-    git clone https://github.com/ebenh/django-flex-user django-flex-user
+    mkdir django-flex-user
+    cd django-flex-user
+    git clone https://github.com/ebenh/django-flex-user
 
 2. Install dependencies::
 
@@ -42,3 +44,8 @@ Running the reference implementation on your local machine
 8. Build the Python package::
 
     python setup.py sdist
+
+9. Build the docs::
+
+    cd docs
+    make html
