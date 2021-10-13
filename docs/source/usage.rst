@@ -19,9 +19,14 @@ Creating a super user
 
     user = FlexUser.objects.create_superuser(...)
 
-
 Authenticating a user
 ---------------------
+::
+
+    from django.contrib.auth import authenticate
+
+    self.user = authenticate(...)
+
 .. automethod::  django_flex_user.backends.FlexUserModelBackend.authenticate
 
 One-time passwords
