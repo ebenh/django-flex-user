@@ -51,10 +51,16 @@ Generate a one-time password
 ############################
 ::
 
+    from django_flex_user.modes.user import FlexUser
     from django_flex_user.models.otp import EmailToken
 
+    # Create a user with an email address, an EmailToken object will be created for them automatically
+    user = FlexUser.objects.create_user(email='alice@example.com', password='password')
+
     email_token = EmailToken.objects.get(user=user)
+    # Generate a one-time password
     email_token.generate_password()
+    # Email the one-time password to alice@example.com
     email_token.send_password()
 
 Check one-time password
@@ -79,10 +85,16 @@ Generate a one-time password
 ############################
 ::
 
+    from django_flex_user.modes.user import FlexUser
     from django_flex_user.models.otp import PhoneToken
 
+    # Create a user with a phone number, a PhoneToken object will be created for them automatically
+    user = FlexUser.objects.create_user(phone='+12025551234', password='password')
+
     phone_token = PhoneToken.objects.get(user=user)
+    # Generate a one-time password
     phone_token.generate_password()
+    # Send the one-time password to +12025551234 via SMS
     phone_token.send_password()
 
 Check one-time password
