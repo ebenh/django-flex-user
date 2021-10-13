@@ -36,11 +36,42 @@ Installation
 
     AUTH_USER_MODEL = 'django_flex_user.FlexUser'
 
-5. Register callbacks::
+5. Register email callback::
 
-    FLEX_USER_OTP_EMAIL_FUNCTION = ... # Your callback here
-    FLEX_USER_OTP_SMS_FUNCTION = ... # Your callback here
+    FLEX_USER_OTP_EMAIL_FUNCTION = ...
 
-4. Run :djadmin:`migrate`::
+Your callback function should have the following signature:
 
-    python mange.py migrate django_flex_user
+.. py:function:: email_otp(email_token, **kwargs)
+
+    Sends one-time password via email.
+
+    :param email_token: The OTP token object.
+    :type email_token: :class:`~django_flex_user.models.otp.EmailToken`
+    :param kwargs: Additional named arguments passed to :meth:`~django_flex_user.models.otp.EmailToken.send_password`
+    :type kwargs: dict, optional
+    :raises TransmissionError: If email fails to send.
+    :returns: None
+    :rtype: None
+
+6. Register SMS callback::
+
+    FLEX_USER_OTP_SMS_FUNCTION = ...
+
+Your callback function should have the following signature:
+
+.. py:function:: sms_otp(phone_token, **kwargs)
+
+    Sends one-time password via SMS.
+
+    :param email_token: The OTP token object.
+    :type email_token: :class:`~django_flex_user.models.otp.PhoneToken`
+    :param kwargs: Additional named arguments passed to :meth:`~django_flex_user.models.otp.PhoneToken.send_password`
+    :type kwargs: dict, optional
+    :raises TransmissionError: If SMS fails to send.
+    :returns: None
+    :rtype: None
+
+7. Apply database migrations::
+
+    python mange.py migrate
