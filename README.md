@@ -13,9 +13,7 @@ Click [here](https://django-flex-user.herokuapp.com/) to see a **demo**.
 
 1. Clone the repository
 
-        mkdir django-flex-user
-        cd django-flex-user
-        git clone https://github.com/ebenh/django-flex-user
+        git clone https://github.com/ebenh/django-flex-user django-flex-user
 
 2. Install dependencies
 
