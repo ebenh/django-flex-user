@@ -41,7 +41,7 @@ For example::
     else:
         # No backend authenticated the credentials
 
-.. automethod::  django_flex_user.backends.FlexUserModelBackend.authenticate
+.. automethod:: django_flex_user.backends.FlexUserModelBackend.authenticate
 
 One-time passwords
 ------------------
@@ -68,6 +68,8 @@ Check one-time password
 ::
 
     from django_flex_user.models.otp import EmailToken, TimeoutError
+
+    ...
 
     email_token = EmailToken.objects.get(user=user)
 
@@ -102,6 +104,8 @@ Check one-time password
 ::
 
     from django_flex_user.models.otp import PhoneToken, TimeoutError
+
+    ...
 
     phone_token = PhoneToken.objects.get(user=user)
 
