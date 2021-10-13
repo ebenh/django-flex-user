@@ -15,6 +15,23 @@ class FlexUserModelBackend(ModelBackend):
     """
 
     def authenticate(self, request, username=None, email=None, phone=None, password=None):
+        """
+        Returns a :class:`~django_flex_user.models.user.FlexUser` object for a set of given credentials.
+
+        :param request: HTTP Request object
+        :type request: :class:`~django.http.HttpRequest`
+        :param username: The user's username, defaults to None.
+        :type username: str, optional
+        :param email: The user's email address, defaults to None.
+        :type email: str, optional
+        :param phone: The user's phone number, defaults to None.
+        :type phone: str, optional
+        :param password: The user's password, defaults to None.
+        :type password: str, optional
+        :return: The authenticated user.
+        :rtype: :class:`~django_flex_user.models.user.FlexUser`, :class:`NoneType`
+        """
+
         try:
             user = UserModel._default_manager.get_by_natural_key(username, email, phone)
         except UserModel.DoesNotExist:
