@@ -70,9 +70,8 @@ class FlexUserManager(BaseUserManager):
         :type password: str, optional
         :param extra_fields: Additional model fields you wish to set for the user.
         :type extra_fields: dict, optional
-        :raises ~django.core.exceptions.ValidationError: An exception is raised if any of the supplied parameters fails
-            model field validation (e.g. the supplied phone number is already in use by another user, the supplied
-            username is invalid, etc.)
+        :raises ~django.core.exceptions.ValidationError: If any of the supplied parameters fails model field validation
+            (e.g. the supplied phone number is already in use by another user, the supplied username is invalid, etc.)
         :return: The newly created user.
         :rtype: :class:`~django_flex_user.models.user.FlexUser`
         """
@@ -101,9 +100,8 @@ class FlexUserManager(BaseUserManager):
         :type password: str, optional
         :param extra_fields: Additional model fields you wish to set for the user.
         :type extra_fields: dict, optional
-        :raises ~django.core.exceptions.ValidationError: An exception is raised if any of the supplied parameters fails
-            model field validation (e.g. the supplied phone number is already in use by another user, the supplied
-            username is invalid, etc.)
+        :raises ~django.core.exceptions.ValidationError: If any of the supplied parameters fails model field validation
+            (e.g. the supplied phone number is already in use by another user, the supplied username is invalid, etc.)
         :return: The newly created user.
         :rtype: :class:`~django_flex_user.models.user.FlexUser`
         """
