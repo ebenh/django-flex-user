@@ -2,8 +2,8 @@
 
 A flexible user model for Django designed to **maximize sign-up conversion**.
 
-Enables users to up using a **username**, **email address**, **phone number** or any combination thereof. Users can also
-sign up using an **OAuth** provider like Facebook or Google.
+Enables users to up using their choice of **username**, **email address**, **phone number** or any combination thereof. 
+Users can also sign up using an **OAuth** provider like Facebook or Google.
 
 **Batteries included.** Email and phone verification, password reset, and **REST API** included "in the box".
 
