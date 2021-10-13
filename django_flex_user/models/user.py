@@ -54,7 +54,7 @@ class FlexUserManager(BaseUserManager):
         """
         Creates a user. You must supply at least one of ``username``, ``email``, or ``phone``.
 
-        If password is None, the user's password will be set using \
+        If ``password`` is None, the user's password will be set using \
         :meth:`~django.contrib.auth.models.User.set_unusable_password`.
 
         Note well that :setting:`AUTH_PASSWORD_VALIDATORS` are *not* run by this method. You must run password

@@ -21,11 +21,23 @@ Creating a super user
 
 Authenticating a user
 ---------------------
-::
+To authenticate a user call :func:`django.contrib.auth.authenticate`.
+
+It takes credentials as keyword arguments and checks them against each authentication backend in
+:setting:`AUTHENTICATION_BACKENDS`. If the credentials are valid for a backend, it returns a \
+:class:`~django_flex_user.models.user.FlexUser` object. If the credentials arent valid for any backend or if a backend
+raises :class:`~django.core.exceptions.PermissionDenied`, it returns None.
+
+For example::
 
     from django.contrib.auth import authenticate
 
-    self.user = authenticate(...)
+    user = authenticate(...)
+
+    if user is not None:
+        # A backend authenticated the credentials
+    else:
+        # No backend authenticated the credentials
 
 .. automethod::  django_flex_user.backends.FlexUserModelBackend.authenticate
 
