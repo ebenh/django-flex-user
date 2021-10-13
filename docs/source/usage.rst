@@ -19,6 +19,8 @@ Creating a super user
 
     user = FlexUser.objects.create_superuser(...)
 
+.. automethod:: django_flex_user.models.user.FlexUserManager.create_superuser
+
 Authenticating a user
 ---------------------
 To authenticate a user call :func:`django.contrib.auth.authenticate`.
