@@ -54,7 +54,7 @@ Running the reference implementation locally
 
     python setup.py sdist
 
-9. Build the docs::
+10. Build the docs::
 
     cd doc
     make html
