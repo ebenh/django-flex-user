@@ -11,13 +11,13 @@ Alternatively, you can run the reference implementation on your local machine.
 Running the reference implementation locally
 ++++++++++++++++++++++++++++++++++++++++++++
 
-1. Clone the git repository::
+#. Clone the git repository::
 
     mkdir django-flex-user
     cd django-flex-user
     git clone https://github.com/ebenh/django-flex-user
 
-2. Create an ``.env`` file::
+#. Create an ``.env`` file::
 
     touch .env
     echo "DEBUG=1" >> .env
@@ -26,35 +26,36 @@ Running the reference implementation locally
     echo "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=..." >> .env
     echo "SOCIAL_AUTH_FACEBOOK_SECRET=..." >> .env
 
-3. Install dependencies::
+#. Install dependencies::
 
     python -m pipenv install --dev
 
-4. Activate the `pipenv` shell::
+#. Activate the `pipenv` shell::
 
     python -m pipenv shell
 
-5. Initialize database tables::
+#. Initialize database tables::
 
     python manage.py migrate
 
-6. Create an admin user::
+#. Create an admin user::
 
     python manage.py createsuperuser
 
-7. Run the development server::
+#. Run the development server::
 
     python manage.py runserver
 
-8. Run tests::
+#. Run tests::
 
     python manage.py test
 
-9. Build the Python package::
+#. Build the Python package::
 
     python setup.py sdist
 
-10. Build the docs::
+#. Build the docs::
 
     cd doc
     make html
+
