@@ -1,11 +1,11 @@
 Installation
 ============
 
-1. Install :mod:`django_flex_user` from the Python Package Index (PyPi)::
+#. Install :mod:`django_flex_user` from the Python Package Index (PyPi)::
 
     pip install django-flex-user
 
-2. Configure :setting:`INSTALLED_APPS` in :mod:`settings.py`::
+#. Configure :setting:`INSTALLED_APPS` in :mod:`settings.py`::
 
     INSTALLED_APPS = [
         'django.contrib.admin',
@@ -18,7 +18,7 @@ Installation
         'django_flex_user.apps.DjangoFlexUserConfig', # Add me
     ]
 
-3. Configure :setting:`AUTHENTICATION_BACKENDS` in :mod:`settings.py`::
+#. Configure :setting:`AUTHENTICATION_BACKENDS` in :mod:`settings.py`::
 
     MIDDLEWARE = [
         'django.middleware.security.SecurityMiddleware',
@@ -32,11 +32,11 @@ Installation
         'django_flex_user.backends.FlexUserModelBackend', # Add me
     ]
 
-4. Configure :setting:`AUTH_USER_MODEL` in :mod:`settings.py`::
+#. Configure :setting:`AUTH_USER_MODEL` in :mod:`settings.py`::
 
     AUTH_USER_MODEL = 'django_flex_user.FlexUser'
 
-5. Configure email callback in :mod:`settings.py`::
+#. Configure email callback in :mod:`settings.py`::
 
     FLEX_USER_OTP_EMAIL_FUNCTION = ...
 
@@ -54,7 +54,7 @@ Your callback function should have the following signature:
     :returns: None
     :rtype: None
 
-6. Configure SMS callback in :mod:`settings.py`::
+#. Configure SMS callback in :mod:`settings.py`::
 
     FLEX_USER_OTP_SMS_FUNCTION = ...
 
@@ -72,6 +72,6 @@ Your callback function should have the following signature:
     :returns: None
     :rtype: None
 
-7. Apply database migrations::
+#. Apply database migrations::
 
     python mange.py migrate
