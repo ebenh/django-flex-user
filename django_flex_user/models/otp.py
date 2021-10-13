@@ -1,5 +1,6 @@
 import string, random, importlib
 from datetime import timedelta
+from functools import wraps
 
 from django.conf import settings
 from django.db import models
@@ -51,6 +52,7 @@ class OTPToken(models.Model):
                                "Too many failed verification attempts. Please try again later.")
 
     def throttle_reset(fun):
+        @wraps(fun)  # Copies docstring from "fun" to "inner"
         def inner(self):
             fun(self)
             self._reset_timeout()
@@ -59,6 +61,7 @@ class OTPToken(models.Model):
         return inner
 
     def throttle(fun):
+        @wraps(fun)  # Copies docstring from "fun" to "inner"
         def inner(self, password):
             self._is_timed_out()
             success = fun(self, password)
@@ -108,6 +111,16 @@ class SideChannelToken(OTPToken):
 
     @OTPToken.throttle
     def check_password(self, password):
+        """
+        Checks one-time password.
+
+        :param password: The one-time password.
+        :type password: str
+        :raises ~django_flex_user.models.otp.TimeoutError: If too many attempts are made.
+        :return: True if the one-time password is valid, False otherwise
+        :rtype: bool
+        """
+
         # Check whether the password has expired
         if self.expiration and self.expiration <= timezone.now():
             return False

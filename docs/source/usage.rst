@@ -81,6 +81,8 @@ Check one-time password
         if success:
             ...
 
+.. automethod:: django_flex_user.models.otp.EmailToken.check_password
+
 Phone
 +++++
 Generate a one-time password
@@ -116,3 +118,5 @@ Check one-time password
     else:
         if success:
             ...
+
+.. automethod:: django_flex_user.models.otp.PhoneToken.check_password
