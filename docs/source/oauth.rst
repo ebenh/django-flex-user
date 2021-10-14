@@ -1,11 +1,13 @@
 OAuth
 =====
 
-Before executing the steps below, you need be familiar with the configuration steps for :mod:`social_django`. Refer to
-the documentation `here <https://python-social-auth.readthedocs.io/en/latest/configuration/django.html>`_.
+OAuth functionality (e.g. sign up using Facebook) is enabled by third-party module :mod:`social_django`.
 
-Below are the steps needed to make :mod:`social_django` compatible with :mod:`django_flex_user`. For a complete
-configuration please refer to the :doc:`reference_implementation`.
+Below are just the steps needed to make :mod:`social_django` compatible with :mod:`django_flex_user`. For a complete
+configuration example refer to the :doc:`reference_project`.
+
+For complete instructions on how to configure :mod:`social_django`, refer to the documentation
+`here <https://python-social-auth.readthedocs.io/en/latest/configuration/django.html>`_
 
 #. Configure :setting:`AUTHENTICATION_BACKENDS` in :mod:`settings.py`:
 
