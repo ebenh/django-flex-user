@@ -16,7 +16,7 @@ class FlexUserModelBackend(ModelBackend):
 
     def authenticate(self, request, username=None, email=None, phone=None, password=None):
         """
-        Returns a :class:`~django_flex_user.models.user.FlexUser` object for a given set of credentials.
+        If the given credentials are valid, return a user object.
 
         :param request: HTTP Request object
         :type request: :class:`~django.http.HttpRequest`
