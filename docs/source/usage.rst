@@ -1,8 +1,8 @@
 Usage
 =====
 
-Creating a user
----------------
+Create User
+-----------
 ::
 
     from django_flex_user.models.user import FlexUser
@@ -11,8 +11,8 @@ Creating a user
 
 .. automethod:: django_flex_user.models.user.FlexUserManager.create_user
 
-Creating a super user
----------------------
+Create Super User
+-----------------
 ::
 
     from django_flex_user.models.user import FlexUser
@@ -21,8 +21,8 @@ Creating a super user
 
 .. automethod:: django_flex_user.models.user.FlexUserManager.create_superuser
 
-Authenticating a user
----------------------
+Authenticate User
+-----------------
 To authenticate a user call :func:`django.contrib.auth.authenticate`.
 
 It takes credentials as keyword arguments and checks them against each authentication backend in
@@ -43,8 +43,8 @@ For example::
 
 .. automethod:: django.contrib.auth.authenticate
 
-One-time passwords
-------------------
+One-time Passwords (OTP)
+------------------------
 
 One-time passwords are based around the concept of a
 `security token <https://en.wikipedia.org/w/index.php?title=Security_token&oldid=1049342825>`_. A security token is a
@@ -59,7 +59,7 @@ this.
 
 EmailToken
 ++++++++++
-Generate one-time password
+Generate One-Time Password
 ##########################
 ::
 
@@ -75,7 +75,7 @@ Generate one-time password
     # Email the one-time password to alice@example.com
     email_token.send_password()
 
-Check one-time password
+Check One-Time Password
 #######################
 ::
 
@@ -100,7 +100,7 @@ Check one-time password
 
 PhoneToken
 ++++++++++
-Generate one-time password
+Generate One-Time Password
 ##########################
 ::
 
@@ -116,7 +116,7 @@ Generate one-time password
     # Send the one-time password to +12025551234 via SMS
     phone_token.send_password()
 
-Check one-time password
+Check One-Time Password
 #######################
 ::
 
