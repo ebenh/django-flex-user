@@ -34,14 +34,14 @@ For example::
 
     from django.contrib.auth import authenticate
 
-    user = authenticate(...)
+    user = authenticate(email='alice@example.com', password='password')
 
     if user is not None:
         # A backend authenticated the credentials
     else:
         # No backend authenticated the credentials
 
-.. automethod:: django_flex_user.backends.FlexUserModelBackend.authenticate
+.. automethod:: django.contrib.auth.authenticate
 
 One-time passwords
 ------------------
