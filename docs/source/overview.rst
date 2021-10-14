@@ -1,31 +1,30 @@
 Overview
 ========
 
-`django-flex-user` is a Django application designed to **maximize sign-up conversion**.
-
-The main components of the Django application are as follows:
+At a high level, the main components of :mod:`django_flex_user` are as follows:
 
 User Model
 ##########
 
-We provide a replacement for Django's default user model.
+:class:`django_flex_user.models.user.FlexUser` is a replacement for Django's default user model.
 
-Our user model enables users to sign up using a **username**, **email address**, **phone number**, or any combination
+It enables users to sign up using their choice of **username**, **email address**, **phone number**, or any combination
 thereof.
 
 OAuth
 #####
 
-We interoperate with `django-social-auth <https://pypi.org/project/django-social-auth/>`_ to enable users to sign up
-using an OAuth provider like Facebook or Google.
+Sign up using an OAuth (e.g. Facebook, Google) is enabled by third-party package
+`django-social-auth <https://pypi.org/project/django-social-auth/>`_.  To lean how to use ``django-social-auth`` with
+:mod:`django_flex_user`, refer to the section titled :doc:`oauth`.
 
 One-Time Passwords
 ##################
 
-We provide a common system for one-time passwords. One-time passwords are used to verify email addresses and phone
-numbers, as well as to perform password resets.
+:class:`django_flex_user.models.otp.EmailToken` and :class:`django_flex_user.models.otp.PhoneToken` enable email
+addresses and phone number verification respectively, as well as password reset.
 
 REST API
 ########
 
-In addition to conventional Python-Django APIs, we provide a REST API suitable for things like singe-page apps (SPAs).
+We provide a REST API suitable for applications like singe-page apps (SPAs).
