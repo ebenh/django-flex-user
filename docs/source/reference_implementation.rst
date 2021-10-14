@@ -1,61 +1,84 @@
-Reference Implementation
-========================
+Reference Project
+=================
 
-For convenience, we provide a test project which implements :mod:`django_flex_user` as a reference implementation. Feel
-free to use the test project to guide your implementation.
+For convenience, we provide a reference project which implements all of the conventional user-flows for sign up,
+sign in and account management. Feel free to use this project to guide your implementation of :mod:`django_flex_user`.
 
-You can try a live version of the reference implementation `here <https://django-flex-user.herokuapp.com>`_.
+You can try a live version of the reference project `here <https://django-flex-user.herokuapp.com>`_. Or, you can run
+the reference project on your local machine.
 
-Alternatively, you can run the reference implementation on your local machine.
+Running the reference project locally
++++++++++++++++++++++++++++++++++++++
 
-Running the reference implementation locally
-++++++++++++++++++++++++++++++++++++++++++++
+.. note::
+    The instructions below assume you're running a POSIX environment (e.g. OS X, Linux or the Microsoft POSIX
+    subsystem).
 
-#. Clone the git repository::
+#. Clone the git repository:
 
-    mkdir django-flex-user
-    cd django-flex-user
-    git clone https://github.com/ebenh/django-flex-user
+    .. code-block:: console
 
-#. Create an ``.env`` file::
+        mkdir django-flex-user
+        cd django-flex-user
+        git clone https://github.com/ebenh/django-flex-user
 
-    touch .env
-    echo "DEBUG=1" >> .env
-    echo "SECRET_KEY=..." >> .env
-    echo "SENDGRID_API_KEY=..." >> .env
-    echo "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=..." >> .env
-    echo "SOCIAL_AUTH_FACEBOOK_SECRET=..." >> .env
+#. Create an ``.env`` file:
 
-#. Install dependencies::
+    .. code-block:: console
 
-    python -m pipenv install --dev
+        touch .env
+        echo "DEBUG=1" >> .env
+        echo "SECRET_KEY=..." >> .env
+        echo "SENDGRID_API_KEY=..." >> .env
+        echo "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=..." >> .env
+        echo "SOCIAL_AUTH_FACEBOOK_SECRET=..." >> .env
 
-#. Activate the `pipenv` shell::
+#. Install dependencies:
 
-    python -m pipenv shell
+    .. code-block:: console
 
-#. Initialize database tables::
+        python -m pipenv install --dev
 
-    python manage.py migrate
+#. Activate the ``pipenv`` shell:
 
-#. Create an admin user::
+    .. code-block:: console
 
-    python manage.py createsuperuser
+        python -m pipenv shell
 
-#. Run the development server::
+#. Initialize database tables:
 
-    python manage.py runserver
+    .. code-block:: console
 
-#. Run tests::
+        python manage.py migrate
 
-    python manage.py test
+#. Create a super user:
 
-#. Build the Python package::
+    .. code-block:: console
 
-    python setup.py sdist
+        python manage.py createsuperuser
 
-#. Build the docs::
+#. Run the development server:
 
-    cd doc
-    make html
+    .. code-block:: console
+
+        python manage.py runserver
+
+#. Run tests:
+
+    .. code-block:: console
+
+        python manage.py test
+
+#. Build the Python package:
+
+    .. code-block:: console
+
+        python setup.py sdist
+
+#. Build the docs:
+
+    .. code-block:: console
+
+        cd doc
+        make html
 
