@@ -28,7 +28,7 @@ class FlexUserModelBackend(ModelBackend):
         :type phone: str, optional
         :param password: The user's password, defaults to None.
         :type password: str, optional
-        :return: A user object if credentials are valid, None otherwise.
+        :return: A user object if the credentials are valid, None otherwise.
         :rtype: None, ~django_flex_user.models.user.FlexUser
         """
 
