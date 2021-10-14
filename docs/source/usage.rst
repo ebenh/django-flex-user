@@ -57,7 +57,7 @@ Generate a one-time password
     # Create a user with an email address, an EmailToken object will be created for them automatically
     user = FlexUser.objects.create_user(email='alice@example.com', password='password')
 
-    email_token = EmailToken.objects.get(user=user)
+    email_token = user.emailtoken_set.first()
     # Generate a one-time password
     email_token.generate_password()
     # Email the one-time password to alice@example.com
@@ -71,7 +71,7 @@ Check one-time password
 
     ...
 
-    email_token = EmailToken.objects.get(user=user)
+    email_token = EmailToken.objects.get(id=id)
 
     try:
         success = email_token.check_password(...)
@@ -95,7 +95,7 @@ Generate a one-time password
     # Create a user with a phone number, a PhoneToken object will be created for them automatically
     user = FlexUser.objects.create_user(phone='+12025551234', password='password')
 
-    phone_token = PhoneToken.objects.get(user=user)
+    phone_token = user.phonetoken_set.first()
     # Generate a one-time password
     phone_token.generate_password()
     # Send the one-time password to +12025551234 via SMS
@@ -109,7 +109,7 @@ Check one-time password
 
     ...
 
-    phone_token = PhoneToken.objects.get(user=user)
+    phone_token = PhoneToken.objects.get(id=id)
 
     try:
         success = phone_token.check_password(...)
