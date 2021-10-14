@@ -116,7 +116,7 @@ class SideChannelToken(OTPToken):
 
         :param password: The one-time password.
         :type password: str
-        :raises ~django_flex_user.models.otp.TimeoutError: If too many attempts are made.
+        :raises ~django_flex_user.models.otp.TimeoutError: If this method is called too many times.
         :return: True if the one-time password is valid, False otherwise
         :rtype: bool
         """
