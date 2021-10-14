@@ -59,8 +59,8 @@ this.
 
 EmailToken
 ++++++++++
-Generate a one-time password
-############################
+Generate one-time password
+##########################
 ::
 
     from django_flex_user.modes.user import FlexUser
@@ -83,22 +83,25 @@ Check one-time password
 
     ...
 
+    # Get the security token
     email_token = EmailToken.objects.get(id=id)
 
     try:
         success = email_token.check_password(...)
     except TimeoutError:
-        ...
+        # There have been too many check_password() attempts
     else:
         if success:
-            ...
+            # The password is correct
+        else:
+            # The password is incorrect or has expired
 
 .. automethod:: django_flex_user.models.otp.EmailToken.check_password
 
 PhoneToken
 ++++++++++
-Generate a one-time password
-############################
+Generate one-time password
+##########################
 ::
 
     from django_flex_user.modes.user import FlexUser
@@ -121,14 +124,17 @@ Check one-time password
 
     ...
 
+    # Get the security token
     phone_token = PhoneToken.objects.get(id=id)
 
     try:
         success = phone_token.check_password(...)
     except TimeoutError:
-        ...
+        # There have been too many check_password() attempts
     else:
         if success:
-            ...
+            # The password is correct
+        else:
+            # The password is incorrect or has expired
 
 .. automethod:: django_flex_user.models.otp.PhoneToken.check_password
