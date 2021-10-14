@@ -45,8 +45,20 @@ For example::
 
 One-time passwords
 ------------------
-Email
-+++++
+
+One-time passwords are based around the concept of a
+`security token <https://en.wikipedia.org/w/index.php?title=Security_token&oldid=1049342825>`_. A security token is a
+piece of hardware or software which generates one-time passwords in conjunction with a server. One common security
+token is `Google Authenticator <https://en.wikipedia.org/w/index.php?title=Google_Authenticator&oldid=1049479885>`_, a
+software application which runs on mobile platforms.
+
+An email address or phone number can also act as a security token by generating a random password on the server and
+sending it to the email address or phone number respectively. :mod:`django_flex_user` implements
+:class:`~django_flex_user.models.otp.EmailToken` and :class:`~django_flex_user.models.otp.PhoneToken` which does just
+this.
+
+EmailToken
+++++++++++
 Generate a one-time password
 ############################
 ::
@@ -56,6 +68,7 @@ Generate a one-time password
     # Create a user with an email address, an EmailToken object will be created for them automatically
     user = FlexUser.objects.create_user(email='alice@example.com', password='password')
 
+    # Get the user's security token
     email_token = user.emailtoken_set.first()
     # Generate a one-time password
     email_token.generate_password()
@@ -82,8 +95,8 @@ Check one-time password
 
 .. automethod:: django_flex_user.models.otp.EmailToken.check_password
 
-Phone
-+++++
+PhoneToken
+++++++++++
 Generate a one-time password
 ############################
 ::
@@ -93,6 +106,7 @@ Generate a one-time password
     # Create a user with a phone number, a PhoneToken object will be created for them automatically
     user = FlexUser.objects.create_user(phone='+12025551234', password='password')
 
+    # Get the user's security token
     phone_token = user.phonetoken_set.first()
     # Generate a one-time password
     phone_token.generate_password()
