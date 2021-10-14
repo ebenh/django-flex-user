@@ -3,7 +3,7 @@ Installation
 
 #. Install :mod:`django_flex_user` from the Python Package Index (PyPi):
 
-    .. code-block:: python
+    .. code-block:: console
 
         pip install django-flex-user
 
@@ -78,6 +78,6 @@ Installation
 
 #. Apply database migrations:
 
-    .. code-block:: python
+    .. code-block:: console
 
         python mange.py migrate
