@@ -20,6 +20,10 @@ Installation
             'django.contrib.staticfiles',
             ...
             'django_flex_user.apps.DjangoFlexUserConfig', # Add me
+            'rest_framework', # Add me
+            'rest_framework.authtoken', # Add me
+            'drf_multiple_model', # Add me
+            'social_django', # Add me
         ]
 
 #. Configure :setting:`AUTHENTICATION_BACKENDS` in :mod:`settings.py`:
