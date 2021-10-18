@@ -35,7 +35,7 @@ Basic Configuration
 
         AUTH_USER_MODEL = 'django_flex_user.FlexUser'
 
-#. Register a callback for sending email messages in :mod:`settings.py`:
+#. Register a callback for sending emails in :mod:`settings.py`:
 
     .. code-block:: python
 
