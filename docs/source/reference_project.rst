@@ -37,7 +37,7 @@ Running the reference project locally
         SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=...
 
     .. note::
-        Ensure ``.env`` is plaintext file. Replace ellipses with values you obtain below.
+        Replace ellipses with values you obtain by following the instructions below:
 
         * For Sendgrid, click `here <https://sendgrid.com/>`_ to obtain an API key.
 
