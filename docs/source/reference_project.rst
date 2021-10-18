@@ -30,7 +30,7 @@ Running the reference project locally
 
         $ touch .env
         $ echo "DEBUG=1" >> .env
-        $ echo "SECRET_KEY=..." >> .env
+        $ echo "SECRET_KEY=NOT_FOR_PRODUCTION_x-)pi_7=*sqrnqeo!!p*986207*n4-!4xa&hd(lq&@@p0m=4*(" >> .env
         $ echo "SENDGRID_API_KEY=..." >> .env
         $ echo "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=..." >> .env
         $ echo "SOCIAL_AUTH_FACEBOOK_SECRET=..." >> .env
