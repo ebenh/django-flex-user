@@ -32,7 +32,7 @@ Installation
     .. code-block:: python
 
         AUTHENTICATION_BACKENDS = [
-            'django_flex_user.backends.FlexUserModelBackend', # Add me
+            'django_flex_user.backends.FlexUserModelBackend',
         ]
 
 #. Configure :setting:`AUTH_USER_MODEL` in :mod:`settings.py`:
