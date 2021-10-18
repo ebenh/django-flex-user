@@ -18,67 +18,66 @@ Running the reference project locally
 
     .. code-block:: console
 
-        mkdir django-flex-user
-        cd django-flex-user
-        git clone https://github.com/ebenh/django-flex-user
+        $ mkdir django-flex-user
+        $ cd django-flex-user
+        $ git clone https://github.com/ebenh/django-flex-user
 
 #. Create an ``.env`` file:
 
     .. code-block:: console
 
-        touch .env
-        echo "DEBUG=1" >> .env
-        echo "SECRET_KEY=..." >> .env
-        echo "SENDGRID_API_KEY=..." >> .env
-        echo "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=..." >> .env
-        echo "SOCIAL_AUTH_FACEBOOK_SECRET=..." >> .env
+        $ touch .env
+        $ echo "DEBUG=1" >> .env
+        $ echo "SECRET_KEY=..." >> .env
+        $ echo "SENDGRID_API_KEY=..." >> .env
+        $ echo "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=..." >> .env
+        $ echo "SOCIAL_AUTH_FACEBOOK_SECRET=..." >> .env
 
 #. Install dependencies:
 
     .. code-block:: console
 
-        python -m pipenv install --dev
+        $ python -m pipenv install --dev
 
 #. Activate the ``pipenv`` shell:
 
     .. code-block:: console
 
-        python -m pipenv shell
+        $ python -m pipenv shell
 
 #. Initialize database tables:
 
     .. code-block:: console
 
-        python manage.py migrate
+        $ python manage.py migrate
 
 #. Create a super user:
 
     .. code-block:: console
 
-        python manage.py createsuperuser
+        $ python manage.py createsuperuser
 
 #. Run the development server:
 
     .. code-block:: console
 
-        python manage.py runserver
+        $ python manage.py runserver
 
 #. Run tests:
 
     .. code-block:: console
 
-        python manage.py test
+        $ python manage.py test
 
 #. Build the Python package:
 
     .. code-block:: console
 
-        python setup.py sdist
+        $ python setup.py sdist
 
 #. Build the docs:
 
     .. code-block:: console
 
-        cd doc
-        make html
-
+        $ cd doc
+        $ make html
