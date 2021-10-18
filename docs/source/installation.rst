@@ -5,11 +5,12 @@ Installation
 
     .. code-block:: console
 
-        pip install django-flex-user
+        $ pip install django-flex-user
 
 #. Configure :setting:`INSTALLED_APPS` in :mod:`settings.py`:
 
     .. code-block:: python
+        :emphasize-lines: 9-13
 
         INSTALLED_APPS = [
             'django.contrib.admin',
