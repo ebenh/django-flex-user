@@ -24,23 +24,26 @@ Running the reference project locally
         $ cd django-flex-user
         $ git clone https://github.com/ebenh/django-flex-user
 
-#. Create an ``.env`` file:
+#. Create an ``.env`` file with the following contents:
 
-    .. code-block:: console
+    .. code-block:: text
 
-        $ touch .env
-        $ echo "DEBUG=1" >> .env
-        $ echo "SECRET_KEY=NOT_FOR_PRODUCTION_x-)pi_7=*sqrnqeo!!p*986207*n4-!4xa&hd(lq&@@p0m=4*(" >> .env
-        $ echo "SENDGRID_API_KEY=..." >> .env
-        $ echo "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=..." >> .env
-        $ echo "SOCIAL_AUTH_FACEBOOK_SECRET=..." >> .env
+        DEBUG=1
+        SECRET_KEY=NOT_FOR_PRODUCTION_x-)pi_7=*sqrnqeo!!p*986207*n4-!4xa&hd(lq&@@p0m=4*(
+        SENDGRID_API_KEY=...
+        SOCIAL_AUTH_FACEBOOK_KEY=...
+        SOCIAL_AUTH_FACEBOOK_SECRET=...
+        SOCIAL_AUTH_GOOGLE_OAUTH2_KEY=...
+        SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=...
 
     .. note::
-        For Sendgrid, click `here <https://sendgrid.com/>`_ to obtain an API key.
+        Ensure ``.env`` is plaintext file. Replace ellipses with values you obtain below.
 
-        For Facebook Login, click `here <https://developers.facebook.com/>`_ to obtain an *"App ID"* and *"Secret Key"*.
+        * For Sendgrid, click `here <https://sendgrid.com/>`_ to obtain an API key.
 
-        For Google Sign-In, click `here <https://cloud.google.com/>`_ to obtain an *"OAuth Client ID"* and *"Client Secret"*.
+        * For Facebook Login, click `here <https://developers.facebook.com/>`_ to obtain an *"App ID"* and *"Secret Key"*.
+
+        * For Google Sign-In, click `here <https://cloud.google.com/>`_ to obtain an *"OAuth Client ID"* and *"Client Secret"*.
 
 #. Install dependencies:
 
