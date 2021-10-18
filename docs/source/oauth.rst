@@ -12,6 +12,7 @@ For complete instructions on how to configure :mod:`social_django`, refer to the
 #. Configure :setting:`AUTHENTICATION_BACKENDS` in :mod:`settings.py`:
 
     .. code-block:: python
+        :emphasize-lines: 4-5
 
         AUTHENTICATION_BACKENDS = [
             'django_flex_user.backends.FlexUserModelBackend',
@@ -19,6 +20,9 @@ For complete instructions on how to configure :mod:`social_django`, refer to the
             'django_flex_user.backends.FlexUserFacebookOAuth2', # Add me
             'django_flex_user.backends.FlexUserGoogleOAuth2', # Add me
         ]
+
+    .. note::
+        At present, we only provide support for Facebook and Google.
 
 #. Configure ``SOCIAL_AUTH_CLEAN_USERNAME_FUNCTION``:
 
