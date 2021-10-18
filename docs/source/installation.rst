@@ -85,4 +85,4 @@ Installation
 
     .. code-block:: console
 
-        python mange.py migrate
+        $ python mange.py migrate
