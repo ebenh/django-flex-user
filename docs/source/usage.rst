@@ -5,9 +5,9 @@ Create User
 -----------
 ::
 
-    from django_flex_user.models.user import FlexUser
+    from django.contrib.auth import get_user_model
 
-    user = FlexUser.objects.create_user(...)
+    user = get_user_model().objects.create_user(...)
 
 .. automethod:: django_flex_user.models.user.FlexUserManager.create_user
 
@@ -15,9 +15,9 @@ Create Super User
 -----------------
 ::
 
-    from django_flex_user.models.user import FlexUser
+    from django.contrib.auth import get_user_model
 
-    user = FlexUser.objects.create_superuser(...)
+    user = get_user_model().objects.create_superuser(...)
 
 .. automethod:: django_flex_user.models.user.FlexUserManager.create_superuser
 
@@ -63,10 +63,10 @@ Generate One-Time Password
 ##########################
 ::
 
-    from django_flex_user.modes.user import FlexUser
+    from django.contrib.auth import get_user_model
 
     # Create a user with an email address, an EmailToken object will be created for them automatically
-    user = FlexUser.objects.create_user(email='alice@example.com', password='password')
+    user = get_user_model().objects.create_user(email='alice@example.com', password='password')
 
     # Get the user's security token
     email_token = user.emailtoken_set.first()
@@ -104,10 +104,10 @@ Generate One-Time Password
 ##########################
 ::
 
-    from django_flex_user.modes.user import FlexUser
+    from django.contrib.auth import get_user_model
 
     # Create a user with a phone number, a PhoneToken object will be created for them automatically
-    user = FlexUser.objects.create_user(phone='+12025551234', password='password')
+    user = get_user_model().objects.create_user(phone='+12025551234', password='password')
 
     # Get the user's security token
     phone_token = user.phonetoken_set.first()

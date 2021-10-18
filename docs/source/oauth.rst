@@ -22,12 +22,13 @@ For instructions on how to configure :mod:`social_django`, refer to its document
         ]
 
     .. note::
-        At present, we support OAuth providers Facebook and Google.
+        At present, the only OAuth providers :mod:`django_flex_user` provides built-in support are Facebook and Google.
 
-        If you wish to add support for additional providers, extend the corresponding backend in
-        :mod:`social_core.backends` and override its :meth:`get_user_details` method.
+        If you want to add support for additional OAuth providers, extend the corresponding backend in
+        :mod:`social_core.backends` and override its :meth:`get_user_details` method. (See
+        :class:`django_flex_user.backends.FlexUserFacebookOAuth2` for an implementation example.)
 
-        See :mod:`django_flex_user.backends.FlexUserFacebookOAuth2` for an implementation example.
+        Once done, append the new class to :setting:`AUTHENTICATION_BACKENDS`.
 
 #. Configure ``SOCIAL_AUTH_CLEAN_USERNAME_FUNCTION`` in :mod:`settings.py`:
 
