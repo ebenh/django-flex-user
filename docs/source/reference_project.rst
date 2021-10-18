@@ -11,14 +11,11 @@ Running the reference project locally
 +++++++++++++++++++++++++++++++++++++
 
 .. note::
-    The instructions below assume you're running a POSIX environment (i.e. you're running OS X, Linux or you've
-    installed the Microsoft POSIX subsystem).
-
-    The commands below need to be modified if you're running a Windows environment.
+    On Windows, the command to execute Python is ``py``.
 
 #. Clone the git repository:
 
-    .. code-block:: console
+    .. code-block:: bash
 
         $ mkdir django-flex-user
         $ cd django-flex-user
@@ -47,49 +44,56 @@ Running the reference project locally
 
 #. Install dependencies:
 
-    .. code-block:: console
+    .. code-block:: bash
 
         $ python -m pipenv install --dev
 
 #. Activate the ``pipenv`` shell:
 
-    .. code-block:: console
+    .. code-block:: bash
 
         $ python -m pipenv shell
 
 #. Initialize database tables:
 
-    .. code-block:: console
+    .. code-block:: bash
 
         $ python manage.py migrate
 
 #. Create a super user:
 
-    .. code-block:: console
+    .. code-block:: bash
 
         $ python manage.py createsuperuser
 
 #. Run the development server:
 
-    .. code-block:: console
+    .. code-block:: bash
 
         $ python manage.py runserver
 
 #. Run tests:
 
-    .. code-block:: console
+    .. code-block:: bash
 
         $ python manage.py test
 
 #. Build the Python package:
 
-    .. code-block:: console
+    .. code-block:: bash
 
         $ python setup.py sdist
 
 #. Build the docs:
 
-    .. code-block:: console
+    .. code-block:: bash
 
         $ cd doc
         $ make html
+
+    Or, on Windows ...
+
+    .. code-block:: batch
+
+        > cd doc
+        > make.bat html
