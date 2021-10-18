@@ -11,8 +11,10 @@ Running the reference project locally
 +++++++++++++++++++++++++++++++++++++
 
 .. note::
-    The instructions below assume you're running a POSIX environment (e.g. OS X, Linux or the Microsoft POSIX
-    subsystem).
+    The instructions below assume you're running a POSIX-compliant shell (i.e. you're running OS X, Linux or you've
+    installed the Microsoft POSIX subsystem).
+
+    The commands below need to be modified if you're running the Windows command shell (i.e. cmd.exe).
 
 #. Clone the git repository:
 
