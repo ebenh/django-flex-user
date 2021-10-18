@@ -22,7 +22,8 @@ For instructions on how to configure :mod:`social_django`, refer to its document
         ]
 
     .. note::
-        At present, the only OAuth providers :mod:`django_flex_user` provides built-in support are Facebook and Google.
+        At present, the only OAuth providers :mod:`django_flex_user` provides built-in support for are Facebook and
+        Google.
 
         If you want to add support for additional OAuth providers, extend the corresponding backend in
         :mod:`social_core.backends` and override its :meth:`get_user_details` method. (See
@@ -39,7 +40,7 @@ For instructions on how to configure :mod:`social_django`, refer to its document
 #. Configure ``SOCIAL_AUTH_PIPELINE`` in :mod:`settings.py`:
 
     .. code-block:: python
-        :emphasize-lines: 25-26
+        :linenos:
 
         # Pipeline configuration
         SOCIAL_AUTH_PIPELINE = (
@@ -83,8 +84,12 @@ For instructions on how to configure :mod:`social_django`, refer to its document
             'social_core.pipeline.social_auth.load_extra_data',
 
             # Update the user record with any changed info from the auth service.
-            'social_core.pipeline.user.user_details'  # todo: disable this step
+            'social_core.pipeline.user.user_details'
         )
+
+    .. note::
+
+        On line 26 we introduce a custom pipeline function.
 
 #. Configure email validation in :mod:`settings.py`:
 
