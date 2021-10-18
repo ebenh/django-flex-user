@@ -1,5 +1,5 @@
-OAuth
-=====
+OAuth Configuration
+===================
 
 OAuth functionality (e.g. sign up using Facebook) is enabled by third-party module :mod:`social_django`.
 

@@ -1,5 +1,5 @@
-REST API
-========
+REST API Configuration
+======================
 
 To make the REST API available, modify your :mod:`urls.py` as follows:
 

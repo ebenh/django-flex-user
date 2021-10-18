@@ -20,9 +20,10 @@ Click `here <https://django-flex-user.herokuapp.com/>`_ to see a **demo**.
    :caption: Contents:
 
    installation
-   usage
-   oauth
-   rest_api
+   basic_configuration
+   oauth_configuration
+   rest_api_configuration
+   basic_usage
    reference_project
 
 Indices and tables
