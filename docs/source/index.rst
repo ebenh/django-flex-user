@@ -19,7 +19,6 @@ Click `here <https://django-flex-user.herokuapp.com/>`_ to see a **demo**.
    :maxdepth: 2
    :caption: Contents:
 
-   overview
    installation
    usage
    oauth
