@@ -40,7 +40,7 @@ SOCIAL_AUTH_INACTIVE_USER_URL = '/'
 SOCIAL_AUTH_RAISE_EXCEPTIONS = False
 
 # Facebook configuration
-SOCIAL_AUTH_FACEBOOK_KEY = '1018453275609332'  # App ID
+SOCIAL_AUTH_FACEBOOK_KEY = env('SOCIAL_AUTH_FACEBOOK_KEY')  # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = env('SOCIAL_AUTH_FACEBOOK_SECRET')  # App Secret
 
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', ]  # It seems email scope is now included by default
@@ -53,7 +53,7 @@ SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [
 ]
 
 # Google configuration
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '487495415273-m9e0fvsajl1oapfpt9pfcthh1qmbhvs0.apps.googleusercontent.com'  # client_id
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')  # client_id
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')  # client_secret
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [  # These scopes don't seem to be necessary
