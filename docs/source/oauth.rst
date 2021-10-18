@@ -29,13 +29,13 @@ For complete instructions on how to configure :mod:`social_django`, refer to the
 
         See :mod:`django_flex_user.backends.FlexUserFacebookOAuth2` for an implementation example.
 
-#. Configure ``SOCIAL_AUTH_CLEAN_USERNAME_FUNCTION``:
+#. Configure ``SOCIAL_AUTH_CLEAN_USERNAME_FUNCTION`` in :mod:`settings.py`:
 
     .. code-block:: python
 
         SOCIAL_AUTH_CLEAN_USERNAME_FUNCTION = 'django_flex_user.validators.flex_user_clean_username'
 
-#. Configure ``SOCIAL_AUTH_PIPELINE``:
+#. Configure ``SOCIAL_AUTH_PIPELINE`` in :mod:`settings.py`:
 
     .. code-block:: python
         :emphasize-lines: 25-26
@@ -85,7 +85,7 @@ For complete instructions on how to configure :mod:`social_django`, refer to the
             'social_core.pipeline.user.user_details'  # todo: disable this step
         )
 
-#. Configure email validation:
+#. Configure email validation in :mod:`settings.py`:
 
     .. code-block:: python
 
