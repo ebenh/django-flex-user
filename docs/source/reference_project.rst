@@ -35,6 +35,13 @@ Running the reference project locally
         $ echo "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=..." >> .env
         $ echo "SOCIAL_AUTH_FACEBOOK_SECRET=..." >> .env
 
+    .. note::
+        For Sendgrid, click `here <https://sendgrid.com/>`_ to obtain an API key.
+
+        For Facebook Login, click `here <https://developers.facebook.com/>`_ to obtain an *"App ID"* and *"Secret Key"*.
+
+        For Google Sign-In, click `here <https://cloud.google.com/>`_ to obtain an *"OAuth Client ID"* and *"Client Secret"*.
+
 #. Install dependencies:
 
     .. code-block:: console
