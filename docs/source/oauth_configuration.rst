@@ -88,7 +88,6 @@ For instructions on how to configure :mod:`social_django`, refer to its document
         )
 
     .. note::
-
         On line 26 we introduce a custom pipeline function.
 
 #. Configure email validation in :mod:`settings.py`:

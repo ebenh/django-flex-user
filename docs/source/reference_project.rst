@@ -10,9 +10,6 @@ the reference project on your local machine.
 Running the reference project locally
 +++++++++++++++++++++++++++++++++++++
 
-.. note::
-    On Windows, the command to execute Python is ``py``.
-
 #. Clone the git repository:
 
     .. code-block:: bash
@@ -47,6 +44,9 @@ Running the reference project locally
     .. code-block:: bash
 
         $ python -m pipenv install --dev
+
+    .. note::
+        The command to execute Python on Windows is ``py``.
 
 #. Activate the ``pipenv`` shell:
 
@@ -91,9 +91,5 @@ Running the reference project locally
         $ cd doc
         $ make html
 
-    Or, on Windows ...
-
-    .. code-block:: batch
-
-        > cd doc
-        > make.bat html
+    .. note::
+        If you're running Git Bash on Windows, the last command should be ``./make.bat html``
