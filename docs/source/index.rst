@@ -23,7 +23,7 @@ Click `here <https://django-flex-user.herokuapp.com/>`_ to see a **demo**.
    usage
    oauth
    rest_api
-   reference_implementation
+   reference_project
 
 Indices and tables
 ==================
