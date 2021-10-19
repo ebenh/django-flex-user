@@ -479,7 +479,6 @@ class TestUserSerializer(TestCase):
 
     def test_email_verified(self):
         from django_flex_user.models.user import FlexUser
-        from django_flex_user.models.otp import EmailToken
         from django_flex_user.serializers import FlexUserSerializer
 
         # Create user
@@ -506,7 +505,6 @@ class TestUserSerializer(TestCase):
 
     def test_phone_verified(self):
         from django_flex_user.models.user import FlexUser
-        from django_flex_user.models.otp import PhoneToken
         from django_flex_user.serializers import FlexUserSerializer
 
         # Create user
