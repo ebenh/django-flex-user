@@ -33,11 +33,11 @@ Running the reference project locally
     .. note::
         Replace ellipses with the values you obtain by following the instructions below:
 
-        * For Sendgrid, click `here <https://sendgrid.com/>`_ to obtain an API key.
+        * For Sendgrid, click `here <https://sendgrid.com/>`__ to obtain an API key.
 
-        * For Facebook Login, click `here <https://developers.facebook.com/>`_ to obtain an *"App ID"* and *"Secret Key"*.
+        * For Facebook Login, click `here <https://developers.facebook.com/>`__ to obtain an *"App ID"* and *"Secret Key"*.
 
-        * For Google Sign-In, click `here <https://cloud.google.com/>`_ to obtain an *"OAuth Client ID"* and *"Client Secret"*.
+        * For Google Sign-In, click `here <https://cloud.google.com/>`__ to obtain an *"OAuth Client ID"* and *"Client Secret"*.
 
 #. Install dependencies:
 
