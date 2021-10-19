@@ -57,6 +57,8 @@ sending it to the email address or phone number respectively. :mod:`django_flex_
 :class:`~django_flex_user.models.otp.EmailToken` and :class:`~django_flex_user.models.otp.PhoneToken` which does just
 this.
 
+These modules are used to verify email addresses and phone numbers, as well as to authorize password resets.
+
 EmailToken
 ++++++++++
 Generate One-Time Password
