@@ -35,7 +35,7 @@ Basic Configuration
 
         AUTH_USER_MODEL = 'django_flex_user.FlexUser'
 
-#. Register a callback for sending emails in :mod:`settings.py`:
+#. Register a callback function for sending emails in :mod:`settings.py`:
 
     .. code-block:: python
 
@@ -55,7 +55,7 @@ Basic Configuration
         :returns: None
         :rtype: None
 
-#. Register a callback for sending SMS messages in :mod:`settings.py`:
+#. Register a callback function for sending SMS messages in :mod:`settings.py`:
 
     .. code-block:: python
 
