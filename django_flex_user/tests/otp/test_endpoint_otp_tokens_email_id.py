@@ -36,10 +36,9 @@ class TestEmailTokenUpdate(APITestCase):
 
     def setUp(self):
         from django_flex_user.models.user import FlexUser
-        from django_flex_user.models.otp import EmailToken
 
         user = FlexUser.objects.create_user(email='validEmail@example.com')
-        self.otp_token = EmailToken.objects.get(user=user)
+        self.otp_token = user.emailtoken_set.first()
         self._REST_ENDPOINT_PATH = TestEmailTokenUpdate._REST_ENDPOINT_PATH.format(type='email', id=self.otp_token.id)
 
     @override_settings(
