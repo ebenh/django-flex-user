@@ -8,7 +8,7 @@ Installation
         $ pip install django-flex-user
 
     .. note::
-        The command to execute pip on Windows is ``py -m pip``.
+        On Windows, the command to execute pip is ``py -m pip``.
 
 #. Apply database migrations:
 
@@ -17,4 +17,4 @@ Installation
         $ python mange.py migrate
 
     .. note::
-        The command to execute Python on Windows is ``py``.
+        On Windows, the command to execute Python is ``py``.

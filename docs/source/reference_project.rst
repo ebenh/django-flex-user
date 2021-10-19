@@ -31,7 +31,7 @@ Running the reference project locally
         SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET=...
 
     .. note::
-        Replace ellipses with values you obtain by following the instructions below:
+        Replace ellipses with the values you obtain by following the instructions below:
 
         * For Sendgrid, click `here <https://sendgrid.com/>`_ to obtain an API key.
 
@@ -46,7 +46,7 @@ Running the reference project locally
         $ python -m pipenv install --dev
 
     .. note::
-        The command to execute Python on Windows is ``py``.
+        On Windows, the command to execute Python is ``py``.
 
 #. Activate the ``pipenv`` shell:
 
