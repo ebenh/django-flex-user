@@ -321,14 +321,13 @@ class TestUserModel(TestCase):
 
     def test_post_save_signal_create_user_with_email(self):
         from django_flex_user.models.user import FlexUser
-        from django_flex_user.models.otp import EmailToken
 
         user = FlexUser(email='validEmail@example.com')
         user.set_unusable_password()
         user.full_clean()
         user.save()
 
-        email_token = EmailToken.objects.get(user_id=user.id)
+        email_token = user.emailtoken_set.get(user_id=user.id)
         self.assertEqual(email_token.email, user.email)
         self.assertFalse(email_token.verified)
         self.assertIsNone(email_token.password)
@@ -338,14 +337,13 @@ class TestUserModel(TestCase):
 
     def test_post_save_signal_create_user_with_phone(self):
         from django_flex_user.models.user import FlexUser
-        from django_flex_user.models.otp import PhoneToken
 
         user = FlexUser(phone='+12025551234')
         user.set_unusable_password()
         user.full_clean()
         user.save()
 
-        phone_token = PhoneToken.objects.get(user_id=user.id)
+        phone_token = user.phonetoken_set.get(user_id=user.id)
         self.assertEqual(phone_token.phone, user.phone)
         self.assertFalse(phone_token.verified)
         self.assertIsNone(phone_token.password)
@@ -355,7 +353,6 @@ class TestUserModel(TestCase):
 
     def test_post_save_signal_add_email(self):
         from django_flex_user.models.user import FlexUser
-        from django_flex_user.models.otp import EmailToken
 
         user = FlexUser(username='validUsername')
         user.set_unusable_password()
@@ -366,7 +363,7 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        email_token = EmailToken.objects.get(user_id=user.id)
+        email_token = user.emailtoken_set.get(user_id=user.id)
         self.assertEqual(email_token.email, user.email)
         self.assertFalse(email_token.verified)
         self.assertIsNone(email_token.password)
@@ -376,7 +373,6 @@ class TestUserModel(TestCase):
 
     def test_post_save_signal_add_phone(self):
         from django_flex_user.models.user import FlexUser
-        from django_flex_user.models.otp import PhoneToken
 
         user = FlexUser(username='validUsername')
         user.set_unusable_password()
@@ -387,7 +383,7 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        phone_token = PhoneToken.objects.get(user_id=user.id)
+        phone_token = user.phonetoken_set.get(user_id=user.id)
         self.assertEqual(phone_token.phone, user.phone)
         self.assertFalse(phone_token.verified)
         self.assertIsNone(phone_token.password)
@@ -408,7 +404,7 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        self.assertRaises(EmailToken.DoesNotExist, EmailToken.objects.get, user_id=user.id)
+        self.assertRaises(EmailToken.DoesNotExist, user.emailtoken_set.get, user_id=user.id)
 
     def test_post_save_signal_remove_phone(self):
         from django_flex_user.models.user import FlexUser
@@ -423,11 +419,10 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        self.assertRaises(PhoneToken.DoesNotExist, PhoneToken.objects.get, user_id=user.id)
+        self.assertRaises(PhoneToken.DoesNotExist, user.phonetoken_set.get, user_id=user.id)
 
     def test_post_save_signal_update_email(self):
         from django_flex_user.models.user import FlexUser
-        from django_flex_user.models.otp import EmailToken
 
         user = FlexUser(username='validUsername', email='validEmail@example.com')
         user.set_unusable_password()
@@ -438,7 +433,7 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        email_token = EmailToken.objects.get(user_id=user.id)
+        email_token = user.emailtoken_set.get(user_id=user.id)
         self.assertEqual(email_token.email, user.email)
         self.assertFalse(email_token.verified)
         self.assertIsNone(email_token.password)
@@ -448,7 +443,6 @@ class TestUserModel(TestCase):
 
     def test_test_post_save_signal_update_phone(self):
         from django_flex_user.models.user import FlexUser
-        from django_flex_user.models.otp import PhoneToken
 
         user = FlexUser(username='validUsername', phone='+12025551234')
         user.set_unusable_password()
@@ -459,7 +453,7 @@ class TestUserModel(TestCase):
         user.full_clean()
         user.save()
 
-        phone_token = PhoneToken.objects.get(user_id=user.id)
+        phone_token = user.phonetoken_set.get(user_id=user.id)
         self.assertEqual(phone_token.phone, user.phone)
         self.assertFalse(phone_token.verified)
         self.assertIsNone(phone_token.password)
