@@ -479,7 +479,6 @@ class TestUserSerializer(TestCase):
 
     def test_email_verified(self):
         from django_flex_user.models.user import FlexUser
-        from django_flex_user.models.otp import EmailToken
         from django_flex_user.serializers import FlexUserSerializer
 
         # Create user
@@ -492,7 +491,7 @@ class TestUserSerializer(TestCase):
         self.assertIsNone(serializer.data['phone_verified'])
 
         # Verify email address
-        email_token = EmailToken.objects.get(user=user)
+        email_token = user.emailtoken_set.first()
         email_token.generate_password()
         email_token.check_password(email_token.password)
 
@@ -506,7 +505,6 @@ class TestUserSerializer(TestCase):
 
     def test_phone_verified(self):
         from django_flex_user.models.user import FlexUser
-        from django_flex_user.models.otp import PhoneToken
         from django_flex_user.serializers import FlexUserSerializer
 
         # Create user
@@ -519,7 +517,7 @@ class TestUserSerializer(TestCase):
         self.assertIsNone(serializer.data['email_verified'])
 
         # Verify phone number
-        phone_token = PhoneToken.objects.get(user=user)
+        phone_token = user.phonetoken_set.first()
         phone_token.generate_password()
         phone_token.check_password(phone_token.password)
 

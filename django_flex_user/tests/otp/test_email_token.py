@@ -10,10 +10,9 @@ class TestEmailToken(TestCase):
 
     def setUp(self):
         from django_flex_user.models.user import FlexUser
-        from django_flex_user.models.otp import EmailToken
 
         user = FlexUser.objects.create_user(email='validEmail@example.com')
-        self.otp_token = EmailToken.objects.get(user=user)
+        self.otp_token = user.emailtoken_set.first()
 
     @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
     def test_generate_password(self):
