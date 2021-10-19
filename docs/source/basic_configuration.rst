@@ -45,7 +45,7 @@ Basic Configuration
 
     .. py:function:: email_otp(email_token, **kwargs)
 
-        Sends one-time password via email.
+        Send one-time password via email.
 
         :param email_token: The OTP token object.
         :type email_token: :class:`~django_flex_user.models.otp.EmailToken`
@@ -65,7 +65,7 @@ Basic Configuration
 
     .. py:function:: sms_otp(phone_token, **kwargs)
 
-        Sends one-time password via SMS.
+        Send one-time password via SMS.
 
         :param email_token: The OTP token object.
         :type email_token: :class:`~django_flex_user.models.otp.PhoneToken`

@@ -7,6 +7,9 @@ Installation
 
         $ pip install django-flex-user
 
+    .. note::
+        The command to execute pip on Windows is ``py -m pip``.
+
 #. Apply database migrations:
 
     .. code-block:: bash
