@@ -7,7 +7,7 @@ Below are just the steps needed to make :mod:`social_django` compatible with :mo
 configuration example refer to the :doc:`reference_project`.
 
 For instructions on how to configure :mod:`social_django`, refer to its documentation
-`here <https://python-social-auth.readthedocs.io/en/latest/configuration/django.html>`_
+`here <https://python-social-auth.readthedocs.io/en/latest/configuration/django.html>`__
 
 #. Configure :setting:`AUTHENTICATION_BACKENDS` in :mod:`settings.py`:
 

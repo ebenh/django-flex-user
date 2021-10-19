@@ -47,9 +47,9 @@ One-time Passwords (OTP)
 ------------------------
 
 One-time passwords are based around the concept of a
-`security token <https://en.wikipedia.org/w/index.php?title=Security_token&oldid=1049342825>`_. A security token is a
+`security token <https://en.wikipedia.org/w/index.php?title=Security_token&oldid=1049342825>`__. A security token is a
 piece of hardware or software which generates one-time passwords in conjunction with a server. One common security
-token is `Google Authenticator <https://en.wikipedia.org/w/index.php?title=Google_Authenticator&oldid=1049479885>`_, a
+token is `Google Authenticator <https://en.wikipedia.org/w/index.php?title=Google_Authenticator&oldid=1049479885>`__, a
 software application which runs on mobile platforms.
 
 An email address or phone number can also act as a security token by generating a random password on the server and

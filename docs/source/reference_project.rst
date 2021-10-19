@@ -4,7 +4,7 @@ Reference Project
 For convenience, we provide a reference project which implements all of the conventional user-flows for sign up,
 sign in and account management. Feel free to use this project to guide your implementation of :mod:`django_flex_user`.
 
-You can try a live version of the reference project `here <https://django-flex-user.herokuapp.com>`_. Or, you can run
+You can try a live version of the reference project `here <https://django-flex-user.herokuapp.com>`__. Or, you can run
 the reference project on your local machine.
 
 Running the reference project locally
