@@ -519,7 +519,7 @@ class TestUserSerializer(TestCase):
         self.assertIsNone(serializer.data['email_verified'])
 
         # Verify phone number
-        phone_token = PhoneToken.objects.get(user=user)
+        phone_token = user.phonetoken_set.first()
         phone_token.generate_password()
         phone_token.check_password(phone_token.password)
 
