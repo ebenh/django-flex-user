@@ -12,3 +12,6 @@ Installation
     .. code-block:: bash
 
         $ python mange.py migrate
+
+    .. note::
+        The command to execute Python on Windows is ``py``.
