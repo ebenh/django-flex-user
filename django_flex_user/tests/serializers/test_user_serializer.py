@@ -492,7 +492,7 @@ class TestUserSerializer(TestCase):
         self.assertIsNone(serializer.data['phone_verified'])
 
         # Verify email address
-        email_token = EmailToken.objects.get(user=user)
+        email_token = user.emailtoken_set.first()
         email_token.generate_password()
         email_token.check_password(email_token.password)
 
