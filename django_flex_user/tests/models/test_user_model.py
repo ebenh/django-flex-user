@@ -334,6 +334,7 @@ class TestUserModel(TestCase):
         self.assertIsNone(email_token.password)
         self.assertIsNone(email_token.timeout)
         self.assertEqual(email_token.failure_count, 0)
+        self.assertIsNone(email_token.expiration)
 
     def test_post_save_signal_create_user_with_phone(self):
         from django_flex_user.models.user import FlexUser
@@ -350,6 +351,7 @@ class TestUserModel(TestCase):
         self.assertIsNone(phone_token.password)
         self.assertIsNone(phone_token.timeout)
         self.assertEqual(phone_token.failure_count, 0)
+        self.assertIsNone(phone_token.expiration)
 
     def test_post_save_signal_add_email(self):
         from django_flex_user.models.user import FlexUser
@@ -370,6 +372,7 @@ class TestUserModel(TestCase):
         self.assertIsNone(email_token.password)
         self.assertIsNone(email_token.timeout)
         self.assertEqual(email_token.failure_count, 0)
+        self.assertIsNone(email_token.expiration)
 
     def test_post_save_signal_add_phone(self):
         from django_flex_user.models.user import FlexUser
@@ -390,6 +393,7 @@ class TestUserModel(TestCase):
         self.assertIsNone(phone_token.password)
         self.assertIsNone(phone_token.timeout)
         self.assertEqual(phone_token.failure_count, 0)
+        self.assertIsNone(phone_token.expiration)
 
     def test_post_save_signal_remove_email(self):
         from django_flex_user.models.user import FlexUser
@@ -440,6 +444,7 @@ class TestUserModel(TestCase):
         self.assertIsNone(email_token.password)
         self.assertIsNone(email_token.timeout)
         self.assertEqual(email_token.failure_count, 0)
+        self.assertIsNone(email_token.expiration)
 
     def test_test_post_save_signal_update_phone(self):
         from django_flex_user.models.user import FlexUser
@@ -460,3 +465,4 @@ class TestUserModel(TestCase):
         self.assertIsNone(phone_token.password)
         self.assertIsNone(phone_token.timeout)
         self.assertEqual(phone_token.failure_count, 0)
+        self.assertIsNone(phone_token.expiration)
