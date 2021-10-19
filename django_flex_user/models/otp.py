@@ -31,7 +31,7 @@ class TransmissionError(Exception):
     pass
 
 
-class OTPToken(models.Model):
+class Token(models.Model):
     user = models.ForeignKey('FlexUser', on_delete=models.CASCADE)
     verified = models.BooleanField(_('verified'), default=False)
 
@@ -90,7 +90,7 @@ class OTPToken(models.Model):
         abstract = True
 
 
-class SideChannelToken(OTPToken):
+class SideChannelToken(Token):
     password = models.CharField(_('password'), null=True, blank=True, max_length=256)
     expiration = models.DateTimeField(_('expiration'), null=True, blank=True)
 
@@ -102,14 +102,14 @@ class SideChannelToken(OTPToken):
     def password_alphabet(self):
         raise NotImplementedError
 
-    @OTPToken.throttle_reset
+    @Token.throttle_reset
     def generate_password(self):
         self.password = ''.join(
             random.SystemRandom().choice(self.password_alphabet) for _ in range(self.password_length)
         )
         self.expiration = timezone.now() + getattr(settings, 'FLEX_USER_OTP_TTL', timedelta(minutes=15))
 
-    @OTPToken.throttle
+    @Token.throttle
     def check_password(self, password):
         """
         Checks one-time password.
