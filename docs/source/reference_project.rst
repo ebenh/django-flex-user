@@ -89,7 +89,7 @@ Running the reference project locally
     .. code-block:: bash
 
         $ cd doc
-        $ sphinx-apidoc -o source ..\django_flex_user ..\django_flex_user\tests ..\django_flex_user\migrations
+        $ sphinx-apidoc -o source ../django_flex_user ../django_flex_user/tests ../django_flex_user/migrations
         $ make html
 
     .. note::
