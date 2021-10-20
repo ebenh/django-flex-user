@@ -26,6 +26,7 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install --upgrade pipenv
         python -m pipenv install --dev
+        export SECRET_KEY=NOT_FOR_PRODUCTION
     - name: Run Tests
       run: |
         python -m pipenv run python manage.py test
