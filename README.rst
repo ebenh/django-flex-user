@@ -9,3 +9,5 @@ Users can also sign up using an **OAuth** provider like Facebook or Google.
 Email address and phone number **verification**, **password reset**, and **REST API** included "in the box".
 
 Click `here <https://django-flex-user.herokuapp.com/>`__ to see a **demo**.
+
+Click `here <https://django-flex-user.readthedocs.io/>`__ to see the **documentation**.
