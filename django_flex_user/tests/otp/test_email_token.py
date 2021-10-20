@@ -196,7 +196,7 @@ class TestEmailToken(TestCase):
             self.assertEqual(self.otp_token.failure_count, 1)
             self.assertEqual(self.otp_token.expiration, timezone.now())
 
-            # Advance time past the expiration
+            # Advance time past the expiration time
             frozen_datetime.tick(timedelta(minutes=15))
 
             self.assertFalse(self.otp_token.check_password(self.otp_token.password))
