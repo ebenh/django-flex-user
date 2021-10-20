@@ -8,10 +8,8 @@ class TestPhoneTokenSerializer(TestCase):
 
     def setUp(self):
         from django_flex_user.models.user import FlexUser
-        from django_flex_user.models.otp import PhoneToken
 
-        user = FlexUser.objects.create_user(phone='+12025550001')
-        self.phone_token = PhoneToken.objects.get(user=user)
+        self.user = FlexUser.objects.create_user(phone='+12025550001')
 
     def test_serialize(self):
         from django_flex_user.serializers import PhoneTokenSerializer
@@ -21,12 +19,15 @@ class TestPhoneTokenSerializer(TestCase):
         # Dummy request for serializer context and building absolute URI's
         request = APIRequestFactory().get('/')
 
+        # Get phone token
+        phone_token = self.user.phonetoken_set.first()
+
         # Make sure the serializer only exposes the data we want it to
-        serializer = PhoneTokenSerializer(self.phone_token, context={'request': request})
+        serializer = PhoneTokenSerializer(phone_token, context={'request': request})
         self.assertEqual(
             serializer.data,
             {
                 'name': '+*********01',
-                'uri': f'{request.build_absolute_uri(reverse("phone-token", args=(self.phone_token.id,)))}'
+                'uri': f'{request.build_absolute_uri(reverse("phone-token", args=(phone_token.id,)))}'
             }
         )

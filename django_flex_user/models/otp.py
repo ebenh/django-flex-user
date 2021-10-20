@@ -1,5 +1,6 @@
 import string, random, importlib
 from datetime import timedelta
+from functools import wraps
 
 from django.conf import settings
 from django.db import models
@@ -30,7 +31,7 @@ class TransmissionError(Exception):
     pass
 
 
-class OTPToken(models.Model):
+class Token(models.Model):
     user = models.ForeignKey('FlexUser', on_delete=models.CASCADE)
     verified = models.BooleanField(_('verified'), default=False)
 
@@ -51,6 +52,7 @@ class OTPToken(models.Model):
                                "Too many failed verification attempts. Please try again later.")
 
     def throttle_reset(fun):
+        @wraps(fun)  # Copies docstring from "fun" to "inner"
         def inner(self):
             fun(self)
             self._reset_timeout()
@@ -59,6 +61,7 @@ class OTPToken(models.Model):
         return inner
 
     def throttle(fun):
+        @wraps(fun)  # Copies docstring from "fun" to "inner"
         def inner(self, password):
             self._is_timed_out()
             success = fun(self, password)
@@ -87,7 +90,7 @@ class OTPToken(models.Model):
         abstract = True
 
 
-class SideChannelToken(OTPToken):
+class SideChannelToken(Token):
     password = models.CharField(_('password'), null=True, blank=True, max_length=256)
     expiration = models.DateTimeField(_('expiration'), null=True, blank=True)
 
@@ -99,15 +102,25 @@ class SideChannelToken(OTPToken):
     def password_alphabet(self):
         raise NotImplementedError
 
-    @OTPToken.throttle_reset
+    @Token.throttle_reset
     def generate_password(self):
         self.password = ''.join(
             random.SystemRandom().choice(self.password_alphabet) for _ in range(self.password_length)
         )
         self.expiration = timezone.now() + getattr(settings, 'FLEX_USER_OTP_TTL', timedelta(minutes=15))
 
-    @OTPToken.throttle
+    @Token.throttle
     def check_password(self, password):
+        """
+        Checks one-time password.
+
+        :param password: The one-time password.
+        :type password: str
+        :raises ~django_flex_user.models.otp.TimeoutError: If this method is called too many times.
+        :return: True if the one-time password is valid, False otherwise
+        :rtype: bool
+        """
+
         # Check whether the password has expired
         if self.expiration and self.expiration <= timezone.now():
             return False

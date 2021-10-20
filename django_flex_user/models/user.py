@@ -12,7 +12,6 @@ from dirtyfields import DirtyFieldsMixin
 
 from django_flex_user.validators import FlexUserUnicodeUsernameValidator
 from django_flex_user.fields import CICharField
-from django_flex_user.models.otp import EmailToken, PhoneToken
 
 
 # Reference: https://docs.djangoproject.com/en/3.0/topics/auth/customizing/
@@ -51,11 +50,63 @@ class FlexUserManager(BaseUserManager):
         return user
 
     def create_user(self, username=None, email=None, phone=None, password=None, **extra_fields):
+        """
+        Create a user. You must supply at least one of ``username``, ``email``, or ``phone``.
+
+        If ``password`` is None, the user's password will be set using \
+        :meth:`~django.contrib.auth.models.User.set_unusable_password`.
+
+        .. warning::
+            This method does not run :setting:`AUTH_PASSWORD_VALIDATORS` against ``password``. It's the
+            caller's responsibility to run password validators before calling this method.
+
+        :param username: The username for the user, defaults to None.
+        :type username: str, optional
+        :param email: The email address for the user, defaults to None.
+        :type email: str, optional
+        :param phone: The phone number for the user, defaults to None.
+        :type phone: str, optional
+        :param password: The password for the user, defaults to None.
+        :type password: str, optional
+        :param extra_fields: Additional model fields you wish to set for the user.
+        :type extra_fields: dict, optional
+        :raises ~django.core.exceptions.ValidationError: If any of the supplied parameters fails model field validation
+            (e.g. the supplied phone number is already in use by another user, the supplied username is invalid, etc.)
+        :return: The newly created user.
+        :rtype: ~django_flex_user.models.user.FlexUser
+        """
+
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
         return self._create_user(username, email, phone, password, **extra_fields)
 
     def create_superuser(self, username=None, email=None, phone=None, password=None, **extra_fields):
+        """
+        Create a super user. You must supply at least one of ``username``, ``email``, or ``phone``.
+
+        If ``password`` is None, the user's password will be set using \
+        :meth:`~django.contrib.auth.models.User.set_unusable_password`.
+
+        .. warning::
+            This method does not run :setting:`AUTH_PASSWORD_VALIDATORS` against ``password``. It's the
+            caller's responsibility to run password validators before calling this method.
+
+        :param username: The username for the user, defaults to None.
+        :type username: str, optional
+        :param email: The email address for the user, defaults to None.
+        :type email: str, optional
+        :param phone: The phone number for the user, defaults to None.
+        :type phone: str, optional
+        :param password: The password for the user, defaults to None.
+        :type password: str, optional
+        :param extra_fields: Additional model fields you wish to set for the user.
+        :type extra_fields: dict, optional
+        :raises ~django.core.exceptions.ValidationError: If any of the supplied parameters fails model field validation
+            (e.g. the supplied phone number is already in use by another user, the supplied username is invalid, etc.)
+        :return: The newly created user.
+        :rtype: ~django_flex_user.models.user.FlexUser
+        """
+
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
 
@@ -261,23 +312,23 @@ def my_post_save_handler(sender, **kwargs):
 
     if kwargs['created']:
         if user.email is not None:
-            EmailToken.objects.create(user_id=user.id, email=user.email)
+            user.emailtoken_set.create(user_id=user.id, email=user.email)
         if user.phone is not None:
-            PhoneToken.objects.create(user_id=user.id, phone=user.phone)
+            user.phonetoken_set.create(user_id=user.id, phone=user.phone)
     else:
         dirty_fields = user.get_dirty_fields(verbose=True)
 
         if 'email' in dirty_fields:
             if dirty_fields['email']['current'] is None:
                 # If the new value for email is None, delete the token if it exists
-                EmailToken.objects.filter(user_id=user.id).delete()
+                user.emailtoken_set.filter(user_id=user.id).delete()
             elif dirty_fields['email']['saved'] is None:
                 # If the old value for email is None and its new value is not None, create a new token
                 # todo: construct this instance manually?
-                EmailToken.objects.create(user=user, email=dirty_fields['email']['current'])
+                user.emailtoken_set.create(user=user, email=dirty_fields['email']['current'])
             else:
                 # Otherwise, update the existing token
-                email_token = EmailToken.objects.get(user=user)
+                email_token = user.emailtoken_set.get(user=user)
                 email_token.email = user.email
                 # Reset the password
                 email_token.verified = False
@@ -287,14 +338,14 @@ def my_post_save_handler(sender, **kwargs):
         if 'phone' in dirty_fields:
             if dirty_fields['phone']['current'] is None:
                 # If the new value for phone is None, delete the token if it exists
-                PhoneToken.objects.filter(user_id=user.id).delete()
+                user.phonetoken_set.filter(user_id=user.id).delete()
             elif dirty_fields['phone']['saved'] is None:
                 # If the old value for phone is None and its new value is not None, create a new token
                 # todo: construct this instance manually?
-                PhoneToken.objects.create(user=user, phone=dirty_fields['phone']['current'])
+                user.phonetoken_set.create(user=user, phone=dirty_fields['phone']['current'])
             else:
                 # Otherwise, update the existing token
-                phone_token = PhoneToken.objects.get(user=user)
+                phone_token = user.phonetoken_set.get(user=user)
                 phone_token.phone = user.phone
                 # Reset the password
                 phone_token.verified = False

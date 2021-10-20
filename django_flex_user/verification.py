@@ -53,7 +53,7 @@ def mail_validation(backend, details, is_new=False, *args, **kwargs):
             else:
                 # Update django-flex-user's internal state
                 user = UserModel.objects.get(email__iexact=details['email'])
-                email_token = EmailToken.objects.get(user=user)
+                email_token = user.emailtoken_set.first()
                 email_token.verified = True
                 email_token.save(update_fields=['verified'])
         else:

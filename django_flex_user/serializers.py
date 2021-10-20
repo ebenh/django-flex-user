@@ -25,21 +25,13 @@ class FlexUserSerializer(serializers.ModelSerializer):
 
     @staticmethod
     def get_email_verified(obj):
-        verified = None
-        try:
-            verified = EmailToken.objects.get(user=obj.id).verified
-        except EmailToken.DoesNotExist:
-            pass
-        return verified
+        email_token = obj.emailtoken_set.first()
+        return email_token.verified if email_token else None
 
     @staticmethod
     def get_phone_verified(obj):
-        verified = None
-        try:
-            verified = PhoneToken.objects.get(user=obj.id).verified
-        except PhoneToken.DoesNotExist:
-            pass
-        return verified
+        phone_token = obj.phonetoken_set.first()
+        return phone_token.verified if phone_token else None
 
     def validate_username(self, value):
         """
@@ -205,21 +197,13 @@ class AuthenticationSerializer(serializers.Serializer):
 
     @staticmethod
     def get_email_verified(obj):
-        verified = None
-        try:
-            verified = EmailToken.objects.get(user=obj.id).verified
-        except EmailToken.DoesNotExist:
-            pass
-        return verified
+        email_token = obj.emailtoken_set.first()
+        return email_token.verified if email_token else None
 
     @staticmethod
     def get_phone_verified(obj):
-        verified = None
-        try:
-            verified = PhoneToken.objects.get(user=obj.id).verified
-        except PhoneToken.DoesNotExist:
-            pass
-        return verified
+        phone_token = obj.phonetoken_set.first()
+        return phone_token.verified if phone_token else None
 
     @staticmethod
     def _english_join(items):
