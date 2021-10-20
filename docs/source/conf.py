@@ -29,7 +29,7 @@ copyright = '2021, Ebenezer Hailemariam'
 author = 'Ebenezer Hailemariam'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1'
+release = '0.1.0'
 
 
 # -- General configuration ---------------------------------------------------
