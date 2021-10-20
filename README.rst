@@ -1,8 +1,6 @@
 django-flex-user
 ================
-.. image:: https://github.com/ebenh/django-flex-user/actions/workflows/django.yml/badge.svg
-  :target: https://github.com/ebenh/django-flex-user/actions/workflows/django.yml
-  :alt: Django CI Status
+|Django CI Badge|
   
 A flexible user model for Django designed to **maximize sign-up conversion**.
 
@@ -14,3 +12,7 @@ Email address and phone number **verification**, **password reset**, and **REST 
 Click `here <https://django-flex-user.herokuapp.com/>`__ to see a **demo**.
 
 Click `here <https://django-flex-user.readthedocs.io/>`__ to see the **documentation**.
+
+.. |Django CI Badge| image:: https://github.com/ebenh/django-flex-user/actions/workflows/django.yml/badge.svg
+  :target: https://github.com/ebenh/django-flex-user/actions/workflows/django.yml
+  :alt: Django CI Status
