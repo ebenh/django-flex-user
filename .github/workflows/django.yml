@@ -26,6 +26,7 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install --upgrade pipenv
         python -m pipenv install --dev
+        echo DEBUG=True >> .env
         echo SECRET_KEY=NOT_FOR_PRODUCTION >> .env
         echo SENDGRID_API_KEY=NOT_FOR_PRODUCTION >> .env
         echo SOCIAL_AUTH_FACEBOOK_KEY=NOT_FOR_PRODUCTION >> .env
