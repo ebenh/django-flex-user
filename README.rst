@@ -1,6 +1,9 @@
 django-flex-user
 ================
-
+.. image:: https://github.com/ebenh/django-flex-user/actions/workflows/django.yml/badge.svg
+  :target: https://github.com/ebenh/django-flex-user/actions/workflows/django.yml
+  :alt: Django CI Status
+  
 A flexible user model for Django designed to **maximize sign-up conversion**.
 
 Enables users to up using their choice of **username**, **email address**, **phone number** or any combination thereof.
