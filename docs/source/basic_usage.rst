@@ -55,9 +55,7 @@ software application which runs on mobile platforms.
 An email address or phone number can also act as a security token by generating a random password on the server and
 sending it to the email address or phone number respectively. :mod:`django_flex_user` implements
 :class:`~django_flex_user.models.otp.EmailToken` and :class:`~django_flex_user.models.otp.PhoneToken` which does just
-this.
-
-These modules are used to verify email addresses and phone numbers, as well as to authorize password resets.
+that. These modules are used to verify email addresses and phone numbers, as well as to authorize password resets.
 
 EmailToken
 ++++++++++
