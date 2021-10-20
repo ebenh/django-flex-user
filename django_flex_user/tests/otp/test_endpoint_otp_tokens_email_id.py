@@ -105,6 +105,17 @@ class TestEmailTokenUpdate(APITestCase):
                     If the supplied password is defined and valid, django_flex_user.views.EmailToken.post should
                     return HTTP status code HTTP_200_OK.
                     """
+                    if response.status_code != status.HTTP_200_OK:
+                        self.otp_token.refresh_from_db()
+                        if self.otp_token.password:
+                            print(self.otp_token.password.encode("unicode_escape").encode('utf-8'))
+                        else:
+                            print('None')
+                        if d['password']:
+                            print(d["password"].encode("unicode_escape").encode('utf-8'))
+                        else:
+                            print('None')
+
                     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
                     self.otp_token.refresh_from_db()
