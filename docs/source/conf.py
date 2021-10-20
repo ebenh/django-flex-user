@@ -49,6 +49,12 @@ intersphinx_mapping = {
 }
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'test_project.settings'
+os.environ['SECRET_KEY'] = ''
+os.environ['SENDGRID_API_KEY'] = ''
+os.environ['SOCIAL_AUTH_FACEBOOK_KEY'] = ''
+os.environ['SOCIAL_AUTH_FACEBOOK_SECRET'] = ''
+os.environ['SOCIAL_AUTH_GOOGLE_OAUTH2_KEY'] = ''
+os.environ['SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET'] = ''
 django.setup()
 
 # Add any paths that contain templates here, relative to this directory.
