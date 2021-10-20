@@ -136,8 +136,6 @@ class TestEmailTokenUpdate(APITestCase):
         from django.db import transaction
         from freezegun import freeze_time
 
-        self.otp_token.generate_password()
-
         for data in self._ContentType.MultipartFormData.password_values:
             with self.subTest(**data), freeze_time(), transaction.atomic():
                 from django.utils import timezone
@@ -172,7 +170,6 @@ class TestEmailTokenUpdate(APITestCase):
                     If the supplied password is defined and valid, django_flex_user.views.EmailToken.post should
                     return HTTP status code HTTP_200_OK.
                     """
-                    # todo: this test randomly fails and I don't know why
                     self.assertEqual(response.status_code, status.HTTP_200_OK)
 
                     self.otp_token.refresh_from_db()
