@@ -13,4 +13,6 @@ include(
     optional('local_settings.py')
 )
 
-django_heroku.settings(locals())
+# Had to add test_runner = False to fix GitHub actions bug
+# https://travis-ci.community/t/django-unit-tests-failing-on-travis-builds/10625
+django_heroku.settings(locals(), test_runner=False)
