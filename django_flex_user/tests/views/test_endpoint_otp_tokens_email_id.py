@@ -27,10 +27,10 @@ class TestEmailTokenRetrieveUpdate(APITestCase):
     # Method GET
 
     @override_settings(
-        FLEX_USER_OTP_EMAIL_FUNCTION='django_flex_user.tests.otp.test_endpoint_otp_tokens_email_id._send_password'
+        FLEX_USER_OTP_EMAIL_FUNCTION='django_flex_user.tests.views.test_endpoint_otp_tokens_email_id._send_password'
     )
     @override_settings(
-        FLEX_USER_OTP_SMS_FUNCTION='django_flex_user.tests.otp.test_endpoint_otp_tokens_email_id._send_password'
+        FLEX_USER_OTP_SMS_FUNCTION='django_flex_user.tests.views.test_endpoint_otp_tokens_email_id._send_password'
     )
     @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
     def test_method_get(self):
