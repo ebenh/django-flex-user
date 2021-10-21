@@ -346,6 +346,41 @@ class TestEmailTokenRetrieveUpdate(APITestCase):
             self.assertEqual(self.otp_token.failure_count, 1)
             self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
 
+    @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
+    def test_method_post_format_multipart_form_data_generate_password_check_password_expired(self):
+        from freezegun import freeze_time
+        from datetime import timedelta
+        from django.utils import timezone
+
+        with freeze_time() as frozen_datetime:
+            self.otp_token.generate_password()
+
+            # Advance time to exactly the expiration time
+            frozen_datetime.tick(timedelta(minutes=15))
+
+            response = self.client.post(self._REST_ENDPOINT_PATH, data={'password': self.otp_token.password},
+                                        format='multipart')
+            self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+            self.otp_token.refresh_from_db()
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.otp_token.failure_count, 1)
+            self.assertEqual(self.otp_token.expiration, timezone.now())
+
+            # Advance time past the expiration time
+            frozen_datetime.tick(timedelta(minutes=15))
+
+            response = self.client.post(self._REST_ENDPOINT_PATH, data={'password': self.otp_token.password},
+                                        format='multipart')
+            self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+            self.otp_token.refresh_from_db()
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=2))
+            self.assertEqual(self.otp_token.failure_count, 2)
+            self.assertEqual(self.otp_token.expiration, timezone.now() - timedelta(minutes=15))
+
     # Method POST, format multipart/form-data, skip generate password, check password
 
     def test_method_post_format_multipart_form_data_check_password_undefined(self):
