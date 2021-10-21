@@ -308,7 +308,7 @@ class UserSocialAuthSerializer(serializers.ModelSerializer):
 
 # noinspection PyAbstractClass
 class OTPSerializer(serializers.Serializer):
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField(trim_whitespace=False, write_only=True)
 
 
 class EmailTokenSerializer(serializers.HyperlinkedModelSerializer):
