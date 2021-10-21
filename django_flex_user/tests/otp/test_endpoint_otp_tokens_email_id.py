@@ -190,6 +190,35 @@ class TestEmailTokenRetrieveUpdate(APITestCase):
             self.assertEqual(self.otp_token.failure_count, 2)
             self.assertEqual(self.otp_token.expiration, timezone.now() - timedelta(minutes=15))
 
+    def test_method_post_format_application_json_generate_password_check_password_throttling(self):
+        from freezegun import freeze_time
+
+        self.otp_token.generate_password()
+
+        with freeze_time() as frozen_datetime:
+            for i in range(0, 10):
+                # Here we try to verify an invalid password. django_flex_user.views.EmailToken.post should return HTTP
+                # status code HTTP_401_UNAUTHORIZED and subsequent verification attempts should be timed out for the
+                # next 2^i seconds.
+                response = self.client.post(self._REST_ENDPOINT_PATH, data={'password': 'invalidPassword'},
+                                            format='json')
+                self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+                # Here we simulate the verification timeout period. For each second of the timeout period we attempt to
+                # verify again. django_flex_user.views.EmailToken.post should return HTTP status code
+                # HTTP_429_TOO_MANY_REQUESTS each time.
+                for j in range(0, 2 ** i):
+                    # Try to verify an invalid password.
+                    response = self.client.post(self._REST_ENDPOINT_PATH, data={'password': 'invalidPassword'},
+                                                format='json')
+                    self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
+                    # Try to verify a valid password.
+                    response = self.client.post(self._REST_ENDPOINT_PATH, data={'password': self.otp_token.password},
+                                                format='json')
+                    self.assertEqual(response.status_code, status.HTTP_429_TOO_MANY_REQUESTS)
+                    # Advance time by one second.
+                    frozen_datetime.tick()
+
     # Method POST, format application/json, skip generate password, check password
 
     def test_method_post_format_application_json_check_password_undefined(self):
