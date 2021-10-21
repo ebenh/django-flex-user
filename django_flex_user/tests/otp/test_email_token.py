@@ -156,28 +156,6 @@ class TestEmailToken(TestCase):
             self.assertEqual(self.otp_token.failure_count, 1)
             self.assertIsNone(self.otp_token.expiration)
 
-    def test_check_password_throttling(self):
-        from django_flex_user.models.otp import TimeoutError
-        from freezegun import freeze_time
-
-        self.otp_token.generate_password()
-
-        with freeze_time() as frozen_datetime:
-            for i in range(0, 10):
-                # Try to verify an invalid password. The method should return false and set the timeout to 2^i seconds
-                success = self.otp_token.check_password('invalidPassword')
-                self.assertFalse(success)
-
-                # Here we simulate the timeout period. For each second of the timeout period we attempt to verify again.
-                # The verification method should raise an exception each time.
-                for j in range(0, 2 ** i):
-                    # Try to verify again, the method should raise TimeoutError exception
-                    self.assertRaises(TimeoutError, self.otp_token.check_password, 'invalidPassword')
-                    # The verify method should raise TimeoutError even if we submit the correct password
-                    self.assertRaises(TimeoutError, self.otp_token.check_password, self.otp_token.password)
-                    # Advance time by 1 second
-                    frozen_datetime.tick()
-
     @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
     def test_check_password_expired_password(self):
         from freezegun import freeze_time
@@ -204,6 +182,28 @@ class TestEmailToken(TestCase):
             self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=2))
             self.assertEqual(self.otp_token.failure_count, 2)
             self.assertEqual(self.otp_token.expiration, timezone.now() - timedelta(minutes=15))
+
+    def test_check_password_throttling(self):
+        from django_flex_user.models.otp import TimeoutError
+        from freezegun import freeze_time
+
+        self.otp_token.generate_password()
+
+        with freeze_time() as frozen_datetime:
+            for i in range(0, 10):
+                # Try to verify an invalid password. The method should return false and set the timeout to 2^i seconds
+                success = self.otp_token.check_password('invalidPassword')
+                self.assertFalse(success)
+
+                # Here we simulate the timeout period. For each second of the timeout period we attempt to verify again.
+                # The verification method should raise an exception each time.
+                for j in range(0, 2 ** i):
+                    # Try to verify again, the method should raise TimeoutError exception
+                    self.assertRaises(TimeoutError, self.otp_token.check_password, 'invalidPassword')
+                    # The verify method should raise TimeoutError even if we submit the correct password
+                    self.assertRaises(TimeoutError, self.otp_token.check_password, self.otp_token.password)
+                    # Advance time by 1 second
+                    frozen_datetime.tick()
 
     def test_generate_password_update_email_check_password(self):
         from freezegun import freeze_time
