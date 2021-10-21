@@ -32,6 +32,7 @@ class TestPhoneToken(TestEmailToken):
             # Ensure the generated password fails
             self.otp_token.refresh_from_db()
             self.assertFalse(self.otp_token.check_password(password))
+            self.assertIsNone(self.otp_token.password)
             self.assertFalse(self.otp_token.verified)
             self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
             self.assertEqual(self.otp_token.failure_count, 1)
