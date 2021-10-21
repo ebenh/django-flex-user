@@ -179,7 +179,7 @@ class TestEmailToken(TestCase):
                     frozen_datetime.tick()
 
     @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
-    def test_expiration(self):
+    def test_check_password_expired_password(self):
         from freezegun import freeze_time
         from datetime import timedelta
         from django.utils import timezone
