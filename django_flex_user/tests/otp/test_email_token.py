@@ -101,6 +101,33 @@ class TestEmailToken(TestCase):
             self.assertEqual(self.otp_token.failure_count, 1)
             self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
 
+    @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
+    def test_check_password_expired_password(self):
+        from freezegun import freeze_time
+        from datetime import timedelta
+        from django.utils import timezone
+
+        with freeze_time() as frozen_datetime:
+            self.otp_token.generate_password()
+
+            # Advance time to exactly the expiration time
+            frozen_datetime.tick(timedelta(minutes=15))
+
+            self.assertFalse(self.otp_token.check_password(self.otp_token.password))
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.otp_token.failure_count, 1)
+            self.assertEqual(self.otp_token.expiration, timezone.now())
+
+            # Advance time past the expiration time
+            frozen_datetime.tick(timedelta(minutes=15))
+
+            self.assertFalse(self.otp_token.check_password(self.otp_token.password))
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=2))
+            self.assertEqual(self.otp_token.failure_count, 2)
+            self.assertEqual(self.otp_token.expiration, timezone.now() - timedelta(minutes=15))
+
     def test_check_password_undefined(self):
         self.assertRaises(TypeError, self.otp_token.check_password)
         self.assertFalse(self.otp_token.verified)
@@ -155,33 +182,6 @@ class TestEmailToken(TestCase):
             self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
             self.assertEqual(self.otp_token.failure_count, 1)
             self.assertIsNone(self.otp_token.expiration)
-
-    @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
-    def test_check_password_expired_password(self):
-        from freezegun import freeze_time
-        from datetime import timedelta
-        from django.utils import timezone
-
-        with freeze_time() as frozen_datetime:
-            self.otp_token.generate_password()
-
-            # Advance time to exactly the expiration time
-            frozen_datetime.tick(timedelta(minutes=15))
-
-            self.assertFalse(self.otp_token.check_password(self.otp_token.password))
-            self.assertFalse(self.otp_token.verified)
-            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
-            self.assertEqual(self.otp_token.failure_count, 1)
-            self.assertEqual(self.otp_token.expiration, timezone.now())
-
-            # Advance time past the expiration time
-            frozen_datetime.tick(timedelta(minutes=15))
-
-            self.assertFalse(self.otp_token.check_password(self.otp_token.password))
-            self.assertFalse(self.otp_token.verified)
-            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=2))
-            self.assertEqual(self.otp_token.failure_count, 2)
-            self.assertEqual(self.otp_token.expiration, timezone.now() - timedelta(minutes=15))
 
     def test_check_password_throttling(self):
         from django_flex_user.models.otp import TimeoutError
