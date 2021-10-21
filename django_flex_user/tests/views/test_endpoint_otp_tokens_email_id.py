@@ -117,22 +117,19 @@ class TestEmailTokenRetrieveUpdate(APITestCase):
             self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
 
     def test_method_post_format_application_json_generate_password_check_password_valid_password(self):
-        from freezegun import freeze_time
+        self.otp_token.generate_password()
 
-        with freeze_time():
-            self.otp_token.generate_password()
+        data = {'password': self.otp_token.password}
 
-            data = {'password': self.otp_token.password}
+        response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-            response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='json')
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-            self.otp_token.refresh_from_db()
-            self.assertIsNone(self.otp_token.password)
-            self.assertTrue(self.otp_token.verified)
-            self.assertIsNone(self.otp_token.timeout)
-            self.assertEqual(self.otp_token.failure_count, 0)
-            self.assertIsNone(self.otp_token.expiration)
+        self.otp_token.refresh_from_db()
+        self.assertIsNone(self.otp_token.password)
+        self.assertTrue(self.otp_token.verified)
+        self.assertIsNone(self.otp_token.timeout)
+        self.assertEqual(self.otp_token.failure_count, 0)
+        self.assertIsNone(self.otp_token.expiration)
 
     @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
     def test_method_post_format_application_json_generate_password_check_password_invalid_password(self):
@@ -337,22 +334,19 @@ class TestEmailTokenRetrieveUpdate(APITestCase):
             self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
 
     def test_method_post_format_multipart_form_data_generate_password_check_password_valid_password(self):
-        from freezegun import freeze_time
+        self.otp_token.generate_password()
 
-        with freeze_time():
-            self.otp_token.generate_password()
+        data = {'password': self.otp_token.password}
 
-            data = {'password': self.otp_token.password}
+        response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-            response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='multipart')
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-            self.otp_token.refresh_from_db()
-            self.assertIsNone(self.otp_token.password)
-            self.assertTrue(self.otp_token.verified)
-            self.assertIsNone(self.otp_token.timeout)
-            self.assertEqual(self.otp_token.failure_count, 0)
-            self.assertIsNone(self.otp_token.expiration)
+        self.otp_token.refresh_from_db()
+        self.assertIsNone(self.otp_token.password)
+        self.assertTrue(self.otp_token.verified)
+        self.assertIsNone(self.otp_token.timeout)
+        self.assertEqual(self.otp_token.failure_count, 0)
+        self.assertIsNone(self.otp_token.expiration)
 
     @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
     def test_method_post_format_multipart_form_data_generate_password_check_password_invalid_password(self):
