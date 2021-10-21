@@ -205,6 +205,14 @@ class TestEmailToken(TestCase):
                     # Advance time by 1 second
                     frozen_datetime.tick()
 
+
+class TestGeneratePasswordUpdateEmailCheckPassword(TestCase):
+    def setUp(self):
+        from django_flex_user.models.user import FlexUser
+
+        user = FlexUser.objects.create_user(email='validEmail@example.com')
+        self.otp_token = user.emailtoken_set.first()
+
     def test_generate_password_update_email_check_password(self):
         from freezegun import freeze_time
         from django.utils import timezone
