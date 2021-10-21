@@ -16,24 +16,6 @@ class TestEmailTokenRetrieveUpdate(APITestCase):
     """
     _REST_ENDPOINT_PATH = '/api/accounts/otp-tokens/{type}/{id}'
 
-    class _ContentType:
-        class ApplicationJSON:
-            password_values = (
-                {},
-                {'password': None},
-                {'password': ''},
-                {'password': 'validPassword'},
-                {'password': 'invalidPassword'}
-            )
-
-        class MultipartFormData:
-            password_values = (
-                {},
-                {'password': ''},
-                {'password': 'validPassword'},
-                {'password': 'invalidPassword'}
-            )
-
     def setUp(self):
         from django_flex_user.models.user import FlexUser
 
@@ -41,6 +23,8 @@ class TestEmailTokenRetrieveUpdate(APITestCase):
         self.otp_token = user.emailtoken_set.first()
         self._REST_ENDPOINT_PATH = TestEmailTokenRetrieveUpdate._REST_ENDPOINT_PATH.format(type='email',
                                                                                            id=self.otp_token.id)
+
+    # Method GET
 
     @override_settings(
         FLEX_USER_OTP_EMAIL_FUNCTION='django_flex_user.tests.otp.test_endpoint_otp_tokens_email_id._send_password'
@@ -244,171 +228,135 @@ class TestEmailTokenRetrieveUpdate(APITestCase):
             self.assertEqual(self.otp_token.failure_count, 1)
             self.assertIsNone(self.otp_token.expiration)
 
+    # Method POST, format multipart/form-data, generate password then check password
+
     @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
-    def test_method_post_format_multipart_form_data_generate_password_check_password(self):
-        from django.db import transaction
+    def test_method_post_format_multipart_form_data_generate_password_check_password_undefined(self):
+        from freezegun import freeze_time
+        from django.utils import timezone
+        from datetime import timedelta
+
+        data = {}
+
+        with freeze_time():
+            self.otp_token.generate_password()
+
+            response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='multipart')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+            self.otp_token.refresh_from_db()
+            self.assertIsNotNone(self.otp_token.password)
+            self.assertFalse(self.otp_token.verified)
+            self.assertIsNone(self.otp_token.timeout)
+            self.assertEqual(self.otp_token.failure_count, 0)
+            self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
+
+    @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
+    def test_method_post_format_multipart_form_data_generate_password_check_password_empty_string(self):
+        from freezegun import freeze_time
+        from django.utils import timezone
+        from datetime import timedelta
+
+        data = {'password': ''}
+
+        with freeze_time():
+            self.otp_token.generate_password()
+
+            response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='multipart')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+            self.otp_token.refresh_from_db()
+            self.assertIsNotNone(self.otp_token.password)
+            self.assertFalse(self.otp_token.verified)
+            self.assertIsNone(self.otp_token.timeout)
+            self.assertEqual(self.otp_token.failure_count, 0)
+            self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
+
+    def test_method_post_format_multipart_form_data_generate_password_check_password_valid_password(self):
         from freezegun import freeze_time
 
-        for data in self._ContentType.MultipartFormData.password_values:
-            with self.subTest(**data), freeze_time(), transaction.atomic():
-                from django.utils import timezone
-                from datetime import timedelta
+        with freeze_time():
+            self.otp_token.generate_password()
 
-                self.otp_token.refresh_from_db()
-                self.otp_token.generate_password()
+            data = {'password': self.otp_token.password}
 
-                """
-                When the value for "password" is "validPassword" we replace it with the actual password stored in
-                self.otp_token.password before passing it to the POST method.
-                """
-                d = {'password': self.otp_token.password} if data.get('password') == 'validPassword' else data
+            response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='multipart')
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-                response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='multipart')
+            self.otp_token.refresh_from_db()
+            self.assertIsNone(self.otp_token.password)
+            self.assertTrue(self.otp_token.verified)
+            self.assertIsNone(self.otp_token.timeout)
+            self.assertEqual(self.otp_token.failure_count, 0)
+            self.assertIsNone(self.otp_token.expiration)
 
-                if not data.get('password'):
-                    """
-                    If the supplied password is either undefined or the empty string,
-                    django_flex_user.views.EmailToken.post should return HTTP status code HTTP_400_BAD_REQUEST.
-                    """
-                    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-                    self.otp_token.refresh_from_db()
-                    self.assertIsNotNone(self.otp_token.password)
-                    self.assertFalse(self.otp_token.verified)
-                    self.assertIsNone(self.otp_token.timeout)
-                    self.assertEqual(self.otp_token.failure_count, 0)
-                    self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
-                elif data['password'] == 'validPassword':
-                    """
-                    If the supplied password is defined and valid, django_flex_user.views.EmailToken.post should
-                    return HTTP status code HTTP_200_OK.
-                    """
-                    self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-                    self.otp_token.refresh_from_db()
-                    self.assertIsNone(self.otp_token.password)
-                    self.assertTrue(self.otp_token.verified)
-                    self.assertIsNone(self.otp_token.timeout)
-                    self.assertEqual(self.otp_token.failure_count, 0)
-                    self.assertIsNone(self.otp_token.expiration)
-                elif data['password'] == 'invalidPassword':
-                    """
-                    If the supplied password is defined and invalid, django_flex_user.views.EmailToken.post
-                    should return HTTP status code HTTP_401_UNAUTHORIZED.
-                    """
-                    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-                    self.otp_token.refresh_from_db()
-                    self.assertIsNotNone(self.otp_token.password)
-                    self.assertFalse(self.otp_token.verified)
-                    self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
-                    self.assertEqual(self.otp_token.failure_count, 1)
-                    self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
-                else:
-                    self.assertFalse(True)
-
-                transaction.set_rollback(True)
-
-    def test_method_post_format_application_json_check_password(self):
-        from django.db import transaction
+    @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
+    def test_method_post_format_multipart_form_data_generate_password_check_password_invalid_password(self):
         from freezegun import freeze_time
+        from django.utils import timezone
+        from datetime import timedelta
 
-        for data in self._ContentType.ApplicationJSON.password_values:
-            with self.subTest(**data), freeze_time(), transaction.atomic():
-                from django.utils import timezone
-                from datetime import timedelta
+        data = {'password': 'invalidPassword'}
 
-                """
-                When the value for "password" is "validPassword" we replace it with the actual password stored in
-                self.otp_token.password before passing it to the POST method.
-                """
-                d = {'password': self.otp_token.password} if data.get('password') == 'validPassword' else data
+        with freeze_time():
+            self.otp_token.generate_password()
 
-                response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='json')
+            response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='multipart')
+            self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-                if not data.get('password') or data['password'] == 'validPassword':
-                    """
-                    If the supplied password is either undefined, None or the empty string OR if the supplied password
-                    is defined and valid the django_flex_user.views.EmailToken.post should return HTTP status code
-                    HTTP_400_BAD_REQUEST.
-                    """
-                    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.otp_token.refresh_from_db()
+            self.assertIsNotNone(self.otp_token.password)
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.otp_token.failure_count, 1)
+            self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
 
-                    self.otp_token.refresh_from_db()
-                    self.assertIsNone(self.otp_token.password)
-                    self.assertFalse(self.otp_token.verified)
-                    self.assertIsNone(self.otp_token.timeout)
-                    self.assertEqual(self.otp_token.failure_count, 0)
-                    self.assertIsNone(self.otp_token.expiration)
-                elif data['password'] == 'invalidPassword':
-                    """
-                    If the supplied password is defined and invalid, or defined and valid,
-                    django_flex_user.views.EmailToken.post should return HTTP status code HTTP_401_UNAUTHORIZED.
-                    """
-                    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    # Method POST, format multipart/form-data, skip generate password, check password
 
-                    self.otp_token.refresh_from_db()
-                    self.assertIsNone(self.otp_token.password)
-                    self.assertFalse(self.otp_token.verified)
-                    self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
-                    self.assertEqual(self.otp_token.failure_count, 1)
-                    self.assertIsNone(self.otp_token.expiration)
-                else:
-                    self.assertFalse(True)
+    def test_method_post_format_multipart_form_data_check_password_undefined(self):
+        data = {}
 
-                transaction.set_rollback(True)
+        response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_method_post_format_multipart_form_data_check_password(self):
-        from django.db import transaction
+        self.otp_token.refresh_from_db()
+        self.assertIsNone(self.otp_token.password)
+        self.assertFalse(self.otp_token.verified)
+        self.assertIsNone(self.otp_token.timeout)
+        self.assertEqual(self.otp_token.failure_count, 0)
+        self.assertIsNone(self.otp_token.expiration)
+
+    def test_method_post_format_multipart_form_data_check_password_empty_string(self):
+        data = {'password': ''}
+
+        response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        self.otp_token.refresh_from_db()
+        self.assertIsNone(self.otp_token.password)
+        self.assertFalse(self.otp_token.verified)
+        self.assertIsNone(self.otp_token.timeout)
+        self.assertEqual(self.otp_token.failure_count, 0)
+        self.assertIsNone(self.otp_token.expiration)
+
+    @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
+    def test_method_post_format_multipart_form_data_check_password_invalid_password(self):
         from freezegun import freeze_time
+        from django.utils import timezone
+        from datetime import timedelta
 
-        for data in self._ContentType.MultipartFormData.password_values:
-            with self.subTest(**data), freeze_time(), transaction.atomic():
-                from django.utils import timezone
-                from datetime import timedelta
+        data = {'password': 'invalidPassword'}
 
-                """
-                When the value for "password" is "validPassword" we replace it with the actual password stored in
-                self.otp_token.password before passing it to the POST method.
-                
-                Also, because mutlipart/form-data cannot accept None values, we perform an extra step to coerce
-                password values which are None to the empty string.
-                """
-                d = {'password': self.otp_token.password or ''} if data.get('password') == 'validPassword' else data
+        with freeze_time():
+            response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='multipart')
+            self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-                response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='multipart')
-
-                if not data.get('password') or data['password'] == 'validPassword':
-                    """
-                    If the supplied password is either undefined, None or the empty string OR if the supplied password
-                    is defined and valid the django_flex_user.views.EmailToken.post should return HTTP status code
-                    HTTP_400_BAD_REQUEST.
-                    """
-                    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-                    self.otp_token.refresh_from_db()
-                    self.assertIsNone(self.otp_token.password)
-                    self.assertFalse(self.otp_token.verified)
-                    self.assertIsNone(self.otp_token.timeout)
-                    self.assertEqual(self.otp_token.failure_count, 0)
-                    self.assertIsNone(self.otp_token.expiration)
-                elif data['password'] == 'invalidPassword':
-                    """
-                    If the supplied password is defined and invalid, or defined and valid,
-                    django_flex_user.views.EmailToken.post should return HTTP status code HTTP_401_UNAUTHORIZED.
-                    """
-                    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-                    self.otp_token.refresh_from_db()
-                    self.assertIsNone(self.otp_token.password)
-                    self.assertFalse(self.otp_token.verified)
-                    self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
-                    self.assertEqual(self.otp_token.failure_count, 1)
-                    self.assertIsNone(self.otp_token.expiration)
-                else:
-                    self.assertFalse(True)
-
-                transaction.set_rollback(True)
+            self.otp_token.refresh_from_db()
+            self.assertIsNone(self.otp_token.password)
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.otp_token.failure_count, 1)
+            self.assertIsNone(self.otp_token.expiration)
 
     def test_method_post_throttling(self):
         from freezegun import freeze_time
@@ -503,18 +451,26 @@ class TestEmailTokenRetrieveUpdate(APITestCase):
             self.assertEqual(self.otp_token.failure_count, 1)
             self.assertIsNone(self.otp_token.expiration)
 
+    # Method PUT
+
     def test_method_put(self):
         response = self.client.put(self._REST_ENDPOINT_PATH)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    # Method PATCH
 
     def test_method_patch(self):
         response = self.client.patch(self._REST_ENDPOINT_PATH)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
+    # Method DELETE
+
     def test_method_delete(self):
         response = self.client.delete(self._REST_ENDPOINT_PATH)
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
+    # Method OPTIONS
+    
     def test_method_options(self):
         response = self.client.options(self._REST_ENDPOINT_PATH)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
