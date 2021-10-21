@@ -102,7 +102,7 @@ class TestEmailToken(TestCase):
             self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
 
     @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
-    def test_check_password_expired_password(self):
+    def test_generate_password_check_password_expired_password(self):
         from freezegun import freeze_time
         from datetime import timedelta
         from django.utils import timezone
