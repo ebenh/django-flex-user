@@ -10,7 +10,7 @@ def _send_password(*args):
     pass
 
 
-class TestEmailTokenUpdate(APITestCase):
+class TestEmailTokenRetrieveUpdate(APITestCase):
     """
     This class is designed to test django_flex_user.views.EmailToken
     """
@@ -39,7 +39,8 @@ class TestEmailTokenUpdate(APITestCase):
 
         user = FlexUser.objects.create_user(email='validEmail@example.com')
         self.otp_token = user.emailtoken_set.first()
-        self._REST_ENDPOINT_PATH = TestEmailTokenUpdate._REST_ENDPOINT_PATH.format(type='email', id=self.otp_token.id)
+        self._REST_ENDPOINT_PATH = TestEmailTokenRetrieveUpdate._REST_ENDPOINT_PATH.format(type='email',
+                                                                                           id=self.otp_token.id)
 
     @override_settings(
         FLEX_USER_OTP_EMAIL_FUNCTION='django_flex_user.tests.otp.test_endpoint_otp_tokens_email_id._send_password'
