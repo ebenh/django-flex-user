@@ -2,6 +2,8 @@
 # Configure social-auth-app-django for single-page apps
 #
 
+from test_project.components.django_environ import env
+
 #
 # Production Variables ... Needed for social-auth-app-django
 #
@@ -24,8 +26,8 @@ SOCIAL_AUTH_LOGIN_ERROR_URL = 'http://localhost:4200/sign-in/oauth/complete/'
 SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = 'http://localhost:4200/account/'
 
 # Facebook configuration
-SOCIAL_AUTH_FACEBOOK_KEY = '222626885799264'  # App ID
-SOCIAL_AUTH_FACEBOOK_SECRET = '148d517f78170127b46167a87c878848'  # App Secret
+SOCIAL_AUTH_FACEBOOK_KEY = env('SOCIAL_AUTH_FACEBOOK_KEY')  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = env('SOCIAL_AUTH_FACEBOOK_SECRET')  # App Secret
 
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', ]  # It seems email scope is now included by default
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
@@ -37,8 +39,8 @@ SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [
 ]
 
 # Google configuration
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '87036211763-394ep44eajp4i8b0347fl44lgpdc0c44.apps.googleusercontent.com'  # client_id
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'SPhA2RPJ1GXQrM8LqIPj02dn'  # client_secret
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = env('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')  # client_id
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = env('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')  # client_secret
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [  # These scopes don't seem to be necessary
     'https://www.googleapis.com/auth/userinfo.email',
