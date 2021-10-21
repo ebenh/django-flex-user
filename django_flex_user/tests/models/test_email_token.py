@@ -101,6 +101,33 @@ class TestEmailToken(TestCase):
             self.assertEqual(self.otp_token.failure_count, 1)
             self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
 
+    @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
+    def test_generate_password_check_password_expired_password(self):
+        from freezegun import freeze_time
+        from datetime import timedelta
+        from django.utils import timezone
+
+        with freeze_time() as frozen_datetime:
+            self.otp_token.generate_password()
+
+            # Advance time to exactly the expiration time
+            frozen_datetime.tick(timedelta(minutes=15))
+
+            self.assertFalse(self.otp_token.check_password(self.otp_token.password))
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.otp_token.failure_count, 1)
+            self.assertEqual(self.otp_token.expiration, timezone.now())
+
+            # Advance time past the expiration time
+            frozen_datetime.tick(timedelta(minutes=15))
+
+            self.assertFalse(self.otp_token.check_password(self.otp_token.password))
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=2))
+            self.assertEqual(self.otp_token.failure_count, 2)
+            self.assertEqual(self.otp_token.expiration, timezone.now() - timedelta(minutes=15))
+
     def test_check_password_undefined(self):
         self.assertRaises(TypeError, self.otp_token.check_password)
         self.assertFalse(self.otp_token.verified)
@@ -178,51 +205,35 @@ class TestEmailToken(TestCase):
                     # Advance time by 1 second
                     frozen_datetime.tick()
 
-    @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
-    def test_expiration(self):
-        from freezegun import freeze_time
-        from datetime import timedelta
-        from django.utils import timezone
 
-        with freeze_time() as frozen_datetime:
-            self.otp_token.generate_password()
-
-            # Advance time to exactly the expiration time
-            frozen_datetime.tick(timedelta(minutes=15))
-
-            self.assertFalse(self.otp_token.check_password(self.otp_token.password))
-            self.assertFalse(self.otp_token.verified)
-            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
-            self.assertEqual(self.otp_token.failure_count, 1)
-            self.assertEqual(self.otp_token.expiration, timezone.now())
-
-            # Advance time past the expiration time
-            frozen_datetime.tick(timedelta(minutes=15))
-
-            self.assertFalse(self.otp_token.check_password(self.otp_token.password))
-            self.assertFalse(self.otp_token.verified)
-            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=2))
-            self.assertEqual(self.otp_token.failure_count, 2)
-            self.assertEqual(self.otp_token.expiration, timezone.now() - timedelta(minutes=15))
-
+class TestGeneratePasswordUpdateEmailCheckPassword(TestCase):
+    """
+    This class is designed to test django_flex_user.models.EmailToken
+    """
+    
     def test_generate_password_update_email_check_password(self):
+        from django_flex_user.models.user import FlexUser
         from freezegun import freeze_time
         from django.utils import timezone
         from datetime import timedelta
+
+        user = FlexUser.objects.create_user(email='validEmail@example.com')
+        email_token = user.emailtoken_set.first()
 
         with freeze_time():
-            self.otp_token.generate_password()
-            password = self.otp_token.password
+            email_token.generate_password()
+            password = email_token.password
 
             # Change the user's email address to a phony one after generating password
-            self.otp_token.user.email = 'president@whitehouse.gov'
-            self.otp_token.user.full_clean()
-            self.otp_token.user.save()
+            email_token.user.email = 'president@whitehouse.gov'
+            email_token.user.full_clean()
+            email_token.user.save()
 
             # Ensure the generated password fails
-            self.otp_token.refresh_from_db()
-            self.assertFalse(self.otp_token.check_password(password))
-            self.assertFalse(self.otp_token.verified)
-            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
-            self.assertEqual(self.otp_token.failure_count, 1)
-            self.assertIsNone(self.otp_token.expiration)
+            email_token.refresh_from_db()
+            self.assertFalse(email_token.check_password(password))
+            self.assertIsNone(email_token.password)
+            self.assertFalse(email_token.verified)
+            self.assertEqual(email_token.timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(email_token.failure_count, 1)
+            self.assertIsNone(email_token.expiration)
