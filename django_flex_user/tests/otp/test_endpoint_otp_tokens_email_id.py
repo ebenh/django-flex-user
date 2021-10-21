@@ -67,81 +67,182 @@ class TestEmailTokenRetrieveUpdate(APITestCase):
             self.assertEqual(self.otp_token.failure_count, 0)
             self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
 
+    # Method POST, format application/json, generate password then check password
+
     @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
-    def test_method_post_format_application_json_generate_password_check_password(self):
-        from django.db import transaction
+    def test_method_post_format_application_json_generate_password_check_password_undefined(self):
+        from freezegun import freeze_time
+        from django.utils import timezone
+        from datetime import timedelta
+
+        data = {}
+
+        with freeze_time():
+            self.otp_token.generate_password()
+
+            response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+            self.otp_token.refresh_from_db()
+            self.assertIsNotNone(self.otp_token.password)
+            self.assertFalse(self.otp_token.verified)
+            self.assertIsNone(self.otp_token.timeout)
+            self.assertEqual(self.otp_token.failure_count, 0)
+            self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
+
+    @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
+    def test_method_post_format_application_json_generate_password_check_password_none(self):
+        from freezegun import freeze_time
+        from django.utils import timezone
+        from datetime import timedelta
+
+        data = {'password': None}
+
+        with freeze_time():
+            self.otp_token.generate_password()
+
+            response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+            self.otp_token.refresh_from_db()
+            self.assertIsNotNone(self.otp_token.password)
+            self.assertFalse(self.otp_token.verified)
+            self.assertIsNone(self.otp_token.timeout)
+            self.assertEqual(self.otp_token.failure_count, 0)
+            self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
+
+    @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
+    def test_method_post_format_application_json_generate_password_check_password_empty_string(self):
+        from freezegun import freeze_time
+        from django.utils import timezone
+        from datetime import timedelta
+
+        data = {'password': ''}
+
+        with freeze_time():
+            self.otp_token.generate_password()
+
+            response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+            self.otp_token.refresh_from_db()
+            self.assertIsNotNone(self.otp_token.password)
+            self.assertFalse(self.otp_token.verified)
+            self.assertIsNone(self.otp_token.timeout)
+            self.assertEqual(self.otp_token.failure_count, 0)
+            self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
+
+    def test_method_post_format_application_json_generate_password_check_password_valid_password(self):
         from freezegun import freeze_time
 
-        for data in self._ContentType.ApplicationJSON.password_values:
-            with self.subTest(**data), freeze_time(), transaction.atomic():
-                from django.utils import timezone
-                from datetime import timedelta
+        with freeze_time():
+            self.otp_token.generate_password()
 
-                self.otp_token.refresh_from_db()
-                self.otp_token.generate_password()
+            data = {'password': self.otp_token.password}
 
-                """
-                When the value for "password" is "validPassword" we replace it with the actual password stored in
-                self.otp_token.password before passing it to the POST method.
-                """
-                d = {'password': self.otp_token.password} if data.get('password') == 'validPassword' else data
+            response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-                response = self.client.post(self._REST_ENDPOINT_PATH, data=d, format='json')
+            self.otp_token.refresh_from_db()
+            self.assertIsNone(self.otp_token.password)
+            self.assertTrue(self.otp_token.verified)
+            self.assertIsNone(self.otp_token.timeout)
+            self.assertEqual(self.otp_token.failure_count, 0)
+            self.assertIsNone(self.otp_token.expiration)
 
-                if not data.get('password'):
-                    """
-                    If the supplied password is either undefined, None or the empty string,
-                    django_flex_user.views.EmailToken.post should return HTTP status code HTTP_400_BAD_REQUEST.
-                    """
-                    self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+    @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
+    def test_method_post_format_application_json_generate_password_check_password_invalid_password(self):
+        from freezegun import freeze_time
+        from django.utils import timezone
+        from datetime import timedelta
 
-                    self.otp_token.refresh_from_db()
-                    self.assertIsNotNone(self.otp_token.password)
-                    self.assertFalse(self.otp_token.verified)
-                    self.assertIsNone(self.otp_token.timeout)
-                    self.assertEqual(self.otp_token.failure_count, 0)
-                    self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
-                elif data['password'] == 'validPassword':
-                    """
-                    If the supplied password is defined and valid, django_flex_user.views.EmailToken.post should
-                    return HTTP status code HTTP_200_OK.
-                    """
-                    if response.status_code != status.HTTP_200_OK:
-                        self.otp_token.refresh_from_db()
-                        if self.otp_token.password:
-                            print(self.otp_token.password.encode("unicode_escape").encode('utf-8'))
-                        else:
-                            print('None')
-                        if d['password']:
-                            print(d["password"].encode("unicode_escape").encode('utf-8'))
-                        else:
-                            print('None')
+        data = {'password': 'invalidPassword'}
 
-                    self.assertEqual(response.status_code, status.HTTP_200_OK)
+        with freeze_time():
+            self.otp_token.generate_password()
 
-                    self.otp_token.refresh_from_db()
-                    self.assertIsNone(self.otp_token.password)
-                    self.assertTrue(self.otp_token.verified)
-                    self.assertIsNone(self.otp_token.timeout)
-                    self.assertEqual(self.otp_token.failure_count, 0)
-                    self.assertIsNone(self.otp_token.expiration)
-                elif data['password'] == 'invalidPassword':
-                    """
-                    If the supplied password is defined and invalid, django_flex_user.views.EmailToken.post
-                    should return HTTP status code HTTP_401_UNAUTHORIZED.
-                    """
-                    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+            response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-                    self.otp_token.refresh_from_db()
-                    self.assertIsNotNone(self.otp_token.password)
-                    self.assertFalse(self.otp_token.verified)
-                    self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
-                    self.assertEqual(self.otp_token.failure_count, 1)
-                    self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
-                else:
-                    self.assertFalse(True)
+            self.otp_token.refresh_from_db()
+            self.assertIsNotNone(self.otp_token.password)
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.otp_token.failure_count, 1)
+            self.assertEqual(self.otp_token.expiration, timezone.now() + timedelta(minutes=15))
 
-                transaction.set_rollback(True)
+    # Method POST, format application/json, skip generate password, check password
+
+    def test_method_post_format_application_json_check_password_undefined(self):
+        data = {}
+
+        response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        self.otp_token.refresh_from_db()
+        self.assertIsNone(self.otp_token.password)
+        self.assertFalse(self.otp_token.verified)
+        self.assertIsNone(self.otp_token.timeout)
+        self.assertEqual(self.otp_token.failure_count, 0)
+        self.assertIsNone(self.otp_token.expiration)
+
+    def test_method_post_format_application_json_check_password_none(self):
+        data = {'password': None}
+
+        response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        self.otp_token.refresh_from_db()
+        self.assertIsNone(self.otp_token.password)
+        self.assertFalse(self.otp_token.verified)
+        self.assertIsNone(self.otp_token.timeout)
+        self.assertEqual(self.otp_token.failure_count, 0)
+        self.assertIsNone(self.otp_token.expiration)
+
+    def test_method_post_format_application_json_check_password_empty_string(self):
+        data = {'password': ''}
+
+        response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        self.otp_token.refresh_from_db()
+        self.assertIsNone(self.otp_token.password)
+        self.assertFalse(self.otp_token.verified)
+        self.assertIsNone(self.otp_token.timeout)
+        self.assertEqual(self.otp_token.failure_count, 0)
+        self.assertIsNone(self.otp_token.expiration)
+
+    def test_method_post_format_application_json_check_password_valid_password(self):
+        data = {'password': self.otp_token.password}
+
+        response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        self.otp_token.refresh_from_db()
+        self.assertIsNone(self.otp_token.password)
+        self.assertFalse(self.otp_token.verified)
+        self.assertIsNone(self.otp_token.timeout)
+        self.assertEqual(self.otp_token.failure_count, 0)
+        self.assertIsNone(self.otp_token.expiration)
+
+    @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
+    def test_method_post_format_application_json_check_password_invalid_password(self):
+        from freezegun import freeze_time
+        from django.utils import timezone
+        from datetime import timedelta
+
+        data = {'password': 'invalidPassword'}
+
+        with freeze_time():
+            response = self.client.post(self._REST_ENDPOINT_PATH, data=data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+            self.otp_token.refresh_from_db()
+            self.assertIsNone(self.otp_token.password)
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.otp_token.failure_count, 1)
+            self.assertIsNone(self.otp_token.expiration)
 
     @override_settings(FLEX_USER_OTP_TTL=timedelta(minutes=15))
     def test_method_post_format_multipart_form_data_generate_password_check_password(self):
