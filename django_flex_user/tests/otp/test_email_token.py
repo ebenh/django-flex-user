@@ -207,31 +207,29 @@ class TestEmailToken(TestCase):
 
 
 class TestGeneratePasswordUpdateEmailCheckPassword(TestCase):
-    def setUp(self):
-        from django_flex_user.models.user import FlexUser
-
-        user = FlexUser.objects.create_user(email='validEmail@example.com')
-        self.otp_token = user.emailtoken_set.first()
-
     def test_generate_password_update_email_check_password(self):
+        from django_flex_user.models.user import FlexUser
         from freezegun import freeze_time
         from django.utils import timezone
         from datetime import timedelta
 
+        user = FlexUser.objects.create_user(email='validEmail@example.com')
+        email_token = user.emailtoken_set.first()
+
         with freeze_time():
-            self.otp_token.generate_password()
-            password = self.otp_token.password
+            email_token.generate_password()
+            password = email_token.password
 
             # Change the user's email address to a phony one after generating password
-            self.otp_token.user.email = 'president@whitehouse.gov'
-            self.otp_token.user.full_clean()
-            self.otp_token.user.save()
+            email_token.user.email = 'president@whitehouse.gov'
+            email_token.user.full_clean()
+            email_token.user.save()
 
             # Ensure the generated password fails
-            self.otp_token.refresh_from_db()
-            self.assertFalse(self.otp_token.check_password(password))
-            self.assertIsNone(self.otp_token.password)
-            self.assertFalse(self.otp_token.verified)
-            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
-            self.assertEqual(self.otp_token.failure_count, 1)
-            self.assertIsNone(self.otp_token.expiration)
+            email_token.refresh_from_db()
+            self.assertFalse(email_token.check_password(password))
+            self.assertIsNone(email_token.password)
+            self.assertFalse(email_token.verified)
+            self.assertEqual(email_token.timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(email_token.failure_count, 1)
+            self.assertIsNone(email_token.expiration)
