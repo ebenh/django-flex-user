@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .test_email_token import TestEmailToken
+from django_flex_user.tests.models.test_email_token import TestEmailToken
 
 
 class TestPhoneToken(TestEmailToken):
