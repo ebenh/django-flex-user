@@ -15,6 +15,10 @@ class TestPhoneToken(TestEmailToken):
 
 
 class TestGeneratePasswordUpdatePhoneCheckPassword(TestCase):
+    """
+    This class is designed to test django_flex_user.models.PhoneToken
+    """
+
     def test_generate_password_update_phone_check_password(self):
         from django_flex_user.models.user import FlexUser
         from freezegun import freeze_time

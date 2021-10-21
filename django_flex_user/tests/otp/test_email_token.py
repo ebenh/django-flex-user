@@ -207,6 +207,10 @@ class TestEmailToken(TestCase):
 
 
 class TestGeneratePasswordUpdateEmailCheckPassword(TestCase):
+    """
+    This class is designed to test django_flex_user.models.EmailToken
+    """
+    
     def test_generate_password_update_email_check_password(self):
         from django_flex_user.models.user import FlexUser
         from freezegun import freeze_time
