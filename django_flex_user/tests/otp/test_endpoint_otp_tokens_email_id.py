@@ -486,30 +486,6 @@ class TestEmailTokenRetrieveUpdate(APITestCase):
             self.assertEqual(self.otp_token.failure_count, 1)
             self.assertIsNone(self.otp_token.expiration)
 
-    def test_method_post_generate_password_update_email_check_password(self):
-        from freezegun import freeze_time
-        from django.utils import timezone
-        from datetime import timedelta
-
-        with freeze_time():
-            self.otp_token.generate_password()
-            password = self.otp_token.password
-
-            # Change the user's email address to a phony one after generating password
-            self.otp_token.user.email = 'president@whitehouse.gov'
-            self.otp_token.user.full_clean()
-            self.otp_token.user.save()
-
-            response = self.client.post(self._REST_ENDPOINT_PATH, data={'password': password})
-            self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-            # Ensure the generated password fails
-            self.otp_token.refresh_from_db()
-            self.assertFalse(self.otp_token.verified)
-            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
-            self.assertEqual(self.otp_token.failure_count, 1)
-            self.assertIsNone(self.otp_token.expiration)
-
     # Method PUT
 
     def test_method_put(self):
@@ -533,3 +509,42 @@ class TestEmailTokenRetrieveUpdate(APITestCase):
     def test_method_options(self):
         response = self.client.options(self._REST_ENDPOINT_PATH)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+class TestMethodPostGeneratePasswordUpdateEmailCheckPassword(APITestCase):
+    """
+    This class is designed to test django_flex_user.views.EmailToken
+    """
+    _REST_ENDPOINT_PATH = '/api/accounts/otp-tokens/{type}/{id}'
+
+    def setUp(self):
+        from django_flex_user.models.user import FlexUser
+
+        user = FlexUser.objects.create_user(email='validEmail@example.com')
+        self.otp_token = user.emailtoken_set.first()
+        self._REST_ENDPOINT_PATH = TestEmailTokenRetrieveUpdate._REST_ENDPOINT_PATH.format(type='email',
+                                                                                           id=self.otp_token.id)
+
+    def test_method_post_generate_password_update_email_check_password(self):
+        from freezegun import freeze_time
+        from django.utils import timezone
+        from datetime import timedelta
+
+        with freeze_time():
+            self.otp_token.generate_password()
+            password = self.otp_token.password
+
+            # Change the user's email address to a phony one after generating password
+            self.otp_token.user.email = 'president@whitehouse.gov'
+            self.otp_token.user.full_clean()
+            self.otp_token.user.save()
+
+            response = self.client.post(self._REST_ENDPOINT_PATH, data={'password': password})
+            self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+            # Ensure the generated password fails
+            self.otp_token.refresh_from_db()
+            self.assertFalse(self.otp_token.verified)
+            self.assertEqual(self.otp_token.timeout, timezone.now() + timedelta(seconds=1))
+            self.assertEqual(self.otp_token.failure_count, 1)
+            self.assertIsNone(self.otp_token.expiration)

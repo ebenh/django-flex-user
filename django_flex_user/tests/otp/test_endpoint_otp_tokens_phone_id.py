@@ -1,5 +1,6 @@
 from .test_endpoint_otp_tokens_email_id import TestEmailTokenRetrieveUpdate
 
+from rest_framework.test import APITestCase
 from rest_framework import status
 
 
@@ -16,8 +17,19 @@ class TestPhoneTokenRetrieveUpdate(TestEmailTokenRetrieveUpdate):
         self._REST_ENDPOINT_PATH = TestEmailTokenRetrieveUpdate._REST_ENDPOINT_PATH.format(type='phone',
                                                                                            id=self.otp_token.id)
 
-    def test_method_post_generate_password_update_email_check_password(self):
-        pass
+
+class TestMethodPostGeneratePasswordUpdatePhoneCheckPassword(APITestCase):
+    """
+    This class is designed to test django_flex_user.views.PhoneToken
+    """
+
+    def setUp(self):
+        from django_flex_user.models.user import FlexUser
+
+        user = FlexUser.objects.create_user(phone='+12025551234')
+        self.otp_token = user.phonetoken_set.first()
+        self._REST_ENDPOINT_PATH = TestEmailTokenRetrieveUpdate._REST_ENDPOINT_PATH.format(type='phone',
+                                                                                           id=self.otp_token.id)
 
     def test_method_post_generate_password_update_phone_check_password(self):
         from freezegun import freeze_time
