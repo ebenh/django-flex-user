@@ -1,4 +1,5 @@
 include LICENSE
 include README.rst
-recursive-include django_flex_user/templates *
 recursive-include django_flex_user/migrations *
+recursive-include django_flex_user/models *
+recursive-include django_flex_user/templates *
