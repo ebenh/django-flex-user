@@ -83,3 +83,12 @@ Basic Configuration
 
     .. note::
         On Windows, the command to execute Python is ``py``.
+
+#. Create a super user:
+
+    .. code-block:: bash
+
+        $ python mange.py createsuperuser
+
+    .. note::
+        On Windows, the command to execute Python is ``py``.
