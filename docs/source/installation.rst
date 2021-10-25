@@ -9,12 +9,3 @@ Installation
 
     .. note::
         On Windows, the command to execute pip is ``py -m pip``.
-
-#. Apply database migrations:
-
-    .. code-block:: bash
-
-        $ python mange.py migrate
-
-    .. note::
-        On Windows, the command to execute Python is ``py``.

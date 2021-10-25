@@ -74,3 +74,12 @@ Basic Configuration
         :raises TransmissionError: If SMS fails to send.
         :returns: None
         :rtype: None
+
+#. Apply database migrations:
+
+    .. code-block:: bash
+
+        $ python mange.py migrate
+
+    .. note::
+        On Windows, the command to execute Python is ``py``.
