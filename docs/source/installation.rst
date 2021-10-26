@@ -1,7 +1,7 @@
 Installation
 ============
 
-#. Install :mod:`django_flex_user` from the Python Package Index (PyPi):
+#. Install :mod:`django_flex_user` from the Python Package Index (PyPI):
 
     .. code-block:: bash
 
