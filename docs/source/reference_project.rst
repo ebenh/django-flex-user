@@ -14,9 +14,8 @@ Running the reference project locally
 
     .. code-block:: bash
 
-        $ mkdir django-flex-user
-        $ cd django-flex-user
         $ git clone https://github.com/ebenh/django-flex-user
+        $ cd django-flex-user
 
 #. Create an ``.env`` file with the following contents:
 
