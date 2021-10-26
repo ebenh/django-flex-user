@@ -90,7 +90,7 @@ Basic Configuration
     .. note::
         On Windows, the command to execute Python is ``py``.
 
-#. Create a super user:
+#. Create a superuser:
 
     .. code-block:: bash
 
