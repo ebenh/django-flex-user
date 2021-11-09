@@ -2,7 +2,7 @@ django-flex-user
 ================
 |Django CI| |MIT license|
   
-A flexible user model for Django designed to **maximize sign-up conversion**.
+A flexible user model for `Django <https://www.djangoproject.com/>`__ designed to **maximize sign-up conversion**.
 
 Enables users to up using their choice of **username**, **email address**, **phone number** or any combination thereof.
 Users can also sign up using an **OAuth** provider like Facebook or Google.
