@@ -22,7 +22,7 @@ to learn how to set up the Django project.
 
 2. Build the Python package.
 
-        $ python setup.py sdist
+        $ python3 setup.py sdist
 
 3. Install and/or upgrade `twine`.
 
