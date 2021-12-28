@@ -85,7 +85,7 @@ Basic Configuration
 
     .. code-block:: bash
 
-        $ python mange.py migrate
+        $ python3 mange.py migrate
 
     .. note::
         On Windows, the command to execute Python is ``py``.
@@ -94,7 +94,7 @@ Basic Configuration
 
     .. code-block:: bash
 
-        $ python mange.py createsuperuser
+        $ python3 mange.py createsuperuser
 
     .. note::
         On Windows, the command to execute Python is ``py``.
