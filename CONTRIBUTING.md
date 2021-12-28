@@ -44,7 +44,7 @@ to learn how to set up the Django project.
 
         $ bumpversion <major|minor|patch> && git push --tags
 
-8. Build the Python package again in order to capture the updated version number.
+8. Build the Python package again in order to capture the latest version number.
 
         $ python setup.py sdist
 
