@@ -5,7 +5,7 @@ Installation
 
     .. code-block:: bash
 
-        $ python -m pip install django-flex-user
+        $ python3 -m pip install --user django-flex-user
 
     .. note::
         On Windows, the command to execute pip is ``py -m pip``.
