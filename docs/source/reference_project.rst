@@ -42,7 +42,7 @@ Running the reference project locally
 
     .. code-block:: bash
 
-        $ python -m pipenv install --dev
+        $ python3 -m pipenv install --dev
 
     .. note::
         On Windows, the command to execute Python is ``py``.
@@ -51,37 +51,37 @@ Running the reference project locally
 
     .. code-block:: bash
 
-        $ python -m pipenv shell
+        $ python3 -m pipenv shell
 
 #. Initialize database tables:
 
     .. code-block:: bash
 
-        $ python manage.py migrate
+        $ python3 manage.py migrate
 
 #. Create a super user:
 
     .. code-block:: bash
 
-        $ python manage.py createsuperuser
+        $ python3 manage.py createsuperuser
 
 #. Run the development server:
 
     .. code-block:: bash
 
-        $ python manage.py runserver
+        $ python3 manage.py runserver
 
 #. Run tests:
 
     .. code-block:: bash
 
-        $ python manage.py test
+        $ python3 manage.py test
 
 #. Build the Python package:
 
     .. code-block:: bash
 
-        $ python setup.py sdist
+        $ python3 setup.py sdist
 
 #. Build the docs:
 
