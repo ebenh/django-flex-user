@@ -23,6 +23,7 @@ django-heroku = "*"
 freezegun = "*"
 sphinx = "*"
 bump2version = "*"
+tox = "*"
 
 [requires]
 python_version = "3.8"
