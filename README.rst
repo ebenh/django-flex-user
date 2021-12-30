@@ -1,6 +1,6 @@
 django-flex-user
 ================
-|Django CI| |MIT license|
+|Tests| |MIT license|
   
 A flexible user model for `Django <https://www.djangoproject.com/>`__ designed to **maximize sign-up conversion**.
 
@@ -15,7 +15,7 @@ Click `here <https://django-flex-user.readthedocs.io/>`__ to see the **documenta
 
 .. |Tests| image:: https://github.com/ebenh/django-flex-user/actions/workflows/django.yml/badge.svg
   :target: https://github.com/ebenh/django-flex-user/actions/workflows/tests.yml
-  :alt: Django CI Status
+  :alt: Status of tests
 
 .. |MIT license| image:: https://img.shields.io/badge/License-MIT-blue.svg
   :target: https://lbesson.mit-license.org/
