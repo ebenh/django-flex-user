@@ -36,3 +36,7 @@ jobs:
     - name: Run Coverage
       run: |
         python -m pipenv run tox -e coverage
+    - uses: actions/upload-artifact@v2
+      with:
+        name: badge.svg
+        path: /home/runner/work/django-flex-user/django-flex-user/badge.svg
