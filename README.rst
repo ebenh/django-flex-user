@@ -13,7 +13,7 @@ Click `here <https://django-flex-user.herokuapp.com/>`__ to see a **demo**.
 
 Click `here <https://django-flex-user.readthedocs.io/>`__ to see the **documentation**.
 
-.. |Tests| image:: https://github.com/ebenh/django-flex-user/actions/workflows/django.yml/badge.svg
+.. |Tests| image:: https://github.com/ebenh/django-flex-user/actions/workflows/tests.yml/badge.svg
   :target: https://github.com/ebenh/django-flex-user/actions/workflows/tests.yml
   :alt: Status of tests
 
