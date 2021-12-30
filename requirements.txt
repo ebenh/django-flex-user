@@ -1,5 +1,5 @@
 # This file exists solely to support readthedocs.io.
-# Our dependencies are handled by pipenv are configured in our Pipfile
+# Our dependencies are handled by pipenv are configured in Pipfile
 django
 djangorestframework
 django-phonenumber-field
