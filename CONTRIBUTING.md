@@ -16,6 +16,14 @@ Refer to the
 docs [here](https://django-flex-user.readthedocs.io/en/latest/reference_project.html#running-the-reference-project-locally)
 to learn how to set up the Django project.
 
+### Adding Dependencies
+
+Add dependencies with the following command:
+
+    $ python3 -m pipenv install [--dev] [package]
+
+After installing the dependency make sure to manually add it to `tox.ini` and `requirements.txt`.
+
 ### Publishing to PyPI
 
 1. Update `MANIFEST.in` to include any new, non-source files you may have added.
@@ -42,7 +50,7 @@ to learn how to set up the Django project.
 
 6. If the above command completes without errors, bump the version number, tag the release and commit.
 
-        $ bumpversion <major|minor|patch> && git push --tags
+        $ bumpversion [major|minor|patch] && git push --tags
 
 8. Build the Python package again in order to capture the latest version number.
 
