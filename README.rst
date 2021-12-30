@@ -17,8 +17,7 @@ Click `here <https://django-flex-user.readthedocs.io/>`__ to see the **documenta
   :target: https://github.com/ebenh/django-flex-user/actions/workflows/tests.yml
   :alt: Status of tests
   
-.. |Coverage| image:: https://github.com/ebenh/django-flex-user/actions/workflows/coverage.yml/badge.svg
-  :target: https://github.com/ebenh/django-flex-user/actions/workflows/coverage.yml
+.. |Coverage| image:: https://img.shields.io/badge/Coverage-91%25-green.svg
   :alt: Test coverage
 
 .. |MIT license| image:: https://img.shields.io/badge/License-MIT-blue.svg
