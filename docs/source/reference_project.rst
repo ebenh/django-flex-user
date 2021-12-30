@@ -77,6 +77,17 @@ Running the reference project locally
 
         $ python3 manage.py test
 
+    To run tests against multiple versions of Python and Django:
+
+    .. code-block:: bash
+
+        $ python3 tox
+
+    .. note::
+        To skip Python interpreters which are not installed run ``tox --skip-missing-interpreters``.
+        To run tests against Python 3.8 only for example, run ``tox -e py38``.
+        To run tests against Python 3.8 and Django 3.2 only, run ``tox -e py38-django32``.
+
 #. Build the Python package:
 
     .. code-block:: bash
