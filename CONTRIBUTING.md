@@ -24,6 +24,14 @@ Add dependencies with the following command:
 
 After installing the dependency make sure to manually add it to `tox.ini` and `requirements.txt`.
 
+### Checking Test Coverage
+
+    $ tox -e coverage
+
+### Checking Code Style
+
+    $ tox -e static
+
 ### Publishing to PyPI
 
 1. Update `MANIFEST.in` to include any new, non-source files you may have added.
